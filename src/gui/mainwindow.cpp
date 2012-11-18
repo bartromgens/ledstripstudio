@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "src/gui/ui_mainwindow.h"
 
 #include "src/player/animation.h"
 

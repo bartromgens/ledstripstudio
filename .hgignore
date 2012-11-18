@@ -13,3 +13,7 @@ Makefile
 include/qextserialport/doc/*
 ledstrip.pro.user
 include/qextserialport/buildlib/buildlib.pro.user
+src/gui/ui_mainwindow.h
+tmp/moc_qextserialport.cpp
+tmp/moc_qextserialenumerator.cpp
+tmp/moc_mainwindow.cpp

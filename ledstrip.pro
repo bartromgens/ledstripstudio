@@ -45,3 +45,4 @@ OTHER_FILES +=
 
 OBJECTS_DIR = ./tmp/
 MOC_DIR = ./tmp/
+UI_DIR = ./src/gui/
