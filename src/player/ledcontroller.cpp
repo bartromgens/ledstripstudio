@@ -1,5 +1,5 @@
 #include "ledcontroller.h"
-#include "frame.h"
+#include "src/basic/frame.h"
 
 //#include "qextserialport.h"
 #include "/home/bart/prog/arduinoControl/qextserialport-1.2beta2/src/qextserialport.h"

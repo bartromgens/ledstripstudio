@@ -9,9 +9,9 @@ SOURCES += \
     src/basic/color.cpp \
     src/fft/fftw++.cpp \
     src/fft/spectrumanalyser.cpp \
-    src/player/animation.cpp \
-    src/player/frame.cpp \
-    src/player/led.cpp \
+    src/basic/animation.cpp \
+    src/basic/frame.cpp \
+    src/basic/led.cpp \
     src/player/ledcontroller.cpp \
     src/player/player.cpp \
     src/main.cpp
@@ -22,9 +22,9 @@ HEADERS += \
     src/basic/color.h \
     src/fft/spectrumanalyser.h \
     src/gui/mainwindow.h \
-    src/player/animation.h \
-    src/player/frame.h \
-    src/player/led.h \
+    src/basic/animation.h \
+    src/basic/frame.h \
+    src/basic/led.h \
     src/player/ledcontroller.h \
     src/player/player.h
 

@@ -1,5 +1,5 @@
 #include "player.h"
-#include "src/player/animation.h"
+#include "src/basic/animation.h"
 #include "src/basic/color.h"
 
 #include <unistd.h>  // for (u)sleep on Linux

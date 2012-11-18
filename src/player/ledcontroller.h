@@ -2,7 +2,7 @@
 #define LEDCONTROLLER_H
 
 #include "src/basic/color.h"
-#include "src/player/frame.h"
+#include "src/basic/frame.h"
 
 #include <QString>
 #include <QTime>

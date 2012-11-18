@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "src/gui/ui_mainwindow.h"
 
-#include "src/player/animation.h"
+#include "src/basic/animation.h"
 
 #include <QTime>
 
