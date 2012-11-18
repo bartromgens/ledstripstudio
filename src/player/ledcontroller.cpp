@@ -12,7 +12,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <unistd.h>  // for usleep on Linux
+#include <unistd.h>  // for (u)sleep on Linux
 
 LEDController::LEDController()
   : m_port(0),
@@ -64,7 +64,7 @@ LEDController::send(const Frame &frame)
 
   usleep(15000);
 //  std::cout << 1000/timerSend.elapsed() << " fps" << std::endl;
-//  m_colorOld.push_back(m_color);
+
   clearAll();
 }
 
@@ -81,9 +81,6 @@ LEDController::connect()
 {
   m_port = createPort();
   m_port->open(QIODevice::ReadWrite);
-
-//  Frame frame(100);
-//  send(frame);
 }
 
 void
