@@ -1,8 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "src/player/ledcontroller.h"
-#include "src/player/player.h"
+#include "src/basic/animation.h"
 
 #include <QMainWindow>
 #include <QColorDialog>
@@ -10,6 +9,8 @@
 #include <iostream>
 #include <memory>
 
+class Studio;
+class Player;
 
 namespace Ui {
 class MainWindow;
@@ -25,20 +26,20 @@ public:
 
   Animation createAnimationTest1();
   Animation createAnimationTest2();
-//  Animation createAnimationTest3();
-  //  Animation createAnimationTest4();
+
 private slots:
   void slotColorSelected(const QColor &color);
   void slotBrightnessChanged();
 
 private:
-//  std::unique_ptr<LEDController> createLedController(QString serialPortName);
+  void connectAllSlots() const;
   
 private:
   Ui::MainWindow *ui;
   QColorDialog m_colorDialog;
   std::size_t m_nLedsTotal;
   Player* m_player;
+  Studio* m_studio;
 };
 
 #endif // MAINWINDOW_H
