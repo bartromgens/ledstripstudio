@@ -6,27 +6,29 @@ SOURCES += \
     src/gui/mainwindow.cpp \
     src/audioinput/audioinput.cpp \
     src/audioinput/userdata.cpp \
-    src/basic/color.cpp \
-    src/fft/fftw++.cpp \
-    src/fft/spectrumanalyser.cpp \
     src/basic/animation.cpp \
+    src/basic/color.cpp \
     src/basic/frame.cpp \
     src/basic/led.cpp \
+    src/spectrum/fftw++.cpp \
+    src/spectrum/spectrumanalyser.cpp \
     src/player/ledcontroller.cpp \
     src/player/player.cpp \
-    src/main.cpp
+    src/studio/studio.cpp \
+    src/main.cpp \
 
 HEADERS += \
     src/audioinput/audioinput.h \
     src/audioinput/userdata.h \
-    src/basic/color.h \
-    src/fft/spectrumanalyser.h \
     src/gui/mainwindow.h \
+    src/spectrum/spectrumanalyser.h \
     src/basic/animation.h \
+    src/basic/color.h \
     src/basic/frame.h \
     src/basic/led.h \
     src/player/ledcontroller.h \
-    src/player/player.h
+    src/player/player.h \
+    src/studio/studio.h
 
 FORMS += \
     src/gui/mainwindow.ui
