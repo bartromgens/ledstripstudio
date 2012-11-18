@@ -1,0 +1,27 @@
+#ifndef FRAME_H
+#define FRAME_H
+
+#include "led.h"
+
+#include <map>
+#include <iostream>
+
+class Frame
+{
+public:
+  Frame(int nLEDs);
+
+  const std::map<int, LED>& getLEDs() const;
+
+  void addLED(LED led);
+
+  void print();
+
+  void setAllLedsOff();
+
+private:
+  int m_nLEDs;
+  std::map<int, LED> m_leds;
+};
+
+#endif // FRAME_H

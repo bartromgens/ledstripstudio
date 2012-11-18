@@ -1,0 +1,15 @@
+syntax: glob
+*.html
+include/qextserialport/examples/qespta/README
+include/qextserialport/buildlib/Makefile
+include/qextserialport/README
+include/qextserialport/LICENSE
+include/qextserialport/ChangeLog
+include/qextserialport/.hgtags
+include/qextserialport/.hgignore
+ledstrip
+Makefile
+*.o
+include/qextserialport/doc/*
+ledstrip.pro.user
+include/qextserialport/buildlib/buildlib.pro.user
