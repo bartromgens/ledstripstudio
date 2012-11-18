@@ -5,33 +5,36 @@
 
 #include <QTime>
 
+
 #include <memory>
 #include <unistd.h> // for usleep on linux
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow),
+  m_colorDialog(),
   m_nLedsTotal(160),
   m_player(new Player())
 {
   setWindowTitle("LED Controller");
 
   ui->setupUi(this);
-  sleep(2);
-//  connect( ui->brightnessYellowHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( updateBrightnessBlue() ) );
-//  connect( ui->brightnessRedHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( updateBrightnessRed() ) );
-//  connect( ui->brightnessGreenHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( updateBrightnessGreen() ) );
-  Animation animation;
 
-  QTime timer;
-  timer.start();
+  m_colorDialog.open();
 
-  for (std::size_t i = 0; i < 1000; ++i)
-  {
-    animation = createAnimationTest2();
-    m_player->play(animation);
-  }
-//  std::cout << timer.elapsed() << std::endl;
+  connect( &m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
+
+  connect( ui->brightnessRedHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+  connect( ui->brightnessGreenHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+  connect( ui->brightnessBlueHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+
+  //  Animation animation;
+
+//  for (std::size_t i = 0; i < 1000; ++i)
+//  {
+//    animation = createAnimationTest1();
+//    m_player->play(animation);
+//  }
 
 }
 
@@ -89,7 +92,7 @@ MainWindow::createAnimationTest1()
 Animation MainWindow::createAnimationTest2()
 {
   Animation animation;
-  double speed = 0.3;
+  double speed = 1.0;
   int nFrames = m_nLedsTotal/speed;
 
   for (int i = 1; i < nFrames; ++i)
@@ -151,34 +154,44 @@ Animation MainWindow::createAnimationTest2()
 //}
 
 void
-MainWindow::updateBrightnessBlue()
+MainWindow::slotColorSelected(const QColor &color)
 {
-//  int brightness = ui->brightnessYellowHorizontalSlider->value();
-//  Color color(127, 0, brightness);
-//  for (int i = 1; i <= m_nLedsTotal; ++i)
-//  {
-//    m_ledController->setColor(color);
-//    m_ledController->setLEDnr(i);
-//  }
-//  updateBrightness();
+  Frame frame(m_nLedsTotal);
+  for (std::size_t i = 0; i < m_nLedsTotal; ++i)
+  {
+    LED led;
+    Color colorNew(color.red()/255.0*127.0, color.green()/255.0*127.0, color.blue()/255.0*127.0);
+    led.setColor(colorNew);
+    led.setLEDnr(i);
+    frame.addLED(led);
+  }
+  Animation animation;
+  animation.addFrame(frame);
+
+  m_player->play(animation);
 }
 
 void
-MainWindow::updateBrightnessGreen()
+MainWindow::slotBrightnessChanged()
 {
-//  int brightness = ui->brightnessGreenHorizontalSlider->value();
-//  Color color(0, brightness, 0);
-//  m_ledController->setColor(color);
-//  m_ledController->setLEDnr(30);
-//  updateBrightness();
-}
+  int brightnessRed = ui->brightnessRedHorizontalSlider->value();
+  int brightnessGreen = ui->brightnessGreenHorizontalSlider->value();
+  int brightnessBlue = ui->brightnessBlueHorizontalSlider->value();
 
-void
-MainWindow::updateBrightnessRed()
-{
-//  int brightness = ui->brightnessRedHorizontalSlider->value();
-//  Color color(brightness, 0, 0);
-//  m_ledController->setColor(color);
-//  m_ledController->setLEDnr(45);
+  Frame frame(m_nLedsTotal);
+
+  for (std::size_t i = 0; i < m_nLedsTotal; ++i)
+  {
+    LED led;
+    Color color(brightnessRed, brightnessGreen, brightnessBlue);
+    led.setColor(color);
+    led.setLEDnr(i);
+    frame.addLED(led);
+  }
+  Animation animation;
+  animation.addFrame(frame);
+
+  m_player->play(animation);
+
 //  updateBrightness();
 }

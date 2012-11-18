@@ -5,6 +5,7 @@
 #include "src/player/player.h"
 
 #include <QMainWindow>
+#include <QColorDialog>
 
 #include <iostream>
 #include <memory>
@@ -22,22 +23,20 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
-  void updateBrightness();
-
   Animation createAnimationTest1();
   Animation createAnimationTest2();
 //  Animation createAnimationTest3();
-//  Animation createAnimationTest4();
+  //  Animation createAnimationTest4();
 private slots:
-  void updateBrightnessBlue();
-  void updateBrightnessRed();
-  void updateBrightnessGreen();
+  void slotColorSelected(const QColor &color);
+  void slotBrightnessChanged();
 
 private:
 //  std::unique_ptr<LEDController> createLedController(QString serialPortName);
   
 private:
   Ui::MainWindow *ui;
+  QColorDialog m_colorDialog;
   std::size_t m_nLedsTotal;
   Player* m_player;
 };
