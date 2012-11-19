@@ -1,6 +1,6 @@
 #include "src/audioinput/audioinput.h"
 #include "src/audioinput/userdata.h"
-#include "src/fft/spectrumanalyser.h"
+#include "src/spectrum/spectrumanalyser.h"
 
 #include <fstream>
 #include <cmath>
