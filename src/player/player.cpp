@@ -5,6 +5,8 @@
 #include <unistd.h>  // for (u)sleep on Linux
 
 Player::Player()
+  : m_ledController(),
+    m_mutex()
 {
   const QString serialPortName = "/dev/ttyACM0";
   //  const QString serialPortName = "COM11"; // windows
@@ -31,6 +33,7 @@ std::unique_ptr<LEDController> Player::createLedController(QString serialPortNam
 void
 Player::play(const Animation& animation)
 {
+  m_mutex.lock();
   std::list<Frame> frames = animation.getFrames();
   while (!frames.empty())
   {
@@ -39,6 +42,7 @@ Player::play(const Animation& animation)
     frames.pop_front();
 //    std::cout << "Player::play() - frames.size(): " << frames.size() << std::endl;
   }
+  m_mutex.unlock();
 }
 
 

@@ -4,6 +4,7 @@
 #include "ledcontroller.h"
 
 #include <memory>
+#include <mutex>
 
 class Animation;
 
@@ -19,6 +20,7 @@ public:
   Frame smoothenFrames(const Frame &firstFrame, const Frame &secondFrame, int nFrames = 1);
 private:
   std::unique_ptr<LEDController> m_ledController;
+  std::mutex m_mutex;
 };
 
 #endif // PLAYER_H
