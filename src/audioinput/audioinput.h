@@ -60,7 +60,6 @@ private:
   PaStream* m_stream;
   paUserData m_data;
   Player* m_ledPlayer;
-  std::mutex g_pages_mutex;
   //  PaStream* m_stream;
 //  paUserData m_data;
 };
