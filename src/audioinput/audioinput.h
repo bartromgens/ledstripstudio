@@ -28,11 +28,12 @@ public:
   AudioInput();
   ~AudioInput();
 
-  void openStream();
   void startStream();
   void closeStream();
 
+  void setLedPlayer(Player* ledPlayer);
 private:
+  void openStream();
 
   void initializeUserData();
 

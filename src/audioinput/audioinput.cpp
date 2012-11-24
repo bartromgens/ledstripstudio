@@ -15,22 +15,30 @@ AudioInput::AudioInput()
     m_nChannels(2),
     m_data()
 {
+  std::cout << "AudioInput::AudioInput()" << std::endl;
   initializeUserData(); // From now on, recordedSamples is initialised.
 
-  m_ledPlayer = new Player();
+//  m_ledPlayer = new Player();
 
   openStream();
-  startStream();
-  closeStream();
-
-  terminatePortAudio(paNoError);
 }
 
 
 AudioInput::~AudioInput()
 {
+  closeStream();
+  terminatePortAudio(paNoError);
+
   delete m_ledPlayer;
 }
+
+
+void
+AudioInput::setLedPlayer(Player* ledPlayer)
+{
+  m_ledPlayer = ledPlayer;
+}
+
 
 void
 AudioInput::initializeUserData()
