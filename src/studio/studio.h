@@ -9,7 +9,7 @@ public:
   Studio(int nLEDs);
   ~Studio();
 
-  Animation createSingleColorSingleFrameAnimation(const Color& color, int nLEDs) const;
+  Animation createSingleColorSingleFrameAnimation(const Color& color) const;
 
   Animation createMovingLine(const Color& color);
 private:

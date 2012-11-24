@@ -15,11 +15,11 @@ Studio::~Studio()
 
 
 Animation
-Studio::createSingleColorSingleFrameAnimation(const Color& color, int nLEDs) const
+Studio::createSingleColorSingleFrameAnimation(const Color& color) const
 {
   Frame frame(m_nLEDs);
 
-  for (std::size_t i = 0; i < m_nLEDs; ++i)
+  for (int i = 0; i < m_nLEDs; ++i)
   {
     LED led;
     led.setColor(color);
@@ -54,7 +54,7 @@ Studio::createMovingLine(const Color& color)
 
 //    std::cout << dx1 << ", " << dx2 << ", " << dx3 << ", " << dx4 << std::endl;
 
-    if ((unsigned int)pos < (m_nLEDs-2))
+    if ((int)pos < (m_nLEDs-2))
     {
       Frame frame(m_nLEDs);
       LED led;
