@@ -34,8 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connectAllSlots();
 
-//  m_colorDialog.open();
-
   //  Animation animation;
 
 
@@ -59,10 +57,13 @@ MainWindow::~MainWindow()
 void
 MainWindow::createActions()
 {
-  newAct = new QAction(tr("&New"), this);
-  newAct->setShortcuts(QKeySequence::New);
+  newAct = new QAction(tr("&Toggle Audio"), this);
   newAct->setStatusTip(tr("Start Audio Input Control Panel"));
   connect(newAct, SIGNAL(triggered()), this, SLOT(slotToggleAudioInput()));
+
+  openColorPickerAct = new QAction(tr("Pick Colour"), this);
+  openColorPickerAct->setStatusTip(tr("Open colour picker"));
+  connect(openColorPickerAct, SIGNAL(triggered()), this, SLOT(slotOpenColorPicker()));
 }
 
 void
@@ -70,6 +71,7 @@ MainWindow::createToolbar()
 {
   fileToolBar = addToolBar(tr("File"));
   fileToolBar->addAction(newAct);
+  fileToolBar->addAction(openColorPickerAct);
 }
 
 void
@@ -115,9 +117,16 @@ void
 MainWindow::connectAllSlots() const
 {
   connect( &m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
-  connect( ui->brightnessRedHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
-  connect( ui->brightnessGreenHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
-  connect( ui->brightnessBlueHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+//  connect( ui->brightnessRedHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+//  connect( ui->brightnessGreenHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+//  connect( ui->brightnessBlueHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+}
+
+
+void
+MainWindow::slotOpenColorPicker()
+{
+  m_colorDialog.open();
 }
 
 
@@ -135,14 +144,14 @@ MainWindow::slotColorSelected(const QColor &color)
 void
 MainWindow::slotBrightnessChanged()
 {
-  int red = ui->brightnessRedHorizontalSlider->value();
-  int green = ui->brightnessGreenHorizontalSlider->value();
-  int blue = ui->brightnessBlueHorizontalSlider->value();
-  Color color(red, green, blue);
+//  int red = ui->brightnessRedHorizontalSlider->value();
+//  int green = ui->brightnessGreenHorizontalSlider->value();
+//  int blue = ui->brightnessBlueHorizontalSlider->value();
+//  Color color(red, green, blue);
 
-  Animation animation = m_studio->createSingleColorSingleFrameAnimation(color);
+//  Animation animation = m_studio->createSingleColorSingleFrameAnimation(color);
 
-  m_player->play(animation);
+//  m_player->play(animation);
 }
 
 

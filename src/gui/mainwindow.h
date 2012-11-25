@@ -30,6 +30,7 @@ public:
   Animation createAnimationTest2();
 
 private slots:
+  void slotOpenColorPicker();
   void slotColorSelected(const QColor &color);
   void slotBrightnessChanged();
   void slotToggleAudioInput();
@@ -58,6 +59,7 @@ private:
   QMenu* helpMenu;
 
   QAction* newAct;
+  QAction* openColorPickerAct;
 
   bool m_isAudioOn;
 };
