@@ -17,7 +17,7 @@ LPD8806 strip = LPD8806(nLEDs, dataPin, clockPin);
 
 void setup() {
   Serial.begin(2000000); // same value as in your c++ script
-  
+    
   // Start up the LED strip
   strip.begin();
   
