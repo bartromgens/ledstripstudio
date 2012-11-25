@@ -5,9 +5,10 @@
 #include "userdata.h"
 //#include "recordCallback.h"
 
-#include "/home/bart/prog/arduinoControl/color.h"
-#include "/home/bart/prog/arduinoControl/animation.h"
-#include "/home/bart/prog/arduinoControl/player.h"
+#include "src/basic/color.h"
+#include "src/basic/animation.h"
+#include "src/player/player.h"
+#include "src/settings/controlsettings.h"
 
 #include <QTime>
 
@@ -33,6 +34,7 @@ public:
   void closeStream();
 
   void setLedPlayer(Player* ledPlayer);
+  void setControlSettings(ControlSettings* settings);
 private:
 
   void initializeUserData();
@@ -60,6 +62,7 @@ private:
   PaStream* m_stream;
   paUserData m_data;
   Player* m_ledPlayer;
+  ControlSettings* m_controlSettings;
   //  PaStream* m_stream;
 //  paUserData m_data;
 };

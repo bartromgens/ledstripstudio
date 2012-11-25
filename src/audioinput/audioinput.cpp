@@ -13,7 +13,9 @@ AudioInput::AudioInput()
     m_nSamples(pow(2, 16)),
     m_framesPerBuffer(512),
     m_nChannels(2),
-    m_data()
+    m_data(),
+    m_ledPlayer(0),
+    m_controlSettings(0)
 {
   std::cout << "AudioInput::AudioInput()" << std::endl;
   initializeUserData(); // From now on, recordedSamples is initialised.
@@ -41,20 +43,19 @@ AudioInput::setLedPlayer(Player* ledPlayer)
 
 
 void
+AudioInput::setControlSettings(ControlSettings* settings)
+{
+  m_controlSettings = settings;
+}
+
+
+void
 AudioInput::initializeUserData()
 {
-//  int numBytes;
-//  int totalFrames = m_nSeconds * m_sampleRate;
-//  paUserData data;
-//  m_data.maxFrameIndex = m_nSeconds * m_sampleRate; // Record for a few seconds.
-//  m_data.frameIndex = 0;
+
   m_data.nChannels = m_nChannels;
   m_data.sampleRate = m_sampleRate;
   m_data.nSamples = m_nSamples;
-//  m_nSamples = totalFrames * m_nChannels;
-//  numBytes = m_nSamples * sizeof(float);
-//  m_data.recordedSamples = (float*) malloc( numBytes );
-//  m_data.recordedSamplesVec = std::vector<float>(m_nSamples);
 }
 
 
@@ -107,7 +108,11 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
   double brightnessGreen = 0.0;
   double brightnessBlue = 0.0;
 
-  double amplifyFactor = 0.04;
+  double amplifyFactor = m_controlSettings->volumeTotal/1000.0;
+  double amplifyFactorRed = m_controlSettings->volumeRed/25.0;
+  double amplifyFactorGreen = m_controlSettings->volumeGreen/50.0;
+  double amplifyFactorBlue = m_controlSettings->volumeBlue/100.0;
+
 
 //      std::cout << brightnessRed << ", " << brightnessGreen << ", " << brightnessBlue << std::endl;
   for (std::map<double, double>::const_iterator iter = spectrum.begin();
@@ -120,15 +125,15 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
     {
       if (frequency < 220.0)
       {
-        brightnessRed += amplitude*amplifyFactor*2.0;
+        brightnessRed += amplitude*amplifyFactor*amplifyFactorRed;
       }
       else if (frequency < 440.0)
       {
-        brightnessGreen += amplitude*amplifyFactor;
+        brightnessGreen += amplitude*amplifyFactor*amplifyFactorGreen;
       }
       else if (frequency < 2000.0)
       {
-        brightnessBlue += amplitude*amplifyFactor/3.0;
+        brightnessBlue += amplitude*amplifyFactor*amplifyFactorBlue;
       }
     }
   }

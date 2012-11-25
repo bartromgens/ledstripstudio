@@ -5,6 +5,7 @@
 #include "src/player/player.h"
 #include "src/studio/studio.h"
 #include "src/audioinput/audioinput.h"
+#include "src/settings/controlsettings.h"
 
 
 #include <QTime>
@@ -22,15 +23,23 @@ MainWindow::MainWindow(QWidget *parent) :
   m_player(new Player()),
   m_studio(new Studio(m_nLedsTotal)),
   m_audioInput(new AudioInput()),
+  m_audioControlSettings(new ControlSettings()),
   m_isAudioOn(false)
 {
   setWindowTitle("LED Controller");
 
   ui->setupUi(this);
 
+  m_audioControlSettings->loadSettings();
+  updateAudioControlGUI();
+
+  m_audioInput->setControlSettings(m_audioControlSettings);
+
   createActions();
   createToolbar();
   createMenus();
+
+//  ui->
 
   connectAllSlots();
 
@@ -48,9 +57,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+  m_audioControlSettings->saveSettings();
+
   delete ui;
   delete m_player;
   delete m_studio;
+  delete m_audioInput;
+  delete m_audioControlSettings;
 }
 
 
@@ -117,9 +130,13 @@ void
 MainWindow::connectAllSlots() const
 {
   connect( &m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
-//  connect( ui->brightnessRedHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
-//  connect( ui->brightnessGreenHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
-//  connect( ui->brightnessBlueHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+  connect( ui->brightnessRedSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+  connect( ui->brightnessGreenSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+  connect( ui->brightnessBlueSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
+  connect( ui->volumeTotalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
+  connect( ui->volumeRedSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
+  connect( ui->volumeGreenSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
+  connect( ui->volumeBlueSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
 }
 
 
@@ -142,16 +159,40 @@ MainWindow::slotColorSelected(const QColor &color)
 
 
 void
+MainWindow::updateAudioControlGUI()
+{
+  ui->volumeTotalSlider->setValue(m_audioControlSettings->volumeTotal);
+  ui->volumeRedSlider->setValue(m_audioControlSettings->volumeRed);
+  ui->volumeGreenSlider->setValue(m_audioControlSettings->volumeGreen);
+  ui->volumeBlueSlider->setValue(m_audioControlSettings->volumeBlue);
+}
+
+
+void
+MainWindow::slotVolumeChanged()
+{
+  m_audioControlSettings->volumeTotal = ui->volumeTotalSlider->value();
+  m_audioControlSettings->volumeRed = ui->volumeRedSlider->value();
+  m_audioControlSettings->volumeGreen = ui->volumeGreenSlider->value();
+  m_audioControlSettings->volumeBlue = ui->volumeBlueSlider->value();
+}
+
+
+void
 MainWindow::slotBrightnessChanged()
 {
-//  int red = ui->brightnessRedHorizontalSlider->value();
-//  int green = ui->brightnessGreenHorizontalSlider->value();
-//  int blue = ui->brightnessBlueHorizontalSlider->value();
-//  Color color(red, green, blue);
+  int red = ui->brightnessRedSlider->value();
+  int green = ui->brightnessGreenSlider->value();
+  int blue = ui->brightnessBlueSlider->value();
+  m_audioControlSettings->setValue("brightnessRed", red);
+  m_audioControlSettings->setValue("brightnessGreen", green);
+  m_audioControlSettings->setValue("brightnessBlue", blue);
 
-//  Animation animation = m_studio->createSingleColorSingleFrameAnimation(color);
+  Color color(red, green, blue);
 
-//  m_player->play(animation);
+  Animation animation = m_studio->createSingleColorSingleFrameAnimation(color);
+
+  m_player->play(animation);
 }
 
 
@@ -166,4 +207,11 @@ MainWindow::slotToggleAudioInput()
   {
     startAudioInputThread();
   }
+}
+
+
+void
+MainWindow::closeEvent(QCloseEvent* /*event*/)
+{
+  m_audioControlSettings->saveSettings();
 }

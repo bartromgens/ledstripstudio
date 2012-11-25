@@ -1,6 +1,5 @@
 TEMPLATE = app
 CONFIG += core gui
-CONFIG += warn_onwarn_on
 
 SOURCES += \
     src/gui/mainwindow.cpp \
@@ -14,6 +13,7 @@ SOURCES += \
     src/spectrum/spectrumanalyser.cpp \
     src/player/ledcontroller.cpp \
     src/player/player.cpp \
+    src/settings/controlsettings.cpp \
     src/studio/studio.cpp \
     src/main.cpp \
 
@@ -28,7 +28,8 @@ HEADERS += \
     src/basic/led.h \
     src/player/ledcontroller.h \
     src/player/player.h \
-    src/studio/studio.h
+    src/settings/controlsettings.h \
+    src/studio/studio.h \
 
 FORMS += \
     src/gui/mainwindow.ui
