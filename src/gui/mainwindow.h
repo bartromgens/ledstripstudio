@@ -10,9 +10,10 @@
 #include <iostream>
 #include <memory>
 
-class Studio;
-class Player;
 class AudioInput;
+class ControlSettings;
+class Player;
+class Studio;
 
 namespace Ui {
 class MainWindow;
@@ -29,11 +30,15 @@ public:
   Animation createAnimationTest1();
   Animation createAnimationTest2();
 
+protected:
+  virtual void closeEvent(QCloseEvent *event);
+
 private slots:
   void slotOpenColorPicker();
   void slotColorSelected(const QColor &color);
   void slotBrightnessChanged();
   void slotToggleAudioInput();
+  void slotVolumeChanged();
 
 private:
   void createMenus();
@@ -43,6 +48,7 @@ private:
   void stopAudioInput();
   void connectAllSlots() const;
   void startAudioInputThread();
+  void updateAudioControlGUI();
   
 private:
   Ui::MainWindow *ui;
@@ -51,6 +57,7 @@ private:
   Player* m_player;
   Studio* m_studio;
   AudioInput* m_audioInput;
+  ControlSettings* m_audioControlSettings;
 
   QToolBar* fileToolBar;
 
