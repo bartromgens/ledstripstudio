@@ -7,6 +7,7 @@
 #include <QString>
 #include <QTime>
 #include <vector>
+#include <deque>
 
 class QextSerialPort;
 
@@ -29,6 +30,8 @@ public:
   void setColor(const Color& color);
   void setLEDnr(int letdNr);
 
+  int getFPS();
+
 private:
   void disconnect();
   QextSerialPort* createPort();
@@ -42,6 +45,7 @@ private:
   QByteArray m_byteMessage;
   QString m_serialPortName;
   QTime m_timer;
+  std::deque<int> m_fpsHistory;
 };
 
 #endif // LEDCONTROLLER_H

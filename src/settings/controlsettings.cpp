@@ -7,7 +7,8 @@ ControlSettings::ControlSettings()
     volumeTotal(0),
     volumeRed(0),
     volumeGreen(0),
-    volumeBlue(0)
+    volumeBlue(0),
+    statusFPS(0)
 {
 }
 
@@ -40,4 +41,23 @@ ControlSettings::loadSettings()
   volumeBlue = value("volumeBlue", "").toInt();
   std::cout << "ControlSettings::loadSettings() - volumeTotal: " << volumeTotal << std::endl;
   m_mutex.unlock();
+}
+
+
+void
+ControlSettings::setStatusFPS(int fps)
+{
+  m_mutex.lock();
+  statusFPS = fps;
+  m_mutex.unlock();
+}
+
+
+int
+ControlSettings::getStatusFPS()
+{
+  m_mutex.lock();
+  int fps = statusFPS;
+  m_mutex.unlock();
+  return fps;
 }

@@ -30,6 +30,13 @@ std::unique_ptr<LEDController> Player::createLedController(QString serialPortNam
 }
 
 
+int
+Player::getFPS() const
+{
+  return m_ledController->getFPS();
+}
+
+
 void
 Player::play(const Animation& animation)
 {

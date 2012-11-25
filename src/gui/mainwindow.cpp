@@ -24,7 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_studio(new Studio(m_nLedsTotal)),
   m_audioInput(new AudioInput()),
   m_audioControlSettings(new ControlSettings()),
-  m_isAudioOn(false)
+  m_isAudioOn(false),
+  m_timer(0)
 {
   setWindowTitle("LED Controller");
 
@@ -42,6 +43,11 @@ MainWindow::MainWindow(QWidget *parent) :
 //  ui->
 
   connectAllSlots();
+
+  m_timer = new QTimer(this);
+  m_timer->setInterval(200);
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
+  m_timer->start();
 
   //  Animation animation;
 
@@ -222,4 +228,13 @@ void
 MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
   m_audioControlSettings->saveSettings();
+}
+
+
+void
+MainWindow::update()
+{
+//  std::cout << "update" << std::endl;
+  int fps = m_audioControlSettings->getStatusFPS();
+  ui->fpsLcd->setText(QString::number(fps));
 }

@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QToolBar>
 #include <QColorDialog>
+#include <QTimer>
 
 #include <iostream>
 #include <memory>
@@ -50,6 +51,9 @@ private:
   void startAudioInputThread();
   void updateAudioControlGUI();
   
+private slots:
+  void update();
+
 private:
   Ui::MainWindow *ui;
   QColorDialog m_colorDialog;
@@ -69,6 +73,8 @@ private:
   QAction* openColorPickerAct;
 
   bool m_isAudioOn;
+
+  QTimer* m_timer;
 };
 
 #endif // MAINWINDOW_H

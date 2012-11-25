@@ -18,6 +18,7 @@ public:
 
   void play(const Animation& animation);
   Frame smoothenFrames(const Frame &firstFrame, const Frame &secondFrame, int nFrames = 1);
+  int getFPS() const;
 private:
   std::unique_ptr<LEDController> m_ledController;
   std::mutex m_mutex;

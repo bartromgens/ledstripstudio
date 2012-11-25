@@ -115,6 +115,8 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
   double amplifyFactorBlue = m_controlSettings->volumeBlue/100.0;
   m_controlSettings->m_mutex.unlock();
 
+  m_controlSettings->setStatusFPS(m_ledPlayer->getFPS());
+
 
 //      std::cout << brightnessRed << ", " << brightnessGreen << ", " << brightnessBlue << std::endl;
   for (std::map<double, double>::const_iterator iter = spectrum.begin();

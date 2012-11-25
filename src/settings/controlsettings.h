@@ -15,6 +15,8 @@ public:
 
   void saveSettings();
   void loadSettings();
+  void setStatusFPS(int fps);
+  int getStatusFPS();
 
 public:
   std::mutex m_mutex;
@@ -22,6 +24,8 @@ public:
   int volumeRed;
   int volumeGreen;
   int volumeBlue;
+
+  int statusFPS;
 };
 
 #endif // CONTROLSETTINGS_H
