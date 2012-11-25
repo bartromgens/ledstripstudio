@@ -108,10 +108,12 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
   double brightnessGreen = 0.0;
   double brightnessBlue = 0.0;
 
+  m_controlSettings->m_mutex.lock();
   double amplifyFactor = m_controlSettings->volumeTotal/1000.0;
   double amplifyFactorRed = m_controlSettings->volumeRed/25.0;
   double amplifyFactorGreen = m_controlSettings->volumeGreen/50.0;
   double amplifyFactorBlue = m_controlSettings->volumeBlue/100.0;
+  m_controlSettings->m_mutex.unlock();
 
 
 //      std::cout << brightnessRed << ", " << brightnessGreen << ", " << brightnessBlue << std::endl;

@@ -161,20 +161,28 @@ MainWindow::slotColorSelected(const QColor &color)
 void
 MainWindow::updateAudioControlGUI()
 {
+  m_audioControlSettings->m_mutex.lock();
+
   ui->volumeTotalSlider->setValue(m_audioControlSettings->volumeTotal);
   ui->volumeRedSlider->setValue(m_audioControlSettings->volumeRed);
   ui->volumeGreenSlider->setValue(m_audioControlSettings->volumeGreen);
   ui->volumeBlueSlider->setValue(m_audioControlSettings->volumeBlue);
+
+  m_audioControlSettings->m_mutex.unlock();
 }
 
 
 void
 MainWindow::slotVolumeChanged()
 {
+  m_audioControlSettings->m_mutex.lock();
+
   m_audioControlSettings->volumeTotal = ui->volumeTotalSlider->value();
   m_audioControlSettings->volumeRed = ui->volumeRedSlider->value();
   m_audioControlSettings->volumeGreen = ui->volumeGreenSlider->value();
   m_audioControlSettings->volumeBlue = ui->volumeBlueSlider->value();
+
+  m_audioControlSettings->m_mutex.unlock();
 }
 
 

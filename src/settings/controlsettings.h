@@ -4,6 +4,7 @@
 #include <QSettings>
 
 #include <vector>
+#include <mutex>
 
 class ControlSettings : public QSettings
 {
@@ -16,6 +17,7 @@ public:
   void loadSettings();
 
 public:
+  std::mutex m_mutex;
   int volumeTotal;
   int volumeRed;
   int volumeGreen;
