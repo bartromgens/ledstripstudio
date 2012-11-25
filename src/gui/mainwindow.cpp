@@ -115,9 +115,8 @@ MainWindow::startAudioInputThread()
 void
 MainWindow::startAudioInput()
 {
-  m_audioControlSettings->lock();
-  m_audioControlSettings->isActive = true;
-  m_audioControlSettings->unlock();
+  m_audioControlSettings->setActive(true);
+
   m_audioInput->openStream();
   m_audioInput->setLedPlayer(m_player);
   m_audioInput->startStream();
@@ -129,10 +128,7 @@ void
 MainWindow::stopAudioInput()
 {
   std::cout << "MainWindow::stopAudioInput()" << std::endl;
-  m_audioControlSettings->lock();
-  m_audioControlSettings->isActive = false;
-  m_audioControlSettings->unlock();
-//  m_audioInput->closeStream();
+  m_audioControlSettings->setActive(false);
   m_isAudioOn = false;
 }
 
@@ -277,9 +273,7 @@ MainWindow::slotToggleAudioInput()
 void
 MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
-  m_audioControlSettings->lock();
-  m_audioControlSettings->isActive = true;
-  m_audioControlSettings->unlock();
+  m_audioControlSettings->setActive(true);
 
   m_audioControlSettings->saveSettings();
 }

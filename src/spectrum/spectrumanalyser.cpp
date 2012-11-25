@@ -56,14 +56,25 @@ SpectrumAnalyser::binSpectrum(std::vector<double> data, int nBins, int sampleRat
 }
 
 std::map<double, double>
-SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate)
+SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType)
 {
   QTime timer;
   timer.start();
 
   std::deque<float> realInWindowed;
-//  realInWindowed = hannWindowFunction(realIn);
-  realInWindowed = linearWindowFunction(realIn);
+
+  if (windowType == SpectrumAnalyser::hann)
+  {
+    realInWindowed = hannWindowFunction(realIn);
+  }
+  else if (windowType == SpectrumAnalyser::linear)
+  {
+    realInWindowed = linearWindowFunction(realIn);
+  }
+  else if (windowType == SpectrumAnalyser::none)
+  {
+    realInWindowed = realIn;
+  }
 
 //  std::cout << "SpectrumAnalyser::computeSpectrum() - hannWindowFunction time: " << timer.elapsed() << std::endl;
 
@@ -110,7 +121,6 @@ SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in)
   for (std::size_t i = 0; i < sizeIn; i++)
   {
     out[i] = 0.5 * ( 1.0 - cos((2.0*M_PI*i)/sizeIn) ) * in[i];
-    std::cout << i/sizeIn << std::endl;
   }
 
   return out;

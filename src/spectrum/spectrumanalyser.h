@@ -15,19 +15,29 @@
 class SpectrumAnalyser
 {
 public:
+  enum windowingType
+  {
+    none,
+    linear,
+    hann
+  };
+
+public:
   SpectrumAnalyser(int nSamples);
   ~SpectrumAnalyser();
 
-  std::map<double, double> binSpectrum(std::vector<double> data, int nBins, int sampleRate);
-  std::map<double, double> computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate) ;
+  std::map<double, double> computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType) ;
 
   unsigned int getNSamples()
   {
     return m_nSamples;
   }
 
+private:
+  std::map<double, double> binSpectrum(std::vector<double> data, int nBins, int sampleRate);
   std::deque<float> hannWindowFunction(const std::deque<float>& in);
   std::deque<float> linearWindowFunction(const std::deque<float>& in);
+
 private:
   double* m_f; // FFT input
   Complex* m_g; // FFT output

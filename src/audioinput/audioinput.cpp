@@ -54,7 +54,6 @@ AudioInput::setControlSettings(ControlSettings* settings)
 void
 AudioInput::initializeUserData()
 {
-
   m_data.nChannels = m_nChannels;
   m_data.sampleRate = m_sampleRate;
   m_data.nSamples = m_nSamples;
@@ -151,23 +150,22 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
     }
   }
 
-  if (brightnessBlue > 127.0)
+  if (brightnessRed > 127.0)
   {
-    brightnessBlue = 127.0;
+    brightnessRed = 127.0;
   }
   if (brightnessGreen > 127.0)
   {
     brightnessGreen = 127.0;
   }
-  if (brightnessRed > 127.0)
+  if (brightnessBlue > 127.0)
   {
-    brightnessRed = 127.0;
+    brightnessBlue = 127.0;
   }
 
   int nLEDs = 160;
 
   Animation animation = createWaveformAnimationCentral(nLEDs, brightnessRed, brightnessGreen, brightnessBlue);
-//  Animation animation = createWaveformAnimationUpwards(nLEDs, brightnessRed, brightnessGreen, brightnessBlue);
 
   m_ledPlayer->play(animation);
 }
@@ -220,30 +218,19 @@ AudioInput::startStream()
     Pa_Sleep(15);
 
     m_controlSettings->lock();
-    run = m_controlSettings->isActive;
+    run = m_controlSettings->isActive();
     m_controlSettings->unlock();
 
     if (m_data.recordedSamplesVec.size() >= spectrumAnalyser.getNSamples())
     {
       if (m_data.data_mutex.try_lock())
       {
-        timer.restart();
-        std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate);
+        std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::linear);
         m_data.data_mutex.unlock();
-        //        std::cout << "AudioInput::startStream() - computeSpectrum time: " << timer.elapsed() << std::endl;
-
-        timer.restart();
         updateLEDs(spectrum);
 //        drawSpectrumInConsole(spectrum, minFreq, maxFreq);
-//        std::cout << "AudioInput::startStream() - updateLEDs time: " << timer.elapsed() << std::endl;
       }
-      else
-      {
-        std::cout << "AudioInput::startStream() - m_data locked!" << std::endl;
-      }
-
     }
-//    std::cout << "AudioInput::startStream() - timer: " << timer.elapsed() << std::endl;
   }
   if( err < 0 )
   {
@@ -345,6 +332,11 @@ AudioInput::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int bri
   Frame frame(nLEDs);
 
   int centreLedNr = nLEDs/2;
+
+//  int maxRGB = std::max(brightnessBlue, std::max(brightnessRed, brightnessGreen));
+//  brightnessRed *= 127.0/maxRGB;
+//  brightnessGreen *= 127.0/maxRGB;
+//  brightnessBlue *= 127.0/maxRGB;
 
   for (int i = 0; i < centreLedNr; ++i)
   {
