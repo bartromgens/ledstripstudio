@@ -108,12 +108,20 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
   double brightnessGreen = 0.0;
   double brightnessBlue = 0.0;
 
-  m_controlSettings->m_mutex.lock();
+  m_controlSettings->lock();
   double amplifyFactor = m_controlSettings->volumeTotal/1000.0;
   double amplifyFactorRed = m_controlSettings->volumeRed/25.0;
   double amplifyFactorGreen = m_controlSettings->volumeGreen/50.0;
   double amplifyFactorBlue = m_controlSettings->volumeBlue/100.0;
-  m_controlSettings->m_mutex.unlock();
+
+  int freqRmin = m_controlSettings->freqRedMin;
+  int freqRmax = m_controlSettings->freqRedMax;
+//  int freqGmin = m_controlSettings->freqGreenMin;
+//  int freqGmax = m_controlSettings->freqGreenMax;
+//  int freqBmin = m_controlSettings->freqBlueMin;
+//  int freqBmax = m_controlSettings->freqBlueMax;
+
+  m_controlSettings->unlock();
 
   m_controlSettings->setStatusFPS(m_ledPlayer->getFPS());
 
@@ -125,9 +133,9 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
     double frequency = iter->first;
     double amplitude = iter->second;
 
-    if (frequency > 150)
+    if (frequency > freqRmin)
     {
-      if (frequency < 220.0)
+      if (frequency < freqRmax)
       {
         brightnessRed += amplitude*amplifyFactor*amplifyFactorRed;
       }

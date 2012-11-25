@@ -18,13 +18,25 @@ public:
   void setStatusFPS(int fps);
   int getStatusFPS();
 
+  void lock();
+  bool try_lock();
+  void unlock();
+
 public:
-  std::mutex m_mutex;
   int volumeTotal;
   int volumeRed;
   int volumeGreen;
   int volumeBlue;
 
+  int freqRedMin;
+  int freqRedMax;
+  int freqGreenMin;
+  int freqGreenMax;
+  int freqBlueMin;
+  int freqBlueMax;
+
+private:
+  std::mutex m_mutex;
   int statusFPS;
 };
 

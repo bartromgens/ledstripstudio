@@ -69,14 +69,7 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="2" column="4" alignment="Qt::AlignHCenter">
-           <widget class="QLabel" name="label_32">
-            <property name="text">
-             <string>B</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2" alignment="Qt::AlignHCenter">
+          <item row="1" column="2">
            <widget class="QSlider" name="brightnessRedSlider">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -90,8 +83,15 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3" alignment="Qt::AlignHCenter">
+          <item row="1" column="3">
            <widget class="QSlider" name="brightnessGreenSlider">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QSlider" name="brightnessBlueSlider">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -104,10 +104,10 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="4" alignment="Qt::AlignHCenter">
-           <widget class="QSlider" name="brightnessBlueSlider">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
+          <item row="2" column="4" alignment="Qt::AlignHCenter">
+           <widget class="QLabel" name="label_32">
+            <property name="text">
+             <string>B</string>
             </property>
            </widget>
           </item>
@@ -263,20 +263,34 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="6" column="3">
-           <widget class="QSlider" name="horizontalSlider_6">
+           <widget class="QSlider" name="freqBmaxSlider">
+            <property name="maximum">
+             <number>2000</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
           <item row="3" column="4">
-           <widget class="QSpinBox" name="spinBox_3"/>
+           <widget class="QSpinBox" name="freqGminSpin">
+            <property name="maximum">
+             <number>40000</number>
+            </property>
+           </widget>
           </item>
           <item row="4" column="4">
-           <widget class="QSpinBox" name="spinBox_4"/>
+           <widget class="QSpinBox" name="freqGmaxSpin">
+            <property name="maximum">
+             <number>40000</number>
+            </property>
+           </widget>
           </item>
           <item row="5" column="3">
-           <widget class="QSlider" name="horizontalSlider_5">
+           <widget class="QSlider" name="freqBminSlider">
+            <property name="maximum">
+             <number>2000</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -290,7 +304,10 @@
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QSlider" name="horizontalSliderRmax">
+           <widget class="QSlider" name="freqRmaxSlider">
+            <property name="maximum">
+             <number>2000</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -311,21 +328,30 @@
            </widget>
           </item>
           <item row="4" column="3">
-           <widget class="QSlider" name="horizontalSlider_3">
+           <widget class="QSlider" name="freqGmaxSlider">
+            <property name="maximum">
+             <number>2000</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QSlider" name="horizontalSliderRmin">
+           <widget class="QSlider" name="freqRminSlider">
+            <property name="maximum">
+             <number>2000</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
           <item row="3" column="3">
-           <widget class="QSlider" name="horizontalSlider_4">
+           <widget class="QSlider" name="freqGminSlider">
+            <property name="maximum">
+             <number>2000</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -339,7 +365,11 @@
            </widget>
           </item>
           <item row="5" column="4">
-           <widget class="QSpinBox" name="spinBox_5"/>
+           <widget class="QSpinBox" name="freqBminSpin">
+            <property name="maximum">
+             <number>40000</number>
+            </property>
+           </widget>
           </item>
           <item row="2" column="2">
            <widget class="QLabel" name="label_5">
@@ -349,7 +379,11 @@
            </widget>
           </item>
           <item row="6" column="4">
-           <widget class="QSpinBox" name="spinBox_6"/>
+           <widget class="QSpinBox" name="freqBmaxSpin">
+            <property name="maximum">
+             <number>40000</number>
+            </property>
+           </widget>
           </item>
           <item row="5" column="5">
            <widget class="QLabel" name="label_22">
@@ -366,10 +400,24 @@
            </widget>
           </item>
           <item row="2" column="4">
-           <widget class="QSpinBox" name="spinBox_2"/>
+           <widget class="QSpinBox" name="freqRmaxSpin">
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>40000</number>
+            </property>
+           </widget>
           </item>
           <item row="1" column="4">
-           <widget class="QSpinBox" name="spinBox"/>
+           <widget class="QSpinBox" name="freqRminSpin">
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>40000</number>
+            </property>
+           </widget>
           </item>
           <item row="4" column="5">
            <widget class="QLabel" name="label_21">
@@ -519,8 +567,15 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QToolButton" name="toolButton_5">
+       <item row="0" column="0" colspan="3">
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Animations&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QToolButton" name="toolButton_6">
          <property name="text">
           <string>...</string>
          </property>
@@ -533,17 +588,10 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QToolButton" name="toolButton_6">
+       <item row="1" column="0">
+        <widget class="QToolButton" name="toolButton_5">
          <property name="text">
           <string>...</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <widget class="QLabel" name="label_24">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Animations&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>

@@ -3,11 +3,17 @@
 #include <iostream>
 
 ControlSettings::ControlSettings()
-  : m_mutex(),
-    volumeTotal(0),
+  : volumeTotal(0),
     volumeRed(0),
     volumeGreen(0),
     volumeBlue(0),
+    freqRedMin(150),
+    freqRedMax(220),
+    freqGreenMin(220),
+    freqGreenMax(440),
+    freqBlueMin(440),
+    freqBlueMax(2000),
+    m_mutex(),
     statusFPS(0)
 {
 }
@@ -26,7 +32,14 @@ ControlSettings::saveSettings()
   setValue("volumeRed", volumeRed);
   setValue("volumeGreen", volumeGreen);
   setValue("volumeBlue", volumeBlue);
-  std::cout << "ControlSettings::saveSettings() - volumeTotal: " << volumeTotal << std::endl;
+
+  setValue("freqRedMin", freqRedMin);
+  setValue("freqRedMax", freqRedMax);
+  setValue("freqGreenMin", freqGreenMin);
+  setValue("freqGreenMax", freqGreenMax);
+  setValue("freqBlueMin", freqBlueMin);
+  setValue("freqBlueMax", freqBlueMax);
+  std::cout << "ControlSettings::saveSettings() - freqBlueMax: " << freqBlueMax << std::endl;
   m_mutex.unlock();
 }
 
@@ -39,7 +52,15 @@ ControlSettings::loadSettings()
   volumeRed = value("volumeRed", "").toInt();
   volumeGreen = value("volumeGreen", "").toInt();
   volumeBlue = value("volumeBlue", "").toInt();
-  std::cout << "ControlSettings::loadSettings() - volumeTotal: " << volumeTotal << std::endl;
+
+  freqRedMin = value("freqRedMin", "").toInt();
+  freqRedMax = value("freqRedMax", "").toInt();
+  freqGreenMin = value("freqGreenMin", "").toInt();
+  freqGreenMax = value("freqGreenMax", "").toInt();
+  freqBlueMin = value("freqBlueMin", "").toInt();
+  freqBlueMax = value("freqBlueMax", "").toInt();
+
+  std::cout << "ControlSettings::loadSettings() - freqBlueMax: " << freqBlueMax << std::endl;
   m_mutex.unlock();
 }
 
@@ -61,3 +82,24 @@ ControlSettings::getStatusFPS()
   m_mutex.unlock();
   return fps;
 }
+
+void
+ControlSettings::lock()
+{
+//  std::cout << "ControlSettings::lock()" << std::endl;
+  m_mutex.lock();
+}
+
+bool
+ControlSettings::try_lock()
+{
+//  std::cout << "ControlSettings::try_lock()" << std::endl;
+  return m_mutex.try_lock();
+}
+
+void ControlSettings::unlock()
+{
+//  std::cout << "ControlSettings::lock()" << std::endl;
+  m_mutex.unlock();
+}
+

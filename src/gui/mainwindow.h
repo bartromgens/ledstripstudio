@@ -40,6 +40,7 @@ private slots:
   void slotBrightnessChanged();
   void slotToggleAudioInput();
   void slotVolumeChanged();
+  void slotFrequencyChanged();
 
 private:
   void createMenus();
