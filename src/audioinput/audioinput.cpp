@@ -22,16 +22,18 @@ AudioInput::AudioInput()
 
 //  m_ledPlayer = new Player();
 
-  openStream();
+//  openStream();
 }
 
 
 AudioInput::~AudioInput()
 {
-  closeStream();
-  terminatePortAudio(paNoError);
-
-  delete m_ledPlayer;
+  std::cout << "AudioInput::~AudioInput()" << std::endl;
+  if (Pa_IsStreamActive( m_stream ))
+  {
+    closeStream();
+    terminatePortAudio(paNoError);
+  }
 }
 
 
@@ -116,10 +118,10 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
 
   int freqRmin = m_controlSettings->freqRedMin;
   int freqRmax = m_controlSettings->freqRedMax;
-//  int freqGmin = m_controlSettings->freqGreenMin;
-//  int freqGmax = m_controlSettings->freqGreenMax;
-//  int freqBmin = m_controlSettings->freqBlueMin;
-//  int freqBmax = m_controlSettings->freqBlueMax;
+  int freqGmin = m_controlSettings->freqGreenMin;
+  int freqGmax = m_controlSettings->freqGreenMax;
+  int freqBmin = m_controlSettings->freqBlueMin;
+  int freqBmax = m_controlSettings->freqBlueMax;
 
   m_controlSettings->unlock();
 
@@ -133,20 +135,19 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
     double frequency = iter->first;
     double amplitude = iter->second;
 
-    if (frequency > freqRmin)
+    if (frequency > freqRmin && frequency < freqRmax)
     {
-      if (frequency < freqRmax)
-      {
         brightnessRed += amplitude*amplifyFactor*amplifyFactorRed;
-      }
-      else if (frequency < 440.0)
-      {
-        brightnessGreen += amplitude*amplifyFactor*amplifyFactorGreen;
-      }
-      else if (frequency < 2000.0)
-      {
-        brightnessBlue += amplitude*amplifyFactor*amplifyFactorBlue;
-      }
+    }
+
+    if (frequency > freqGmin && frequency < freqGmax)
+    {
+      brightnessGreen += amplitude*amplifyFactor*amplifyFactorGreen;
+    }
+
+    if (frequency > freqBmin && frequency < freqBmax)
+    {
+      brightnessBlue += amplitude*amplifyFactor*amplifyFactorBlue;
     }
   }
 
@@ -206,16 +207,22 @@ AudioInput::startStream()
   {
     terminatePortAudio(err);
   }
-  printf("\n=== Now recording!! Please speak into the microphone. ===\n"); fflush(stdout);
 
   SpectrumAnalyser spectrumAnalyser(m_nSamples);
 
   QTime timer;
 
-  while( ( err = Pa_IsStreamActive( m_stream ) ) == 1 )
+  bool run = true;
+  while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
+         && run)
   {
     timer.start();
     Pa_Sleep(15);
+
+    m_controlSettings->lock();
+    run = m_controlSettings->isActive;
+    m_controlSettings->unlock();
+
     if (m_data.recordedSamplesVec.size() >= spectrumAnalyser.getNSamples())
     {
       if (m_data.data_mutex.try_lock())
@@ -254,6 +261,7 @@ AudioInput::closeStream()
   err = Pa_CloseStream( m_stream );
   if( err != paNoError )
   {
+    std::cout << "AudioInput::closeStream() - ERROR: terminatePortAudio" << std::endl;
     terminatePortAudio(err);
   }
 }

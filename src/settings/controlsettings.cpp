@@ -14,7 +14,8 @@ ControlSettings::ControlSettings()
     freqBlueMin(440),
     freqBlueMax(2000),
     m_mutex(),
-    statusFPS(0)
+    statusFPS(0),
+    isActive(false)
 {
 }
 

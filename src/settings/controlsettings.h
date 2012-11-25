@@ -35,6 +35,8 @@ public:
   int freqBlueMin;
   int freqBlueMax;
 
+  bool isActive;
+
 private:
   std::mutex m_mutex;
   int statusFPS;

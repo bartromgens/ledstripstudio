@@ -64,9 +64,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
   delete ui;
-  delete m_player;
-  delete m_studio;
   delete m_audioInput;
+  delete m_studio;
+  delete m_player;
   delete m_audioControlSettings;
 }
 
@@ -115,9 +115,13 @@ MainWindow::startAudioInputThread()
 void
 MainWindow::startAudioInput()
 {
+  m_audioControlSettings->lock();
+  m_audioControlSettings->isActive = true;
+  m_audioControlSettings->unlock();
   m_audioInput->openStream();
   m_audioInput->setLedPlayer(m_player);
   m_audioInput->startStream();
+  m_audioInput->closeStream();
 }
 
 
@@ -125,8 +129,10 @@ void
 MainWindow::stopAudioInput()
 {
   std::cout << "MainWindow::stopAudioInput()" << std::endl;
-  m_audioInput->setLedPlayer(m_player);
-  m_audioInput->closeStream();
+  m_audioControlSettings->lock();
+  m_audioControlSettings->isActive = false;
+  m_audioControlSettings->unlock();
+//  m_audioInput->closeStream();
   m_isAudioOn = false;
 }
 
@@ -271,6 +277,10 @@ MainWindow::slotToggleAudioInput()
 void
 MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
+  m_audioControlSettings->lock();
+  m_audioControlSettings->isActive = true;
+  m_audioControlSettings->unlock();
+
   m_audioControlSettings->saveSettings();
 }
 
