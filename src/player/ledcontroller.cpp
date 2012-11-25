@@ -37,6 +37,17 @@ LEDController::send(const Frame &frame)
 
   const std::map<int, LED>& leds = frame.getLEDs();
 
+  // make sure 15 ms has elapsed since the last send, for the Arduino to process the data.
+  int minSleep = 15;
+  int toSleep = minSleep - m_timer.elapsed();
+
+  if (toSleep > 0)
+  {
+    std::cout << "sleep: " << toSleep << std::endl;
+    usleep(toSleep*1000);
+  }
+
+  // send the frame
   for (std::size_t i = 0; i < leds.size(); ++i)
   {
     int red = leds.at(i).getColor().r;
@@ -59,10 +70,9 @@ LEDController::send(const Frame &frame)
 //      std::cout << int(result[i]) << std::endl;
 //    }
   }
-//  std::cout << "LEDController::send() - elapsed since last send: " <<  m_timer.elapsed() << "[ms]" << std::endl;
+  std::cout << "LEDController::send() - elapsed since last send: " <<  m_timer.elapsed() << "[ms]" << std::endl;
   m_timer.restart();
 
-  usleep(15000);
 //  std::cout << 1000/timerSend.elapsed() << " fps" << std::endl;
 
   clearAll();
