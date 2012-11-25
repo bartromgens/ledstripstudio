@@ -3,8 +3,9 @@
 
 #include <QSettings>
 
-#include <vector>
+#include <atomic>
 #include <mutex>
+#include <vector>
 
 class ControlSettings : public QSettings
 {
@@ -16,7 +17,10 @@ public:
   void saveSettings();
   void loadSettings();
   void setStatusFPS(int fps);
-  int getStatusFPS();
+  int getStatusFPS() const;
+
+  bool isActive() const;
+  void setActive(bool isActive);
 
   void lock();
   bool try_lock();
@@ -35,11 +39,11 @@ public:
   int freqBlueMin;
   int freqBlueMax;
 
-  bool isActive;
 
 private:
   std::mutex m_mutex;
-  int statusFPS;
+  std::atomic<int> m_statusFPS;
+  std::atomic<bool> m_isActive;
 };
 
 #endif // CONTROLSETTINGS_H

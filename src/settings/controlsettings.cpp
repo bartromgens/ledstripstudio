@@ -14,8 +14,8 @@ ControlSettings::ControlSettings()
     freqBlueMin(440),
     freqBlueMax(2000),
     m_mutex(),
-    statusFPS(0),
-    isActive(false)
+    m_statusFPS(0),
+    m_isActive(false)
 {
 }
 
@@ -29,18 +29,21 @@ void
 ControlSettings::saveSettings()
 {
   m_mutex.lock();
+
+  // volume settings
   setValue("volumeTotal", volumeTotal);
   setValue("volumeRed", volumeRed);
   setValue("volumeGreen", volumeGreen);
   setValue("volumeBlue", volumeBlue);
 
+  // frequency settings
   setValue("freqRedMin", freqRedMin);
   setValue("freqRedMax", freqRedMax);
   setValue("freqGreenMin", freqGreenMin);
   setValue("freqGreenMax", freqGreenMax);
   setValue("freqBlueMin", freqBlueMin);
   setValue("freqBlueMax", freqBlueMax);
-  std::cout << "ControlSettings::saveSettings() - freqBlueMax: " << freqBlueMax << std::endl;
+
   m_mutex.unlock();
 }
 
@@ -49,11 +52,14 @@ void
 ControlSettings::loadSettings()
 {
   m_mutex.lock();
+
+  // volume settings
   volumeTotal = value("volumeTotal", "").toInt();
   volumeRed = value("volumeRed", "").toInt();
   volumeGreen = value("volumeGreen", "").toInt();
   volumeBlue = value("volumeBlue", "").toInt();
 
+  // frequency settings
   freqRedMin = value("freqRedMin", "").toInt();
   freqRedMax = value("freqRedMax", "").toInt();
   freqGreenMin = value("freqGreenMin", "").toInt();
@@ -61,28 +67,9 @@ ControlSettings::loadSettings()
   freqBlueMin = value("freqBlueMin", "").toInt();
   freqBlueMax = value("freqBlueMax", "").toInt();
 
-  std::cout << "ControlSettings::loadSettings() - freqBlueMax: " << freqBlueMax << std::endl;
   m_mutex.unlock();
 }
 
-
-void
-ControlSettings::setStatusFPS(int fps)
-{
-  m_mutex.lock();
-  statusFPS = fps;
-  m_mutex.unlock();
-}
-
-
-int
-ControlSettings::getStatusFPS()
-{
-  m_mutex.lock();
-  int fps = statusFPS;
-  m_mutex.unlock();
-  return fps;
-}
 
 void
 ControlSettings::lock()
@@ -91,6 +78,7 @@ ControlSettings::lock()
   m_mutex.lock();
 }
 
+
 bool
 ControlSettings::try_lock()
 {
@@ -98,9 +86,37 @@ ControlSettings::try_lock()
   return m_mutex.try_lock();
 }
 
+
 void ControlSettings::unlock()
 {
 //  std::cout << "ControlSettings::lock()" << std::endl;
   m_mutex.unlock();
+}
+
+
+void
+ControlSettings::setStatusFPS(int fps)
+{
+  m_statusFPS.store(fps);
+}
+
+
+int
+ControlSettings::getStatusFPS() const
+{
+  return m_statusFPS.load();
+}
+
+
+bool
+ControlSettings::isActive() const
+{
+  return m_isActive.load();
+}
+
+
+void ControlSettings::setActive(bool isActive)
+{
+  m_isActive.store(isActive);
 }
 
