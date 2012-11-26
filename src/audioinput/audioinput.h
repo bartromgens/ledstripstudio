@@ -65,6 +65,8 @@ private:
   ControlSettings* m_controlSettings;
   //  PaStream* m_stream;
 //  paUserData m_data;
+
+  int m_offSet;
 };
 
 #endif // AUDIOINPUT_H

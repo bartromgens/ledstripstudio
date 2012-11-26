@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   ui->setupUi(this);
 
-
   createActions();
   createToolbar();
   createMenus();
@@ -40,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_audioControlSettings->loadSettings();
   updateAudioControlGUI();
-
 
   m_audioInput->setControlSettings(m_audioControlSettings);
 

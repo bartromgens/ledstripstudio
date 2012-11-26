@@ -150,19 +150,6 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
     }
   }
 
-  if (brightnessRed > 127.0)
-  {
-    brightnessRed = 127.0;
-  }
-  if (brightnessGreen > 127.0)
-  {
-    brightnessGreen = 127.0;
-  }
-  if (brightnessBlue > 127.0)
-  {
-    brightnessBlue = 127.0;
-  }
-
   int nLEDs = 160;
 
   Animation animation = createWaveformAnimationCentral(nLEDs, brightnessRed, brightnessGreen, brightnessBlue);
@@ -340,16 +327,37 @@ AudioInput::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int bri
 
   for (int i = 0; i < centreLedNr; ++i)
   {
-    int scaleFact = (i * 127) / centreLedNr ;
+    int scaleFact = (i * 127) / centreLedNr;
+
+    int r = brightnessRed - scaleFact;
+    int g = brightnessGreen - scaleFact;
+    int b = brightnessBlue - scaleFact;
+
+    if (r > 127.0)
+    {
+      r = 127.0;
+    }
+    if (g > 127.0)
+    {
+      g = 127.0;
+    }
+    if (b > 127.0)
+    {
+      b = 127.0;
+    }
+
+    int offSet = 120;
+    int ledNr1 = (centreLedNr + i + 1 + offSet) % nLEDs;
+    int ledNr2 = (centreLedNr - i + offSet) % nLEDs;
 
     LED led;
-    led.setLEDnr(centreLedNr+i);
-    led.setColor( Color((int)(brightnessRed) - scaleFact, (int)(brightnessGreen) - scaleFact, (int)(brightnessBlue) - scaleFact ));
+    led.setLEDnr(ledNr1);
+    led.setColor( Color(r, g, b) );
     frame.addLED(led);
 
     LED led2;
-    led2.setLEDnr(centreLedNr-i+1);
-    led2.setColor( Color((int)(brightnessRed) - scaleFact, (int)(brightnessGreen) - scaleFact, (int)(brightnessBlue) - scaleFact ));
+    led2.setLEDnr(ledNr2);
+    led2.setColor( Color(r, g, b) );
     frame.addLED(led2);
   }
 

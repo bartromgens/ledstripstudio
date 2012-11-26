@@ -18,6 +18,7 @@ public:
 //  int frameIndex;  //Index into sample array
 //  int maxFrameIndex;
   std::mutex data_mutex;
+
   std::deque<float> recordedSamplesVec;
   int nChannels;
   double sampleRate;
