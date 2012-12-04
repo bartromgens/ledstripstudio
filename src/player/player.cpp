@@ -6,6 +6,7 @@
 
 Player::Player()
   : m_ledController(),
+    m_lastFrame(0),
     m_mutex()
 {
   const QString serialPortName = "/dev/ttyACM0";
@@ -37,6 +38,16 @@ Player::getFPS() const
 }
 
 
+Frame
+Player::getLastFrame()
+{
+  m_mutex.lock();
+  Frame frame = m_lastFrame;
+  m_mutex.unlock();
+  return frame;
+}
+
+
 void
 Player::play(const Animation& animation)
 {
@@ -45,6 +56,7 @@ Player::play(const Animation& animation)
   while (!frames.empty())
   {
     Frame frame = frames.front();
+    m_lastFrame = frame;
     m_ledController->send(frame);
     frames.pop_front();
 //    std::cout << "Player::play() - frames.size(): " << frames.size() << std::endl;

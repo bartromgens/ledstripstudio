@@ -1,10 +1,11 @@
 #include "mainwindow.h"
 #include "src/gui/ui_mainwindow.h"
 
+#include "src/audioinput/audioinput.h"
 #include "src/basic/animation.h"
+#include "src/gui/ledstripemulator.h"
 #include "src/player/player.h"
 #include "src/studio/studio.h"
-#include "src/audioinput/audioinput.h"
 #include "src/settings/controlsettings.h"
 
 
@@ -47,9 +48,12 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
   m_timer->start();
 
+  m_timerEmulator = new QTimer(this);
+  m_timerEmulator->setInterval(30);
+  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
+  m_timerEmulator->start();
+
   //  Animation animation;
-
-
 //  for (std::size_t i = 0; i < 1000; ++i)
 //  {
 //    Color color(cos(i/M_PI)*177, sin(i/M_PI)*177, cos(2*i/M_PI)*177);
@@ -283,4 +287,14 @@ MainWindow::update()
 //  std::cout << "update" << std::endl;
   int fps = m_audioControlSettings->getStatusFPS();
   ui->fpsLcd->setText(QString::number(fps));
+  ui->ledStripEmulator->update();
+}
+
+
+void
+MainWindow::slotPlayerPlayed()
+{
+  Frame frame = m_player->getLastFrame();
+  ui->ledStripEmulator->setFrame(frame);
+  ui->ledStripEmulator->update();
 }

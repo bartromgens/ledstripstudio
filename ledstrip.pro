@@ -16,6 +16,7 @@ SOURCES += \
     src/settings/controlsettings.cpp \
     src/studio/studio.cpp \
     src/main.cpp \
+    src/gui/ledstripemulator.cpp
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -30,6 +31,7 @@ HEADERS += \
     src/player/player.h \
     src/settings/controlsettings.h \
     src/studio/studio.h \
+    src/gui/ledstripemulator.h
 
 FORMS += \
     src/gui/mainwindow.ui

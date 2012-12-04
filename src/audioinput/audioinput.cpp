@@ -328,6 +328,7 @@ AudioInput::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int bri
   for (int i = 0; i < centreLedNr; ++i)
   {
     int scaleFact = (i * 127) / centreLedNr;
+//    int scaleFact = 0.0;
 
     int r = brightnessRed - scaleFact;
     int g = brightnessGreen - scaleFact;
@@ -346,7 +347,20 @@ AudioInput::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int bri
       b = 127.0;
     }
 
-    int offSet = 120;
+    if (r < 0.0)
+    {
+      r = 0.0;
+    }
+    if (g < 0.0)
+    {
+      g = 0.0;
+    }
+    if (b < 0.0)
+    {
+      b = 0.0;
+    }
+
+    int offSet = 80;
     int ledNr1 = (centreLedNr + i + 1 + offSet) % nLEDs;
     int ledNr2 = (centreLedNr - i + offSet) % nLEDs;
 

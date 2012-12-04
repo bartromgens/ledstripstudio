@@ -13,6 +13,7 @@
 
 class AudioInput;
 class ControlSettings;
+class LedStripEmulator;
 class Player;
 class Studio;
 
@@ -25,18 +26,21 @@ class MainWindow : public QMainWindow
   Q_OBJECT
   
 public:
-  explicit MainWindow(QWidget *parent = 0);
+  explicit MainWindow(QWidget* parent = 0);
   ~MainWindow();
 
   Animation createAnimationTest1();
   Animation createAnimationTest2();
 
+public slots:
+  void slotPlayerPlayed();
+
 protected:
-  virtual void closeEvent(QCloseEvent *event);
+  virtual void closeEvent(QCloseEvent* event);
 
 private slots:
   void slotOpenColorPicker();
-  void slotColorSelected(const QColor &color);
+  void slotColorSelected(const QColor& color);
   void slotBrightnessChanged();
   void slotToggleAudioInput();
   void slotVolumeChanged();
@@ -64,6 +68,8 @@ private:
   AudioInput* m_audioInput;
   ControlSettings* m_audioControlSettings;
 
+//  LedStripEmulator* m_ledStripEmulator;
+
   QToolBar* fileToolBar;
 
   QMenu* fileMenu;
@@ -76,6 +82,7 @@ private:
   bool m_isAudioOn;
 
   QTimer* m_timer;
+  QTimer* m_timerEmulator;
 };
 
 #endif // MAINWINDOW_H
