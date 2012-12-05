@@ -360,7 +360,7 @@ AudioInput::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int bri
       b = 0.0;
     }
 
-    int offSet = 80;
+    int offSet = 0;
     int ledNr1 = (centreLedNr + i + 1 + offSet) % nLEDs;
     int ledNr2 = (centreLedNr - i + offSet) % nLEDs;
 

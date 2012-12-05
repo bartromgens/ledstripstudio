@@ -45,3 +45,13 @@ Frame::setAllLedsOff()
     m_leds[i] = led;
   }
 }
+
+void
+Frame::amplifyRGB(double facR, double facG, double facB)
+{
+  for (std::size_t i = 0; i < m_leds.size(); ++i)
+  {
+    const Color& colorOld = m_leds[i].getColor();
+    m_leds[i].setColor(Color(colorOld.r * facR, colorOld.g * facG, colorOld.b * facB));
+  }
+}

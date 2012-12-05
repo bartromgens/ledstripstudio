@@ -294,7 +294,32 @@ MainWindow::update()
 void
 MainWindow::slotPlayerPlayed()
 {
+  ui->ledStripEmulator->setHeight(ui->ledStripEmulator->size().height());
+  ui->ledStripEmulator->setWidth(ui->ledStripEmulator->size().width()/m_nLedsTotal);
+  ui->ledStripEmulatorRed->setHeight(ui->ledStripEmulatorRed->size().height());
+  ui->ledStripEmulatorRed->setWidth(ui->ledStripEmulatorRed->size().width()/m_nLedsTotal);
+  ui->ledStripEmulatorGreen->setHeight(ui->ledStripEmulatorGreen->size().height());
+  ui->ledStripEmulatorGreen->setWidth(ui->ledStripEmulatorGreen->size().width()/m_nLedsTotal);
+  ui->ledStripEmulatorBlue->setHeight(ui->ledStripEmulatorBlue->size().height());
+  ui->ledStripEmulatorBlue->setWidth(ui->ledStripEmulatorBlue->size().width()/m_nLedsTotal);
+
   Frame frame = m_player->getLastFrame();
   ui->ledStripEmulator->setFrame(frame);
   ui->ledStripEmulator->update();
+
+  frame = m_player->getLastFrame();
+  frame.amplifyRGB(1.0, 0.0, 0.0);
+  ui->ledStripEmulatorRed->setFrame(frame);
+
+  frame = m_player->getLastFrame();
+  frame.amplifyRGB(0.0, 1.0, 0.0);
+  ui->ledStripEmulatorGreen->setFrame(frame);
+
+  frame = m_player->getLastFrame();
+  frame.amplifyRGB(0.0, 0.0, 1.0);
+  ui->ledStripEmulatorBlue->setFrame(frame);
+
+  ui->ledStripEmulatorRed->update();
+  ui->ledStripEmulatorGreen->update();
+  ui->ledStripEmulatorBlue->update();
 }

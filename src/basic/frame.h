@@ -19,6 +19,8 @@ public:
 
   void setAllLedsOff();
 
+  void amplifyRGB(double facR, double facG, double facB);
+
 private:
   int m_nLEDs;
   std::map<int, LED> m_leds;

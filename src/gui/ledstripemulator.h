@@ -14,12 +14,17 @@ public:
   ~LedStripEmulator();
 
   void setFrame(const Frame& frame);
+  void setHeight(int height);
+  void setWidth(int width);
+
 protected:
   void paintEvent(QPaintEvent* event);
   void drawStrip(QPainter* qp);
 
 private:
   Frame m_frame;
+  int m_height;
+  int m_width;
 };
 
 #endif // LEDSTRIPEMULATOR_H
