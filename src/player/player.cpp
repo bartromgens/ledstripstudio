@@ -52,7 +52,7 @@ void
 Player::play(const Animation& animation)
 {
   m_mutex.lock();
-  std::list<Frame> frames = animation.getFrames();
+  std::deque<Frame> frames = animation.getFrames();
   while (!frames.empty())
   {
     Frame frame = frames.front();

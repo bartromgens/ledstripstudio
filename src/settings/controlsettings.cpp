@@ -74,7 +74,6 @@ ControlSettings::loadSettings()
 void
 ControlSettings::lock()
 {
-//  std::cout << "ControlSettings::lock()" << std::endl;
   m_mutex.lock();
 }
 
@@ -82,14 +81,12 @@ ControlSettings::lock()
 bool
 ControlSettings::try_lock()
 {
-//  std::cout << "ControlSettings::try_lock()" << std::endl;
   return m_mutex.try_lock();
 }
 
 
 void ControlSettings::unlock()
 {
-//  std::cout << "ControlSettings::lock()" << std::endl;
   m_mutex.unlock();
 }
 

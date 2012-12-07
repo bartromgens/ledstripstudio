@@ -11,7 +11,7 @@ public:
 
   Animation createSingleColorSingleFrameAnimation(const Color& color) const;
 
-  Animation createMovingLine(const Color& color);
+  Animation createMovingLine(const Color& color, double speed);
 private:
 
 private:

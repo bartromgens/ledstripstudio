@@ -33,10 +33,9 @@ Studio::createSingleColorSingleFrameAnimation(const Color& color) const
 
 
 Animation
-Studio::createMovingLine(const Color& color)
+Studio::createMovingLine(const Color& color, double speed)
 {
   Animation animation;
-  double speed = 3.0;
   int nFrames = m_nLEDs/speed;
 
   int r = color.r;

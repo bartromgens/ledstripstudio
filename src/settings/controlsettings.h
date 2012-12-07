@@ -41,7 +41,7 @@ public:
 
 
 private:
-  std::mutex m_mutex;
+  mutable std::mutex m_mutex;
   std::atomic<int> m_statusFPS;
   std::atomic<bool> m_isActive;
 };

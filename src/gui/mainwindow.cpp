@@ -53,13 +53,15 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
 
-  //  Animation animation;
-//  for (std::size_t i = 0; i < 1000; ++i)
-//  {
-//    Color color(cos(i/M_PI)*177, sin(i/M_PI)*177, cos(2*i/M_PI)*177);
-//    Animation animation = m_studio->createMovingLine(color);
-//    m_player->play(animation);
-//  }
+  for (std::size_t i = 0; i < 1000; ++i)
+  {
+    Color colorA(127, 0, 0);
+    Color colorB(0, 127, 0);
+    Animation animationA = m_studio->createMovingLine(colorA, 2.0);
+    Animation animationB = m_studio->createMovingLine(colorB, 1.0);
+    Animation animationCombined = animationA.combineTwoAnimations(animationA, animationB);
+    m_player->play(animationA);
+  }
 
 }
 
