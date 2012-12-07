@@ -6,7 +6,7 @@
 class LED
 {
 public:
-  LED();
+  LED(int ledNr, const Color& color);
 
   const Color& getColor() const;
   int getLEDnr() const;

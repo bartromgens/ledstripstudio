@@ -11,7 +11,8 @@ public:
 
   Animation createSingleColorSingleFrameAnimation(const Color& color) const;
 
-  Animation createMovingLine(const Color& color, double speed);
+  Animation createMovingLine(int nFrames, const Color& color, double speed);
+  Animation createMovingDot(int startPos, int nFrames, const Color& color, double speed);
 private:
 
 private:

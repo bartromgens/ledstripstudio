@@ -126,8 +126,6 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
 
   m_controlSettings->setStatusFPS(m_ledPlayer->getFPS());
 
-
-//      std::cout << brightnessRed << ", " << brightnessGreen << ", " << brightnessBlue << std::endl;
   for (std::map<double, double>::const_iterator iter = spectrum.begin();
        iter != spectrum.end(); ++iter)
   {
@@ -364,14 +362,10 @@ AudioInput::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int bri
     int ledNr1 = (centreLedNr + i + 1 + offSet) % nLEDs;
     int ledNr2 = (centreLedNr - i + offSet) % nLEDs;
 
-    LED led;
-    led.setLEDnr(ledNr1);
-    led.setColor( Color(r, g, b) );
+    LED led(ledNr1, Color(r, g, b));
     frame.addLED(led);
 
-    LED led2;
-    led2.setLEDnr(ledNr2);
-    led2.setColor( Color(r, g, b) );
+    LED led2(ledNr2, Color(r, g, b));
     frame.addLED(led2);
   }
 

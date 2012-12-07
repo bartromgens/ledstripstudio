@@ -53,16 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
 
-  for (std::size_t i = 0; i < 1000; ++i)
-  {
-    Color colorA(127, 0, 0);
-    Color colorB(0, 127, 0);
-    Animation animationA = m_studio->createMovingLine(colorA, 2.0);
-    Animation animationB = m_studio->createMovingLine(colorB, 1.0);
-    Animation animationCombined = animationA.combineTwoAnimations(animationA, animationB);
-    m_player->play(animationA);
-  }
-
+  startAnimationThread();
 }
 
 MainWindow::~MainWindow()
@@ -125,6 +116,46 @@ MainWindow::startAudioInput()
   m_audioInput->setLedPlayer(m_player);
   m_audioInput->startStream();
   m_audioInput->closeStream();
+}
+
+
+void
+MainWindow::startAnimationThread() const
+{
+  std::cout << "MainWindow::startAnimation()" << std::endl;
+  std::thread t1(&MainWindow::startAnimation, this);
+  t1.detach();
+}
+
+
+void
+MainWindow::startAnimation() const
+{
+  for (std::size_t i = 0; i < 10000; ++i)
+  {
+    Color colorA(127, 0, 0);
+    Color colorB(0, 127, 0);
+    Color colorC(0, 0, 127);
+    Color colorD(127, 0, 127);
+
+    int nFrames = 1000;
+
+//    Animation animationA = m_studio->createMovingDot(0, nFrames, colorA, 2.5);
+//    Animation animationB = m_studio->createMovingDot(0, nFrames, colorB, 1.5);
+//    Animation animationC = m_studio->createMovingDot(0, nFrames, colorC, 1.0);
+//    Animation animationD = m_studio->createMovingDot(0, nFrames, colorD, 0.7);
+//    Animation animationA = m_studio->createMovingDot(colorB, 1.0);
+    Animation animationA = m_studio->createMovingLine(nFrames, colorA, 3.3);
+    Animation animationB = m_studio->createMovingLine(nFrames, colorB, 2.2);
+    Animation animationC = m_studio->createMovingLine(nFrames, colorC, 1.1);
+    Animation animationD = m_studio->createMovingLine(nFrames, colorD, 0.8);
+//    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
+    Animation animationCombined = animationA.combineTwoAnimations(animationA, animationB);
+    Animation animationCombined2 = animationA.combineTwoAnimations(animationCombined, animationC);
+    Animation animationCombined3 = animationA.combineTwoAnimations(animationCombined2, animationD);
+//    std::cout << animationCombined.getFrames().size() << std::endl;
+    m_player->play(animationCombined3);
+  }
 }
 
 
@@ -306,21 +337,21 @@ MainWindow::slotPlayerPlayed()
   ui->ledStripEmulatorBlue->setWidth(ui->ledStripEmulatorBlue->size().width()/m_nLedsTotal);
 
   Frame frame = m_player->getLastFrame();
+
+  Frame frameR = frame;
+  Frame frameG = frame;
+  Frame frameB = frame;
+
+  frameR.amplifyRGB(1.0, 0.0, 0.0);
+  frameG.amplifyRGB(0.0, 1.0, 0.0);
+  frameB.amplifyRGB(0.0, 0.0, 1.0);
+
   ui->ledStripEmulator->setFrame(frame);
+  ui->ledStripEmulatorRed->setFrame(frameR);
+  ui->ledStripEmulatorGreen->setFrame(frameG);
+  ui->ledStripEmulatorBlue->setFrame(frameB);
+
   ui->ledStripEmulator->update();
-
-  frame = m_player->getLastFrame();
-  frame.amplifyRGB(1.0, 0.0, 0.0);
-  ui->ledStripEmulatorRed->setFrame(frame);
-
-  frame = m_player->getLastFrame();
-  frame.amplifyRGB(0.0, 1.0, 0.0);
-  ui->ledStripEmulatorGreen->setFrame(frame);
-
-  frame = m_player->getLastFrame();
-  frame.amplifyRGB(0.0, 0.0, 1.0);
-  ui->ledStripEmulatorBlue->setFrame(frame);
-
   ui->ledStripEmulatorRed->update();
   ui->ledStripEmulatorGreen->update();
   ui->ledStripEmulatorBlue->update();

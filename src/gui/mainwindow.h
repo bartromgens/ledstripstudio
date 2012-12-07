@@ -54,6 +54,8 @@ private:
   void stopAudioInput();
   void connectAllSlots() const;
   void startAudioInputThread();
+  void startAnimationThread() const;
+  void startAnimation() const;
   void updateAudioControlGUI();
   
 private slots:

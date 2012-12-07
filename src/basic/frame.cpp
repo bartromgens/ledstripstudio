@@ -4,16 +4,15 @@ Frame::Frame(int nLEDs)
   : m_nLEDs(nLEDs),
     m_leds()
 {
-  for (int i = 0; i < nLEDs; ++i)
+  m_leds.reserve(m_nLEDs);
+  for (int i = 0; i < m_nLEDs; ++i)
   {
-    LED led;
-    led.setColor(Color());
-    led.setLEDnr(i);
-    m_leds[i] = led;
+    LED emptyLed(i, Color(0, 0, 0));
+    m_leds.push_back(emptyLed);
   }
 }
 
-const std::map<int, LED>&
+const std::vector<LED>&
 Frame::getLEDs() const
 {
   return m_leds;
@@ -39,9 +38,7 @@ Frame::setAllLedsOff()
 {
   for (int i = 1; i <= m_nLEDs; ++i)
   {
-    LED led;
-    led.setColor(Color());
-    led.setLEDnr(i);
+    LED led(i, Color());
     m_leds[i] = led;
   }
 }

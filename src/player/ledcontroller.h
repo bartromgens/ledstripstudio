@@ -8,6 +8,7 @@
 #include <QTime>
 #include <vector>
 #include <deque>
+#include <mutex>
 
 class QextSerialPort;
 
@@ -45,7 +46,9 @@ private:
   QByteArray m_byteMessage;
   QString m_serialPortName;
   QTime m_timer;
+  QTime m_timer2;
   std::deque<int> m_fpsHistory;
+  mutable std::mutex m_mutex;
 };
 
 #endif // LEDCONTROLLER_H

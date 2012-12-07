@@ -21,9 +21,7 @@ Studio::createSingleColorSingleFrameAnimation(const Color& color) const
 
   for (int i = 0; i < m_nLEDs; ++i)
   {
-    LED led;
-    led.setColor(color);
-    led.setLEDnr(i);
+    LED led(i, color);
     frame.addLED(led);
   }
   Animation animation;
@@ -33,18 +31,17 @@ Studio::createSingleColorSingleFrameAnimation(const Color& color) const
 
 
 Animation
-Studio::createMovingLine(const Color& color, double speed)
+Studio::createMovingLine(int nFrames, const Color& color, double speed)
 {
   Animation animation;
-  int nFrames = m_nLEDs/speed;
 
   int r = color.r;
   int g = color.g;
   int b = color.b;
 
-  for (int i = 1; i < nFrames; ++i)
+  for (int i = 0; i < nFrames; ++i)
   {
-    double pos = i*speed+1;
+    double pos = int(i*speed+1) % m_nLEDs;
     double dx = std::fabs(int(pos)-pos);
     double dx1 = std::fabs(int(pos+1)-pos);
     double dx2 = std::fabs(int(pos-1)-pos);
@@ -53,32 +50,45 @@ Studio::createMovingLine(const Color& color, double speed)
 
 //    std::cout << dx1 << ", " << dx2 << ", " << dx3 << ", " << dx4 << std::endl;
 
+    Frame frame(m_nLEDs);
     if ((int)pos < (m_nLEDs-2))
     {
-      Frame frame(m_nLEDs);
-      LED led;
-      led.setLEDnr(int(pos));
-      led.setColor(Color(r-50*dx, g-50*dx, b-50*dx));
+      LED led(int(pos), Color(r-50*dx, g-50*dx, b-50*dx));
       frame.addLED(led);
-      led = LED();
-      led.setLEDnr(int(pos+1));
-      led.setColor(Color(r-40*dx1, g-50*dx, b-50*dx));
+      led = LED(int(pos+1), Color(r-40*dx1, g-50*dx1, b-50*dx1));
       frame.addLED(led);
-      led = LED();
-      led.setLEDnr(int(pos+2));
-      led.setColor(Color(r-40*dx3, g-50*dx, b-50*dx));
+      led = LED(int(pos+2), Color(r-40*dx3, g-50*dx3, b-50*dx3));
       frame.addLED(led);
       if (pos > 3.0)
       {
-        led = LED();
-        led.setLEDnr(int(pos-1));
-        led.setColor(Color(r-40*dx2, g-40*dx2, b-40*dx2));
+        led = LED(int(pos-1), Color(r-40*dx2, g-40*dx2, b-40*dx2));
         frame.addLED(led);
-        led = LED();
-        led.setLEDnr(int(pos-2));
-        led.setColor(Color(r-40*dx4, g-40*dx4, b-40*dx4));
+        led = LED(int(pos-2), Color(r-40*dx4, g-40*dx4, b-40*dx4));
         frame.addLED(led);
       }
+    }
+    animation.addFrame(frame);
+  }
+
+  return animation;
+}
+
+Animation
+Studio::createMovingDot(int startPos, int nFrames, const Color &color, double speed)
+{
+  Animation animation;
+
+  for (int i = 1; i < nFrames; ++i)
+  {
+    double pos = int(i*speed+startPos) % m_nLEDs;
+
+//    std::cout << dx1 << ", " << dx2 << ", " << dx3 << ", " << dx4 << std::endl;
+
+    if ((int)pos < (m_nLEDs-2))
+    {
+      Frame frame(m_nLEDs);
+      LED led(int(pos), color);
+      frame.addLED(led);
       animation.addFrame(frame);
     }
   }

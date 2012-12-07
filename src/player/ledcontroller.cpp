@@ -18,9 +18,12 @@ LEDController::LEDController()
   : m_port(0),
     m_serialPortName("none"),
     m_timer(),
+    m_timer2(),
     m_fpsHistory()
 {
   m_timer.start();
+  m_timer2.start();
+  usleep(100*1000);
 }
 
 
@@ -36,16 +39,21 @@ LEDController::send(const Frame &frame)
 {
   QByteArray bytes;
 
-  const std::map<int, LED>& leds = frame.getLEDs();
+  const std::vector<LED>& leds = frame.getLEDs();
 
-  // make sure 15 ms has elapsed since the last send, for the Arduino to process the data.
+  // make sure n ms has elapsed since the last send, for the Arduino to process the data.
   int minSleep = 20;
-  int toSleep = minSleep - m_timer.elapsed();
+  int elapsed = m_timer.elapsed();
+  int toSleep = minSleep - elapsed;
 
   if (toSleep > 0)
   {
     usleep(toSleep*1000);
   }
+
+//  std::cout << "send() time to sleep: " << toSleep << std::endl;
+//  std::cout << "LEDController::send() - elapsed since last send: " <<  m_timer2.elapsed() << "[ms]" << std::endl;
+  m_timer2.restart();
 
   // send the frame
   for (std::size_t i = 0; i < leds.size(); ++i)
@@ -70,15 +78,14 @@ LEDController::send(const Frame &frame)
 //      std::cout << int(result[i]) << std::endl;
 //    }
   }
-//  std::cout << "LEDController::send() - elapsed since last send: " <<  m_timer.elapsed() << "[ms]" << std::endl;
 
-  m_fpsHistory.push_back(1000/m_timer.elapsed());
+  m_fpsHistory.push_back(1000.0/m_timer.elapsed());
   if (m_fpsHistory.size() > 10)
   {
     m_fpsHistory.pop_front();
   }
-
   m_timer.restart();
+
 
 //  std::cout << 1000/timerSend.elapsed() << " fps" << std::endl;
 

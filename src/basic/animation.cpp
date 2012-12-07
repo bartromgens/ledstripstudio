@@ -50,14 +50,17 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
   std::size_t maxFrames = std::max(framesA.size(), framesB.size());
   std::size_t minFrames = std::min(framesA.size(), framesB.size());
 
+  std::cout << "Animation::combineTwoAnimations() - minframes: " << minFrames << std::endl;
+  std::cout << "Animation::combineTwoAnimations() - maxframes: " << maxFrames << std::endl;
 
   for (std::size_t i = 0 ; i < minFrames; ++i)
   {
-    const std::map<int, LED>& ledsA = framesA[i].getLEDs();
-    const std::map<int, LED>& ledsB = framesB[i].getLEDs();
+    const std::vector<LED>& ledsA = framesA[i].getLEDs();
+    const std::vector<LED>& ledsB = framesB[i].getLEDs();
     assert(ledsB.size() == ledsA.size());
 
     Frame combinedFrame(ledsA.size());
+
     for (std::size_t j = 0 ; j < ledsA.size(); ++j)
     {
       LED ledA = ledsA.at(j);
@@ -68,13 +71,11 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
 
       Color combinedColor(colorA.r + colorB.r, colorA.g + colorB.g, colorA.b + colorB.b);
 
-      LED ledNew;
-      ledNew.setColor(combinedColor);
-      ledNew.setLEDnr(j);
+      LED ledNew(j, combinedColor);
 
       combinedFrame.addLED(ledNew);
-      animation.addFrame(combinedFrame);
     }
+    animation.addFrame(combinedFrame);
   }
 
   return animation;

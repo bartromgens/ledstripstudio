@@ -4,6 +4,7 @@
 #include "led.h"
 
 #include <map>
+#include <vector>
 #include <iostream>
 
 class Frame
@@ -11,7 +12,7 @@ class Frame
 public:
   Frame(int nLEDs);
 
-  const std::map<int, LED>& getLEDs() const;
+  const std::vector<LED>& getLEDs() const;
 
   void addLED(LED led);
 
@@ -23,7 +24,7 @@ public:
 
 private:
   int m_nLEDs;
-  std::map<int, LED> m_leds;
+  std::vector<LED> m_leds;
 };
 
 #endif // FRAME_H

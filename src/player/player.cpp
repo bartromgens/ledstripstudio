@@ -1,5 +1,4 @@
 #include "player.h"
-#include "src/basic/animation.h"
 #include "src/basic/color.h"
 
 #include <unistd.h>  // for (u)sleep on Linux
@@ -7,6 +6,7 @@
 Player::Player()
   : m_ledController(),
     m_lastFrame(0),
+    m_mainAnimation(),
     m_mutex()
 {
   const QString serialPortName = "/dev/ttyACM0";
@@ -39,12 +39,19 @@ Player::getFPS() const
 
 
 Frame
-Player::getLastFrame()
+Player::getLastFrame() const
 {
-  m_mutex.lock();
-  Frame frame = m_lastFrame;
-  m_mutex.unlock();
-  return frame;
+//  m_mutex.lock();
+//  Frame frame = m_lastFrame;
+//  m_mutex.unlock();
+  return m_lastFrame;
+}
+
+
+void
+Player::addAnimation(const Animation& animation)
+{
+  m_mainAnimation = animation;
 }
 
 
@@ -59,7 +66,6 @@ Player::play(const Animation& animation)
     m_lastFrame = frame;
     m_ledController->send(frame);
     frames.pop_front();
-//    std::cout << "Player::play() - frames.size(): " << frames.size() << std::endl;
   }
   m_mutex.unlock();
 }
@@ -75,14 +81,12 @@ Player::smoothenFrames(const Frame& firstFrame, const Frame& secondFrame, int /*
 
   for (std::size_t i = 1; i <= nLEDs; ++i)
   {
-    LED ledNew;
-    ledNew.setLEDnr(i);
     int r;
     int g;
     int b;
 
-    std::map<int, LED> ledsFirst = firstFrame.getLEDs();
-    std::map<int, LED> ledsSecond = secondFrame.getLEDs();
+    std::vector<LED> ledsFirst = firstFrame.getLEDs();
+    std::vector<LED> ledsSecond = secondFrame.getLEDs();
     Color colorFirst = ledsFirst[i].getColor();
     Color colorSecond = ledsSecond[i].getColor();
     r = (colorFirst.r + colorSecond.r)/2;
@@ -90,6 +94,7 @@ Player::smoothenFrames(const Frame& firstFrame, const Frame& secondFrame, int /*
     b = (colorFirst.b + colorSecond.b)/2;
     Color colorNew(r, g, b);
 
+    LED ledNew(i, colorNew);
     ledNew.setColor(colorNew);
     frameSmooth.addLED(ledNew);
   }
@@ -101,8 +106,8 @@ Player::smoothenFrames(const Frame& firstFrame, const Frame& secondFrame, int /*
 
 //    std::vector<Frame> framesSmooth(nFrames, frame.getLEDs().size());
 
-//    std::map<int, LED> leds = frame.getLEDs();
-//    for (std::map<int, LED>::iterator iter = leds.begin();
+//    std::vector<LED> leds = frame.getLEDs();
+//    for (std::vector<LED>::iterator iter = leds.begin();
 //         iter != leds.end(); ++iter)
 //    {
 //      LED led = iter->second;
