@@ -50,8 +50,8 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
   std::size_t maxFrames = std::max(framesA.size(), framesB.size());
   std::size_t minFrames = std::min(framesA.size(), framesB.size());
 
-  std::cout << "Animation::combineTwoAnimations() - minframes: " << minFrames << std::endl;
-  std::cout << "Animation::combineTwoAnimations() - maxframes: " << maxFrames << std::endl;
+//  std::cout << "Animation::combineTwoAnimations() - minframes: " << minFrames << std::endl;
+//  std::cout << "Animation::combineTwoAnimations() - maxframes: " << maxFrames << std::endl;
 
   for (std::size_t i = 0 ; i < minFrames; ++i)
   {
@@ -69,7 +69,7 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
       Color colorA = ledA.getColor();
       Color colorB = ledB.getColor();
 
-      Color combinedColor(colorA.r + colorB.r, colorA.g + colorB.g, colorA.b + colorB.b);
+      Color combinedColor( std::min(colorA.r + colorB.r, 127), std::min(colorA.g + colorB.g, 127), std::min(colorA.b + colorB.b, 127) );
 
       LED ledNew(j, combinedColor);
 
@@ -78,6 +78,27 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
     animation.addFrame(combinedFrame);
   }
 
+  std::deque<Frame> frames;
+  if (framesA.size() > framesB.size())
+  {
+    frames = animationA.getFrames();
+  }
+  else
+  {
+    frames = animationB.getFrames();
+  }
+
+  for (std::size_t i = minFrames ; i < maxFrames; ++i)
+  {
+    animation.addFrame(frames[i]);
+  }
+
   return animation;
 }
 
+
+void
+Animation::pop_frontFrame()
+{
+  m_frames.pop_front();
+}

@@ -13,7 +13,7 @@ Player::Player()
   //  const QString serialPortName = "COM11"; // windows
   m_ledController = createLedController(serialPortName);
 
-  sleep(3); // let the LED strip initialise
+  sleep(2); // let the LED strip initialise
 }
 
 
@@ -51,23 +51,31 @@ Player::getLastFrame() const
 void
 Player::addAnimation(const Animation& animation)
 {
-  m_mainAnimation = animation;
+  m_mutex.lock();
+  if (!m_mainAnimation.getFrames().empty())
+  {
+    m_mainAnimation = animation.combineTwoAnimations(animation, m_mainAnimation);
+  }
+  else
+  {
+    m_mainAnimation = animation;
+  }
+  m_mutex.unlock();
 }
 
 
 void
-Player::play(const Animation& animation)
+Player::play()
 {
-  m_mutex.lock();
-  std::deque<Frame> frames = animation.getFrames();
-  while (!frames.empty())
-  {
-    Frame frame = frames.front();
-    m_lastFrame = frame;
-    m_ledController->send(frame);
-    frames.pop_front();
-  }
-  m_mutex.unlock();
+//  while (!m_mainAnimation.getFrames().empty())
+//  {
+    m_mutex.lock();
+    const std::deque<Frame>& frames = m_mainAnimation.getFrames();
+    m_lastFrame = frames.front();
+    m_ledController->send(frames.front());
+    m_mainAnimation.pop_frontFrame();
+    m_mutex.unlock();
+//  }
 }
 
 

@@ -18,7 +18,7 @@ public:
 
   void addAnimation(const Animation &animation);
 
-  void play(const Animation& animation);
+  void play();
 
   int getFPS() const;
   Frame getLastFrame() const;

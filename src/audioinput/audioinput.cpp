@@ -1,6 +1,7 @@
 #include "src/audioinput/audioinput.h"
 #include "src/audioinput/userdata.h"
 #include "src/spectrum/spectrumanalyser.h"
+#include "src/studio/studio.h"
 
 #include <fstream>
 #include <cmath>
@@ -15,7 +16,8 @@ AudioInput::AudioInput()
     m_nChannels(2),
     m_data(),
     m_ledPlayer(0),
-    m_controlSettings(0)
+    m_controlSettings(0),
+    m_nUpdates(0)
 {
   std::cout << "AudioInput::AudioInput()" << std::endl;
   initializeUserData(); // From now on, recordedSamples is initialised.
@@ -151,8 +153,18 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
   int nLEDs = 160;
 
   Animation animation = createWaveformAnimationCentral(nLEDs, brightnessRed, brightnessGreen, brightnessBlue);
+  m_ledPlayer->addAnimation(animation);
+  Studio studio(nLEDs);
+  if (m_nUpdates++ % (nLEDs/30) == 1)
+  {
+    double speed = 1.0;
+    m_ledPlayer->addAnimation( studio.createMovingLine(nLEDs/speed,
+                                                       Color(std::abs(cos(m_nUpdates/5.0+1)*127), std::abs(sin(m_nUpdates/8.0)*127), std::abs(sin(m_nUpdates/23.0+5)*127)),
+                                                       speed)
+                             );
+  }
 
-  m_ledPlayer->play(animation);
+  m_ledPlayer->play();
 }
 
 

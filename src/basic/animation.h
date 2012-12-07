@@ -29,6 +29,7 @@ public:
 
   Animation combineTwoAnimations(const Animation& animationA, const Animation& animationB) const;
 
+  void pop_frontFrame();
 private:
   AdditionType m_additionType;
   std::deque<Frame> m_frames;

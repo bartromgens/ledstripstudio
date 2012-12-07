@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
 
-  startAnimationThread();
+//  startAnimationThread();
 }
 
 MainWindow::~MainWindow()
@@ -154,7 +154,11 @@ MainWindow::startAnimation() const
     Animation animationCombined2 = animationA.combineTwoAnimations(animationCombined, animationC);
     Animation animationCombined3 = animationA.combineTwoAnimations(animationCombined2, animationD);
 //    std::cout << animationCombined.getFrames().size() << std::endl;
-    m_player->play(animationCombined3);
+    m_player->addAnimation(animationA);
+    m_player->addAnimation(animationB);
+    m_player->addAnimation(animationC);
+    m_player->addAnimation(animationD);
+    m_player->play();
   }
 }
 
@@ -218,7 +222,8 @@ MainWindow::slotColorSelected(const QColor &color)
 
   Animation animation = m_studio->createSingleColorSingleFrameAnimation(colorNew);
 
-  m_player->play(animation);
+  m_player->addAnimation(animation);
+  m_player->play();
 }
 
 
@@ -286,8 +291,9 @@ MainWindow::slotBrightnessChanged()
   Color color(red, green, blue);
 
   Animation animation = m_studio->createSingleColorSingleFrameAnimation(color);
+  m_player->addAnimation(animation);
 
-  m_player->play(animation);
+  m_player->play();
 }
 
 

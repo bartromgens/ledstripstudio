@@ -35,6 +35,7 @@ public:
 
   void setLedPlayer(Player* ledPlayer);
   void setControlSettings(ControlSettings* settings);
+
 private:
 
   void initializeUserData();
@@ -54,6 +55,7 @@ private:
   Animation createWaveformAnimationCentral(int nLEDs, int brightnessRed, int brightnessGreen, int brightnessBlue);
 
 private:
+
   double m_sampleRate;
   int m_nSamples;
   unsigned long m_framesPerBuffer;
@@ -63,8 +65,7 @@ private:
   paUserData m_data;
   Player* m_ledPlayer;
   ControlSettings* m_controlSettings;
-  //  PaStream* m_stream;
-//  paUserData m_data;
+  int m_nUpdates;
 
   int m_offSet;
 };
