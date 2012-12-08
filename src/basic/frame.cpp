@@ -11,7 +11,6 @@ Frame::~Frame()
 {
 }
 
-
 void
 Frame::fill()
 {

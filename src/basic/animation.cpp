@@ -8,18 +8,20 @@ Animation::Animation()
 {
 }
 
+
 const std::deque<Frame>&
 Animation::getFrames() const
 {
   return m_frames;
 }
 
+
 void
 Animation::addFrame(const Frame& frame)
 {
-//  std::cout << "Animation::addFrame" << std::endl;
   m_frames.push_back(frame);
 }
+
 
 void
 Animation::setAdditionType(AdditionType type)
@@ -27,11 +29,13 @@ Animation::setAdditionType(AdditionType type)
   m_additionType = type;
 }
 
+
 Animation::AdditionType
 Animation::getAdditionType() const
 {
   return m_additionType;
 }
+
 
 Animation
 Animation::combineAnimations(const std::list<Animation>& animations)
@@ -40,6 +44,7 @@ Animation::combineAnimations(const std::list<Animation>& animations)
   Animation animation;
   return animation;
 }
+
 
 Animation
 Animation::combineTwoAnimations(const Animation& animationA, const Animation& animationB) const
@@ -51,9 +56,7 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
   std::size_t maxFrames = std::max(framesA.size(), framesB.size());
   std::size_t minFrames = std::min(framesA.size(), framesB.size());
 
-//  std::cout << "Animation::combineTwoAnimations() - minframes: " << minFrames << std::endl;
-//  std::cout << "Animation::combineTwoAnimations() - maxframes: " << maxFrames << std::endl;
-
+  // combine the frames
   for (std::size_t i = 0 ; i < minFrames; ++i)
   {
     const std::vector<LED>& ledsA = framesA[i].getLEDs();
@@ -64,11 +67,8 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
 
     for (std::size_t j = 0 ; j < ledsA.size(); ++j)
     {
-      LED ledA = ledsA.at(j);
-      LED ledB = ledsB.at(j);
-
-      Color colorA = ledA.getColor();
-      Color colorB = ledB.getColor();
+      Color colorA = ledsA.at(j).getColor();
+      Color colorB = ledsB.at(j).getColor();
 
       Color combinedColor( std::min(colorA.r + colorB.r, 127), std::min(colorA.g + colorB.g, 127), std::min(colorA.b + colorB.b, 127) );
 
@@ -79,6 +79,7 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
     animation.addFrame(combinedFrame);
   }
 
+  // check who has more frames
   std::deque<Frame> frames;
   if (framesA.size() > framesB.size())
   {
@@ -89,6 +90,7 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
     frames = animationB.getFrames();
   }
 
+  // fill the frames with the one that still has some left
   for (std::size_t i = minFrames ; i < maxFrames; ++i)
   {
     animation.addFrame(frames[i]);
