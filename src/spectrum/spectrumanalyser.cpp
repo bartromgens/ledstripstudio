@@ -32,8 +32,14 @@ SpectrumAnalyser::~SpectrumAnalyser()
 }
 
 
+unsigned int SpectrumAnalyser::getNSamples() const
+{
+  return m_nSamples;
+}
+
+
 std::map<double, double>
-SpectrumAnalyser::binSpectrum(std::vector<double> data, int nBins, int sampleRate)
+SpectrumAnalyser::binSpectrum(std::vector<double> data, int nBins, int sampleRate) const
 {
   std::map<double, double> hist;
   double binWidth = sampleRate/nBins;
@@ -105,7 +111,7 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, in
 
 
 std::deque<float>
-SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in)
+SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in) const
 {
   std::size_t sizeIn = in.size();
 
@@ -127,7 +133,7 @@ SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in)
 }
 
 std::deque<float>
-SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in)
+SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
 {
   std::size_t sizeIn = in.size();
 

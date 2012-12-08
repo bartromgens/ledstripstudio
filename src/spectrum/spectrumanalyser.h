@@ -28,15 +28,12 @@ public:
 
   std::map<double, double> computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType) ;
 
-  unsigned int getNSamples()
-  {
-    return m_nSamples;
-  }
+  unsigned int getNSamples() const;
 
 private:
-  std::map<double, double> binSpectrum(std::vector<double> data, int nBins, int sampleRate);
-  std::deque<float> hannWindowFunction(const std::deque<float>& in);
-  std::deque<float> linearWindowFunction(const std::deque<float>& in);
+  std::map<double, double> binSpectrum(std::vector<double> data, int nBins, int sampleRate) const;
+  std::deque<float> hannWindowFunction(const std::deque<float>& in) const;
+  std::deque<float> linearWindowFunction(const std::deque<float>& in) const;
 
 private:
   double* m_f; // FFT input
