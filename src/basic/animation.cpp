@@ -17,6 +17,7 @@ Animation::getFrames() const
 void
 Animation::addFrame(const Frame& frame)
 {
+//  std::cout << "Animation::addFrame" << std::endl;
   m_frames.push_back(frame);
 }
 

@@ -12,6 +12,10 @@ Frame::Frame(int nLEDs)
   }
 }
 
+Frame::~Frame()
+{
+}
+
 const std::vector<LED>&
 Frame::getLEDs() const
 {
@@ -19,9 +23,12 @@ Frame::getLEDs() const
 }
 
 void
-Frame::addLED(LED led)
+Frame::addLED(const LED& led)
 {
-  m_leds[led.getLEDnr()] = led;
+  if (led.getLEDnr() > 0 && led.getLEDnr() < m_nLEDs)
+  {
+    m_leds[led.getLEDnr()] = led;
+  }
 }
 
 void

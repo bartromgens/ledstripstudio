@@ -15,6 +15,7 @@ public:
   Animation createMovingDot(int startPos, int nFrames, const Color& color, double speed);
   Animation createMovingRainbow();
   Color wheel(int wheelPos);
+  Animation createRandomMovingDots(int nDots, int nFrames);
 private:
 
 private:

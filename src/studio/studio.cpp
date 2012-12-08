@@ -1,7 +1,9 @@
 #include "studio.h"
 #include "src/basic/frame.h"
+#include "src/basic/color.h"
 
 #include <cmath>
+#include <algorithm>
 
 Studio::Studio(int m_nLEDs)
   : m_nLEDs(m_nLEDs)
@@ -11,6 +13,86 @@ Studio::Studio(int m_nLEDs)
 
 Studio::~Studio()
 {
+}
+
+
+Animation
+Studio::createRandomMovingDots(int nDots, int nFrames)
+{
+  Animation animation;
+
+  std::vector<double> speeds;
+  std::vector<Color> colors;
+  std::vector<double> positions;
+  std::vector<int> positions_int;
+
+  for (int i = 0; i < nDots; ++i)
+  {
+    double speed = (rand() % 1000) / 2000.0;
+    speeds.push_back(speed);
+    int startPos = i*30;
+    positions.push_back(startPos);
+    positions_int.push_back(startPos);
+
+    int r = (rand() % 128);
+    int g = (rand() % 128);
+    int b = (rand() % 128);
+
+    r = 0;
+    g = 0;
+    b = 0;
+
+    switch (i % 3)
+    {
+    case 0:
+    {
+      r = 127;
+      break;
+    }
+    case 1:
+    {
+      g = 127;
+      break;
+    }
+    case 2:
+    {
+      b = 127;
+      break;
+    }
+    }
+
+    colors.push_back(Color(r, g, b));
+  }
+
+
+  for (int j = 0; j < nFrames; ++j)
+  {
+    Frame frame(m_nLEDs);
+    std::vector<int> usedPositions;
+
+    for (int i = 0; i < nDots; ++i)
+    {
+      positions[i] += speeds[i];
+
+      int pos = int(positions[i]) % m_nLEDs;
+      LED led(pos, colors[i]);
+      frame.addLED(led);
+      usedPositions.push_back(pos);
+    }
+
+    for (int i = 0; i < nDots; ++i)
+    {
+      if (std::count(usedPositions.begin(), usedPositions.end(), int(usedPositions[i])) == 2)
+      {
+        std::cout<< "speed reversed" << std::endl;
+        speeds[i] *= -1.0;
+        positions[i] += speeds[i];
+      }
+    }
+    usedPositions.clear();
+    animation.addFrame(frame);
+  }
+  return animation;
 }
 
 

@@ -11,10 +11,11 @@ class Frame
 {
 public:
   Frame(int nLEDs);
+  ~Frame();
 
   const std::vector<LED>& getLEDs() const;
 
-  void addLED(LED led);
+  void addLED(const LED& led);
 
   void print();
 

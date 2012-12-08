@@ -16,6 +16,7 @@
 #include <unistd.h> // for usleep on linux
 
 
+
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow),
@@ -138,7 +139,7 @@ MainWindow::startAnimation() const
     Color colorC(0, 0, 127);
     Color colorD(127, 0, 127);
 
-    int nFrames = 1000;
+//    int nFrames = 1000;
 
 //    Animation animationA = m_studio->createMovingDot(0, nFrames, colorA, 2.5);
 //    Animation animationB = m_studio->createMovingDot(0, nFrames, colorB, 1.5);
@@ -146,21 +147,13 @@ MainWindow::startAnimation() const
 //    Animation animationD = m_studio->createMovingDot(0, nFrames, colorD, 0.7);
 //    Animation animationA = m_studio->createMovingDot(colorB, 1.0);
 
-//    Animation animationA = m_studio->createMovingLine(nFrames, colorA, 3.3);
-//    Animation animationB = m_studio->createMovingLine(nFrames, colorB, 2.2);
-//    Animation animationC = m_studio->createMovingLine(nFrames, colorC, 1.1);
-//    Animation animationD = m_studio->createMovingLine(nFrames, colorD, 0.8);
+//    Animation animationA = m_studio->createMovingLine(nFrames, colorA, 1.5);
+//    m_player->addAnimation(animationA);
+
 //    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
 
-//    Animation animationCombined = animationA.combineTwoAnimations(animationA, animationB);
-//    Animation animationCombined2 = animationA.combineTwoAnimations(animationCombined, animationC);
-//    Animation animationCombined3 = animationA.combineTwoAnimations(animationCombined2, animationD);
-//    std::cout << animationCombined.getFrames().size() << std::endl;
-//    m_player->addAnimation(animationA);
-//    m_player->addAnimation(animationB);
-//    m_player->addAnimation(animationC);
-//    m_player->addAnimation(animationD);
-    m_player->addAnimation(m_studio->createMovingRainbow());
+//    m_player->addAnimation(m_studio->createMovingRainbow());
+    m_player->addAnimation(m_studio->createRandomMovingDots(14, 20000));
     m_player->playAllAnimations();
   }
 }
