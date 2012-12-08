@@ -95,3 +95,56 @@ Studio::createMovingDot(int startPos, int nFrames, const Color &color, double sp
 
   return animation;
 }
+
+
+Animation
+Studio::createMovingRainbow()
+{
+  Animation animation;
+  for (int j = 0; j < 384 * 5; j++)
+  {
+    // 5 cycles of all 384 colors in the wheel
+    Frame frame(m_nLEDs);
+    for (int i = 0; i < m_nLEDs; i++)
+    {
+      // tricky math! we use each pixel as a fraction of the full 384-color wheel
+      // (thats the i / strip.numPixels() part)
+      // Then add in j which makes the colors go around per pixel
+      // the % 384 is to make the wheel cycle around
+      Color color = wheel( ((i * 384 / m_nLEDs) + j) % 384 );
+      LED led(i, color);
+//      led.print();
+      frame.addLED(led);
+    }
+    animation.addFrame(frame);
+  }
+  return animation;
+}
+
+Color
+Studio::wheel(int wheelPos)
+{
+  int r;
+  int g;
+  int b;
+
+  switch(wheelPos / 128)
+  {
+    case 0:
+      r = 127 - wheelPos % 128;   //Red down
+      g = wheelPos % 128;      // Green up
+      b = 0;                  //blue off
+      break;
+    case 1:
+      g = 127 - wheelPos % 128;  //green down
+      b = wheelPos % 128;      //blue up
+      r = 0;                  //red off
+      break;
+    case 2:
+      b = 127 - wheelPos % 128;  //blue down
+      r = wheelPos % 128;      //red up
+      g = 0;                  //green off
+      break;
+  }
+  return Color(r, g, b);
+}

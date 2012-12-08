@@ -13,6 +13,8 @@ public:
 
   Animation createMovingLine(int nFrames, const Color& color, double speed);
   Animation createMovingDot(int startPos, int nFrames, const Color& color, double speed);
+  Animation createMovingRainbow();
+  Color wheel(int wheelPos);
 private:
 
 private:

@@ -65,17 +65,23 @@ Player::addAnimation(const Animation& animation)
 
 
 void
-Player::play()
+Player::playAllAnimations()
 {
-//  while (!m_mainAnimation.getFrames().empty())
-//  {
-    m_mutex.lock();
-    const std::deque<Frame>& frames = m_mainAnimation.getFrames();
-    m_lastFrame = frames.front();
-    m_ledController->send(frames.front());
-    m_mainAnimation.pop_frontFrame();
-    m_mutex.unlock();
-//  }
+  while (!m_mainAnimation.getFrames().empty())
+  {
+    playFrame();
+  }
+}
+
+void
+Player::playFrame()
+{
+  m_mutex.lock();
+  const std::deque<Frame>& frames = m_mainAnimation.getFrames();
+  m_lastFrame = frames.front();
+  m_ledController->send(frames.front());
+  m_mainAnimation.pop_frontFrame();
+  m_mutex.unlock();
 }
 
 

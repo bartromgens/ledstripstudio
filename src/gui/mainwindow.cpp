@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
 
-//  startAnimationThread();
+  startAnimationThread();
 }
 
 MainWindow::~MainWindow()
@@ -131,7 +131,7 @@ MainWindow::startAnimationThread() const
 void
 MainWindow::startAnimation() const
 {
-  for (std::size_t i = 0; i < 10000; ++i)
+  for (std::size_t i = 0; i < 1; ++i)
   {
     Color colorA(127, 0, 0);
     Color colorB(0, 127, 0);
@@ -145,20 +145,23 @@ MainWindow::startAnimation() const
 //    Animation animationC = m_studio->createMovingDot(0, nFrames, colorC, 1.0);
 //    Animation animationD = m_studio->createMovingDot(0, nFrames, colorD, 0.7);
 //    Animation animationA = m_studio->createMovingDot(colorB, 1.0);
-    Animation animationA = m_studio->createMovingLine(nFrames, colorA, 3.3);
-    Animation animationB = m_studio->createMovingLine(nFrames, colorB, 2.2);
-    Animation animationC = m_studio->createMovingLine(nFrames, colorC, 1.1);
-    Animation animationD = m_studio->createMovingLine(nFrames, colorD, 0.8);
+
+//    Animation animationA = m_studio->createMovingLine(nFrames, colorA, 3.3);
+//    Animation animationB = m_studio->createMovingLine(nFrames, colorB, 2.2);
+//    Animation animationC = m_studio->createMovingLine(nFrames, colorC, 1.1);
+//    Animation animationD = m_studio->createMovingLine(nFrames, colorD, 0.8);
 //    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
-    Animation animationCombined = animationA.combineTwoAnimations(animationA, animationB);
-    Animation animationCombined2 = animationA.combineTwoAnimations(animationCombined, animationC);
-    Animation animationCombined3 = animationA.combineTwoAnimations(animationCombined2, animationD);
+
+//    Animation animationCombined = animationA.combineTwoAnimations(animationA, animationB);
+//    Animation animationCombined2 = animationA.combineTwoAnimations(animationCombined, animationC);
+//    Animation animationCombined3 = animationA.combineTwoAnimations(animationCombined2, animationD);
 //    std::cout << animationCombined.getFrames().size() << std::endl;
-    m_player->addAnimation(animationA);
-    m_player->addAnimation(animationB);
-    m_player->addAnimation(animationC);
-    m_player->addAnimation(animationD);
-    m_player->play();
+//    m_player->addAnimation(animationA);
+//    m_player->addAnimation(animationB);
+//    m_player->addAnimation(animationC);
+//    m_player->addAnimation(animationD);
+    m_player->addAnimation(m_studio->createMovingRainbow());
+    m_player->playAllAnimations();
   }
 }
 
@@ -223,7 +226,7 @@ MainWindow::slotColorSelected(const QColor &color)
   Animation animation = m_studio->createSingleColorSingleFrameAnimation(colorNew);
 
   m_player->addAnimation(animation);
-  m_player->play();
+  m_player->playFrame();
 }
 
 
@@ -293,7 +296,7 @@ MainWindow::slotBrightnessChanged()
   Animation animation = m_studio->createSingleColorSingleFrameAnimation(color);
   m_player->addAnimation(animation);
 
-  m_player->play();
+  m_player->playFrame();
 }
 
 

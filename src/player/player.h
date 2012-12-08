@@ -18,13 +18,15 @@ public:
 
   void addAnimation(const Animation &animation);
 
-  void play();
+  void playFrame();
 
   int getFPS() const;
   Frame getLastFrame() const;
 
   // experimental
   Frame smoothenFrames(const Frame &firstFrame, const Frame &secondFrame, int nFrames = 1);
+
+  void playAllAnimations();
 
 private:
   std::unique_ptr<LEDController> m_ledController;

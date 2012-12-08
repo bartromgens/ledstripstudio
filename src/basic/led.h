@@ -14,6 +14,8 @@ public:
   void setColor(const Color &color);
   void setLEDnr(int letNr);
 
+  void print() const;
+
 private:
   int m_ledNr;
   Color m_color;

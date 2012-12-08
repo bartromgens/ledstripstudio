@@ -164,7 +164,7 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
                              );
   }
 
-  m_ledPlayer->play();
+  m_ledPlayer->playFrame();
 }
 
 
