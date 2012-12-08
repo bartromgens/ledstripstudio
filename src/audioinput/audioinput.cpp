@@ -40,14 +40,14 @@ AudioInput::~AudioInput()
 
 
 void
-AudioInput::setLedPlayer(Player* ledPlayer)
+AudioInput::setLedPlayer(std::shared_ptr<Player>  ledPlayer)
 {
   m_ledPlayer = ledPlayer;
 }
 
 
 void
-AudioInput::setControlSettings(ControlSettings* settings)
+AudioInput::setControlSettings(std::shared_ptr<ControlSettings> settings)
 {
   m_controlSettings = settings;
 }

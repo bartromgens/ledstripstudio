@@ -6,9 +6,11 @@
 
 #include <QString>
 #include <QTime>
-#include <vector>
+
 #include <deque>
 #include <mutex>
+#include <memory>
+#include <vector>
 
 class QextSerialPort;
 
@@ -35,14 +37,14 @@ public:
 
 private:
   void disconnect();
-  QextSerialPort* createPort();
+  std::unique_ptr<QextSerialPort> createPort();
 
 private:
   std::vector<int> m_ledNr;
   std::vector<Color> m_color;
   std::vector<std::vector<Color> > m_colorOld;
 
-  QextSerialPort* m_port ;
+  std::unique_ptr<QextSerialPort> m_port ;
   QByteArray m_byteMessage;
   QString m_serialPortName;
   QTime m_timer;

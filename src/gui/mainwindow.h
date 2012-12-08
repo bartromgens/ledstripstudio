@@ -62,13 +62,13 @@ private slots:
   void update();
 
 private:
-  Ui::MainWindow *ui;
+  std::unique_ptr<Ui::MainWindow> ui;
   QColorDialog m_colorDialog;
   std::size_t m_nLedsTotal;
-  Player* m_player;
-  Studio* m_studio;
-  AudioInput* m_audioInput;
-  ControlSettings* m_audioControlSettings;
+  std::shared_ptr<Player> m_player;
+  std::unique_ptr<Studio> m_studio;
+  std::unique_ptr<AudioInput> m_audioInput;
+  std::shared_ptr<ControlSettings> m_audioControlSettings;
 
 //  LedStripEmulator* m_ledStripEmulator;
 

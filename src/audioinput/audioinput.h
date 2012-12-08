@@ -33,8 +33,8 @@ public:
   void startStream();
   void closeStream();
 
-  void setLedPlayer(Player* ledPlayer);
-  void setControlSettings(ControlSettings* settings);
+  void setLedPlayer(std::shared_ptr<Player> ledPlayer);
+  void setControlSettings(std::shared_ptr<ControlSettings> settings);
 
 private:
 
@@ -63,8 +63,8 @@ private:
 //  int m_nSamples;
   PaStream* m_stream;
   paUserData m_data;
-  Player* m_ledPlayer;
-  ControlSettings* m_controlSettings;
+  std::shared_ptr<Player> m_ledPlayer;
+  std::shared_ptr<ControlSettings> m_controlSettings;
   int m_nUpdates;
 
   int m_offSet;

@@ -59,11 +59,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-  delete ui;
-  delete m_audioInput;
-  delete m_studio;
-  delete m_player;
-  delete m_audioControlSettings;
 }
 
 

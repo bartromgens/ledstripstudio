@@ -44,6 +44,7 @@ LIBS += -lportaudio -lasound -lfftw3_omp -lfftw3 -lgomp -lpthread -lm
 
 QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_CXXFLAGS += -fopenmp
+QMAKE_CXXFLAGS += -Wall
 QMAKE_CXXFLAGS_RELEASE -= -O3
 
 OTHER_FILES +=

@@ -15,7 +15,7 @@
 #include <unistd.h>  // for (u)sleep on Linux
 
 LEDController::LEDController()
-  : m_port(0),
+  : m_port(),
     m_serialPortName("none"),
     m_timer(),
     m_timer2(),
@@ -150,11 +150,11 @@ LEDController::setSerialPortName(QString serialPortName)
   m_serialPortName = serialPortName;
 }
 
-QextSerialPort *
+std::unique_ptr<QextSerialPort>
 LEDController::createPort()
 {
   std::cout << "LEDController::createPort() - port name: " << m_serialPortName.toStdString() << std::endl;
-  QextSerialPort* port = new QextSerialPort(m_serialPortName, QextSerialPort::EventDriven);
+  std::unique_ptr<QextSerialPort> port(new QextSerialPort(m_serialPortName, QextSerialPort::EventDriven));
   port->setBaudRate(BAUD2000000);
   port->setFlowControl(FLOW_OFF);
   port->setParity(PAR_NONE);
