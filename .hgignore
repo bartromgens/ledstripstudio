@@ -17,3 +17,7 @@ src/gui/ui_mainwindow.h
 tmp/moc_qextserialport.cpp
 tmp/moc_qextserialenumerator.cpp
 tmp/moc_mainwindow.cpp
+ledstrip.pro.user.2.6pre1
+tmp/moc_player.cpp
+tmp/moc_ledstripemulator.cpp
+wisdom3.txt
