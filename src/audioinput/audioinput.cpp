@@ -21,10 +21,6 @@ AudioInput::AudioInput()
 {
   std::cout << "AudioInput::AudioInput()" << std::endl;
   initializeUserData(); // From now on, recordedSamples is initialised.
-
-//  m_ledPlayer = new Player();
-
-//  openStream();
 }
 
 

@@ -19,17 +19,18 @@ public:
 
   Animation();
 
-  const std::deque<Frame>& getFrames() const;
 
   void addFrame(const Frame& frame);
+  void pop_frontFrame();
+
+  const std::deque<Frame>& getFrames() const;
+
   Animation combineAnimations(const std::list<Animation>& animations);
-
-  AdditionType getAdditionType() const;
-  void setAdditionType(AdditionType type);
-
   Animation combineTwoAnimations(const Animation& animationA, const Animation& animationB) const;
 
-  void pop_frontFrame();
+  void setAdditionType(AdditionType type);
+  AdditionType getAdditionType() const;
+
 private:
   AdditionType m_additionType;
   std::deque<Frame> m_frames;
