@@ -17,11 +17,13 @@ public:
 
   void addLED(const LED& led);
 
+  void setAllLedsOff();
+  void amplifyRGB(double facR, double facG, double facB);
+
   void print();
 
-  void setAllLedsOff();
-
-  void amplifyRGB(double facR, double facG, double facB);
+private:
+  void fill();
 
 private:
   int m_nLEDs;

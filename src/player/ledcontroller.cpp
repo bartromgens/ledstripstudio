@@ -34,6 +34,35 @@ LEDController::~LEDController()
 }
 
 
+std::unique_ptr<QextSerialPort>
+LEDController::createPort()
+{
+  std::cout << "LEDController::createPort() - port name: " << m_serialPortName.toStdString() << std::endl;
+  std::unique_ptr<QextSerialPort> port(new QextSerialPort(m_serialPortName, QextSerialPort::EventDriven));
+  port->setBaudRate(BAUD2000000);
+  port->setFlowControl(FLOW_OFF);
+  port->setParity(PAR_NONE);
+  port->setDataBits(DATA_8);
+  port->setStopBits(STOP_2);
+
+  return port;
+}
+
+
+void
+LEDController::connect()
+{
+  m_port = createPort();
+  m_port->open(QIODevice::ReadWrite);
+}
+
+void
+LEDController::disconnect()
+{
+ m_port->close();
+}
+
+
 void
 LEDController::send(const Frame &frame)
 {
@@ -69,14 +98,6 @@ LEDController::send(const Frame &frame)
 
     m_port->write(bytes);
     bytes.clear();
-//    QByteArray result;
-//    int bytesAvailable = m_port->bytesAvailable();
-//    result.resize(bytesAvailable);
-//    m_port->read(result.data(), result.size());
-//    for (int i = 0; i < result.size(); ++i)
-//    {
-//      std::cout << int(result[i]) << std::endl;
-//    }
   }
 
   m_fpsHistory.push_back(1000.0/m_timer.elapsed());
@@ -86,11 +107,25 @@ LEDController::send(const Frame &frame)
   }
   m_timer.restart();
 
-
 //  std::cout << 1000/timerSend.elapsed() << " fps" << std::endl;
 
   clearAll();
 }
+
+
+void
+LEDController::read()
+{
+  QByteArray result;
+  int bytesAvailable = m_port->bytesAvailable();
+  result.resize(bytesAvailable);
+  m_port->read(result.data(), result.size());
+  for (int i = 0; i < result.size(); ++i)
+  {
+    std::cout << int(result[i]) << std::endl;
+  }
+}
+
 
 void
 LEDController::clearAll()
@@ -101,29 +136,18 @@ LEDController::clearAll()
 
 
 void
-LEDController::connect()
-{
-  m_port = createPort();
-  m_port->open(QIODevice::ReadWrite);
-}
-
-void
-LEDController::disconnect()
-{
- m_port->close();
-}
-
-void
 LEDController::setColor(const Color& color)
 {
   m_color.push_back(color);
 }
+
 
 void
 LEDController::setLEDnr(int ledNr)
 {
   m_ledNr.push_back(ledNr);
 }
+
 
 int
 LEDController::getFPS()
@@ -144,22 +168,9 @@ LEDController::getFPS()
   return averageFPS;
 }
 
+
 void
 LEDController::setSerialPortName(QString serialPortName)
 {
   m_serialPortName = serialPortName;
-}
-
-std::unique_ptr<QextSerialPort>
-LEDController::createPort()
-{
-  std::cout << "LEDController::createPort() - port name: " << m_serialPortName.toStdString() << std::endl;
-  std::unique_ptr<QextSerialPort> port(new QextSerialPort(m_serialPortName, QextSerialPort::EventDriven));
-  port->setBaudRate(BAUD2000000);
-  port->setFlowControl(FLOW_OFF);
-  port->setParity(PAR_NONE);
-  port->setDataBits(DATA_8);
-  port->setStopBits(STOP_2);
-
-  return port;
 }

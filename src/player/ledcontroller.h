@@ -36,6 +36,7 @@ public:
   int getFPS();
 
 private:
+  void read();
   void disconnect();
   std::unique_ptr<QextSerialPort> createPort();
 

@@ -4,16 +4,23 @@ Frame::Frame(int nLEDs)
   : m_nLEDs(nLEDs),
     m_leds()
 {
+  fill();
+}
+
+Frame::~Frame()
+{
+}
+
+
+void
+Frame::fill()
+{
   m_leds.reserve(m_nLEDs);
   for (int i = 0; i < m_nLEDs; ++i)
   {
     LED emptyLed(i, Color(0, 0, 0));
     m_leds.push_back(emptyLed);
   }
-}
-
-Frame::~Frame()
-{
 }
 
 const std::vector<LED>&

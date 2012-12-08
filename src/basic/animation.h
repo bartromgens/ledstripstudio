@@ -19,7 +19,6 @@ public:
 
   Animation();
 
-
   void addFrame(const Frame& frame);
   void pop_frontFrame();
 
