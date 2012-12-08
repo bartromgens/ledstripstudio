@@ -39,7 +39,7 @@ unsigned int SpectrumAnalyser::getNSamples() const
 
 
 std::map<double, double>
-SpectrumAnalyser::binSpectrum(std::vector<double> data, int nBins, int sampleRate) const
+SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sampleRate) const
 {
   std::map<double, double> hist;
   double binWidth = sampleRate/nBins;

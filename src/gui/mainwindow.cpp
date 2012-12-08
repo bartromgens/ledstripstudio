@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
 
-  startAnimationThread();
+//  startAnimationThread();
 }
 
 MainWindow::~MainWindow()

@@ -31,7 +31,7 @@ public:
   unsigned int getNSamples() const;
 
 private:
-  std::map<double, double> binSpectrum(std::vector<double> data, int nBins, int sampleRate) const;
+  std::map<double, double> binSpectrum(const std::vector<double>& data, int nBins, int sampleRate) const;
   std::deque<float> hannWindowFunction(const std::deque<float>& in) const;
   std::deque<float> linearWindowFunction(const std::deque<float>& in) const;
 
