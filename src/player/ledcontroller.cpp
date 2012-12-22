@@ -1,29 +1,27 @@
 #include "ledcontroller.h"
-#include "src/basic/frame.h"
 
 //#include "qextserialport.h"
 #include "/home/bart/prog/arduinoControl/qextserialport-1.2beta2/src/qextserialport.h"
 
-#include <QDebug>
-#include <QIODevice>
-#include <QRegExp>
-#include <QStringList>
-#include <QTime>
-
-#include <iostream>
-#include <cmath>
 #include <unistd.h>  // for (u)sleep on Linux
 
 LEDController::LEDController()
   : m_port(),
-    m_serialPortName("none"),
+    m_serialPortName("/dev/ttyACM0"),
     m_timer(),
     m_timer2(),
-    m_fpsHistory()
+    m_fpsHistory(),
+    m_io_service(new boost::asio::io_service()),
+    m_serialPort(new boost::asio::serial_port(*m_io_service, m_serialPortName.toStdString()))
 {
   m_timer.start();
   m_timer2.start();
-  usleep(100*1000);
+  usleep(10*1000);
+
+  unsigned int baud = 2000000;
+//  unsigned int baud = 9600;
+  boost::asio::serial_port_base::baud_rate baud_option(baud);
+  m_serialPort->set_option(baud_option); // set the baud rate after the port has been opened
 }
 
 
@@ -31,6 +29,8 @@ LEDController::~LEDController()
 {
   std::cout << "LEDController::~LEDController()" << std::endl;
   disconnect();
+  delete m_serialPort;
+  delete m_io_service;
 }
 
 
@@ -52,8 +52,8 @@ LEDController::createPort()
 void
 LEDController::connect()
 {
-  m_port = createPort();
-  m_port->open(QIODevice::ReadWrite);
+//  m_port = createPort();
+//  m_port->open(QIODevice::ReadWrite);
 }
 
 void
@@ -67,6 +67,7 @@ void
 LEDController::send(const Frame &frame)
 {
   QByteArray bytes;
+  std::string message = "";
 
   const std::vector<LED>& leds = frame.getLEDs();
 
@@ -91,12 +92,29 @@ LEDController::send(const Frame &frame)
     int green = leds.at(i).getColor().g;
     int blue = leds.at(i).getColor().b;
 
+    message += leds.at(i).getLEDnr();
+    message += std::max(red, 0);
+    message += std::max(green, 0);
+    message += std::max(blue, 0);
+//    message.append(std::max(red, 0));
+//    message.append(std::max(green, 0));
+//    message.append(std::max(blue, 0));
+
     bytes.append( leds.at(i).getLEDnr() );
     bytes.append( std::max(red, 0) );
     bytes.append( std::max(green, 0) );
     bytes.append( std::max(blue, 0) );
 
-    m_port->write(bytes);
+    boost::system::error_code error;
+    boost::asio::write(*m_serialPort, boost::asio::buffer(bytes.constData(), bytes.size()), boost::asio::transfer_all(), error);
+    if (error)
+    {
+      std::cout << "LEDController::send() - error: " << error.message() << std::endl;
+    }
+//    std::cout << "LEDController::send() - write success!" << std::endl;
+//    std::cout << "LEDController::send() - message: " << message << std::endl;
+
+//    m_port->write(bytes);
     bytes.clear();
   }
 

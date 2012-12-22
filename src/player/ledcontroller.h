@@ -7,6 +7,9 @@
 #include <QString>
 #include <QTime>
 
+#include <boost/asio.hpp>
+#include <boost/asio/serial_port.hpp>
+
 #include <deque>
 #include <mutex>
 #include <memory>
@@ -52,6 +55,9 @@ private:
   QTime m_timer2;
   std::deque<int> m_fpsHistory;
   mutable std::mutex m_mutex;
+
+  boost::asio::io_service* m_io_service;
+  boost::asio::serial_port* m_serialPort; // the serial port this instance is connected to
 };
 
 #endif // LEDCONTROLLER_H
