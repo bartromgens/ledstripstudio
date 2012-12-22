@@ -41,11 +41,15 @@ INCLUDEPATH += /home/bart/prog/ledstrip/include/
 
 LIBS += -L/home/bart/prog/ledstrip/lib/
 LIBS += -lportaudio -lasound -lfftw3_omp -lfftw3 -lgomp -lpthread -lm
+# for boost asio serial port communication
+LIBS += -lboost_system152
 
 QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_CXXFLAGS += -fopenmp
 QMAKE_CXXFLAGS += -Wall
-QMAKE_CXXFLAGS_RELEASE -= -O3
+QMAKE_CXXFLAGS += -Wall
+QMAKE_CXXFLAGS_RELEASE += -O3
+QMAKE_LFLAGS += -time
 
 OTHER_FILES +=
 

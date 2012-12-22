@@ -1,11 +1,6 @@
 #include "src/audioinput/audioinput.h"
-#include "src/audioinput/userdata.h"
 #include "src/spectrum/spectrumanalyser.h"
-#include "src/studio/studio.h"
 
-#include <fstream>
-#include <cmath>
-#include <unistd.h>  // for (u)sleep on Linux
 
 std::mutex g_pages_mutex;
 

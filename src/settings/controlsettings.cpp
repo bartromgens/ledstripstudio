@@ -1,6 +1,5 @@
 #include "controlsettings.h"
 
-#include <iostream>
 
 ControlSettings::ControlSettings()
   : volumeTotal(0),

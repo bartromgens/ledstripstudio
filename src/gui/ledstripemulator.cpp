@@ -2,7 +2,6 @@
 
 #include <QPainter>
 
-#include <iostream>
 
 LedStripEmulator::LedStripEmulator(QWidget* parent)
   : QWidget(parent),

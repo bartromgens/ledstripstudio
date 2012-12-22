@@ -2,18 +2,11 @@
 #include "src/gui/ui_mainwindow.h"
 
 #include "src/audioinput/audioinput.h"
-#include "src/basic/animation.h"
-#include "src/gui/ledstripemulator.h"
-#include "src/player/player.h"
 #include "src/studio/studio.h"
-#include "src/settings/controlsettings.h"
 
 
-#include <QTime>
 
 #include <thread>
-#include <memory>
-#include <unistd.h> // for usleep on linux
 
 
 
@@ -56,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //  startAnimationThread();
 }
+
 
 MainWindow::~MainWindow()
 {

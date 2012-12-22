@@ -1,5 +1,4 @@
 #include "player.h"
-#include "src/basic/color.h"
 
 #include <unistd.h>  // for (u)sleep on Linux
 
@@ -72,6 +71,7 @@ Player::playAllAnimations()
     playFrame();
   }
 }
+
 
 void
 Player::playFrame()

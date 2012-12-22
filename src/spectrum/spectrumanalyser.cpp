@@ -1,5 +1,4 @@
 #include "spectrumanalyser.h"
-#include "./fftwpp/fftw++.h"
 
 #include <QTime>
 

@@ -1,8 +1,5 @@
 #include "studio.h"
-#include "src/basic/frame.h"
-#include "src/basic/color.h"
 
-#include <cmath>
 #include <algorithm>
 
 Studio::Studio(int m_nLEDs)
@@ -84,7 +81,6 @@ Studio::createRandomMovingDots(int nDots, int nFrames)
     {
       if (std::count(usedPositions.begin(), usedPositions.end(), int(usedPositions[i])) == 2)
       {
-        std::cout<< "speed reversed" << std::endl;
         speeds[i] *= -1.0;
         positions[i] += speeds[i];
       }
@@ -206,9 +202,9 @@ Studio::createMovingRainbow()
 Color
 Studio::wheel(int wheelPos)
 {
-  int r;
-  int g;
-  int b;
+  int r = 0;
+  int g = 0;
+  int b = 0;
 
   switch(wheelPos / 128)
   {

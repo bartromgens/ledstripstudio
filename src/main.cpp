@@ -2,10 +2,7 @@
 
 //#include "windows.h"
 
-#include <iostream>
 #include <QApplication>
-#include <random>
-#include <ctime>
 
 int main(int argc,char *argv[])
 {
