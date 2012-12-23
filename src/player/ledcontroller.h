@@ -55,7 +55,7 @@ private:
   std::deque<int> m_fpsHistory;
   mutable boost::mutex m_mutex;
 
-  boost::asio::io_service* m_io_service;
+  std::unique_ptr<boost::asio::io_service> m_io_service;
   std::unique_ptr<boost::asio::serial_port> m_serialPort; // the serial port this instance is connected to
 };
 

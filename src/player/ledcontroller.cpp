@@ -2,8 +2,8 @@
 #include "basic/universalsleep.h"
 
 LEDController::LEDController()
-  : m_serialPortName("/dev/ttyACM0"),
-//  : m_serialPortName("COM7"),
+//  : m_serialPortName("/dev/ttyACM0"),
+  : m_serialPortName("COM7"),
     m_timer(),
     m_timer2(),
     m_fpsHistory(),
@@ -45,7 +45,6 @@ LEDController::~LEDController()
 {
   std::cout << "LEDController::~LEDController()" << std::endl;
   disconnect();
-  delete m_io_service;
 }
 
 void
