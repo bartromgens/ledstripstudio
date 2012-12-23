@@ -129,19 +129,20 @@ Studio::createMovingLine(int nFrames, const Color& color, double speed)
 //    std::cout << dx1 << ", " << dx2 << ", " << dx3 << ", " << dx4 << std::endl;
 
     Frame frame(m_nLEDs);
-    if ((int)pos < (m_nLEDs-2))
+    int posInt = int(pos);
+    if (posInt< (m_nLEDs-2))
     {
-      LED led(int(pos), Color(r-50*dx, g-50*dx, b-50*dx));
+      LED led( posInt, Color(int(r-50*dx), int(g-50*dx), int(b-50*dx)) );
       frame.addLED(led);
-      led = LED(int(pos+1), Color(r-40*dx1, g-50*dx1, b-50*dx1));
+      led = LED( posInt+1, Color(int(r-40*dx1), int(g-50*dx1), int(b-50*dx1)) );
       frame.addLED(led);
-      led = LED(int(pos+2), Color(r-40*dx3, g-50*dx3, b-50*dx3));
+      led = LED( posInt + 2, Color(int(r-40*dx3), int(g-50*dx3), int(b-50*dx3)) );
       frame.addLED(led);
       if (pos > 3.0)
       {
-        led = LED(int(pos-1), Color(r-40*dx2, g-40*dx2, b-40*dx2));
+        led = LED( posInt-1, Color(int(r-40*dx2), int(g-40*dx2), int(b-40*dx2)) );
         frame.addLED(led);
-        led = LED(int(pos-2), Color(r-40*dx4, g-40*dx4, b-40*dx4));
+        led = LED( posInt-2, Color(int(r-40*dx4), int(g-40*dx4), int(b-40*dx4)) );
         frame.addLED(led);
       }
     }
@@ -150,6 +151,7 @@ Studio::createMovingLine(int nFrames, const Color& color, double speed)
 
   return animation;
 }
+
 
 Animation
 Studio::createMovingDot(int startPos, int nFrames, const Color &color, double speed)
@@ -198,6 +200,7 @@ Studio::createMovingRainbow()
   }
   return animation;
 }
+
 
 Color
 Studio::wheel(int wheelPos)
