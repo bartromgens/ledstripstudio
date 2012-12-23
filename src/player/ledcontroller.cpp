@@ -2,8 +2,8 @@
 #include "basic/universalsleep.h"
 
 LEDController::LEDController()
-//  : m_serialPortName("/dev/ttyACM0"),
-  : m_serialPortName("COM7"),
+  : m_serialPortName("/dev/ttyACM0"),
+//  : m_serialPortName("COM7"),
     m_timer(),
     m_timer2(),
     m_fpsHistory(),
@@ -13,17 +13,18 @@ LEDController::LEDController()
 
   try
   {
-    m_serialPort = new boost::asio::serial_port(*m_io_service, m_serialPortName.toStdString());
+    m_serialPort.reset( new boost::asio::serial_port(*m_io_service, m_serialPortName.toStdString()) );
   }
   catch(...)
   {
     std::cout << "boom!" << std::endl;
+    return;
   }
 
   m_timer.start();
   m_timer2.start();
 
-  universalsleep::sleep_ms(10);
+  universalsleep::sleep_ms(100);
 
 //  unsigned int baud = 921600;
   unsigned int baud = 2000000;
@@ -44,7 +45,6 @@ LEDController::~LEDController()
 {
   std::cout << "LEDController::~LEDController()" << std::endl;
   disconnect();
-  delete m_serialPort;
   delete m_io_service;
 }
 
@@ -64,8 +64,12 @@ LEDController::disconnect()
 void
 LEDController::send(const Frame &frame)
 {
+  if (!m_serialPort)
+  {
+    return;
+  }
+
   QByteArray bytes;
-  std::string message = "";
 
   const std::vector<LED>& leds = frame.getLEDs();
 
@@ -76,11 +80,10 @@ LEDController::send(const Frame &frame)
 
   if (toSleep > 0)
   {
-    universalsleep::sleep_ms(10);
+    universalsleep::sleep_ms(toSleep);
   }
 
 //  std::cout << "send() time to sleep: " << toSleep << std::endl;
-  std::cout << "LEDController::send() - elapsed since last send: " <<  m_timer2.elapsed() << "[ms]" << std::endl;
   m_timer2.restart();
 
   // send the frame
@@ -89,16 +92,6 @@ LEDController::send(const Frame &frame)
     int red = leds.at(i).getColor().r;
     int green = leds.at(i).getColor().g;
     int blue = leds.at(i).getColor().b;
-
-    message += leds.at(i).getLEDnr();
-    message += std::max(red, 0);
-    message += std::max(green, 0);
-    message += std::max(blue, 0);
-
-//    std::cout << red << std::endl;
-//    message.append(std::max(red, 0));
-//    message.append(std::max(green, 0));
-//    message.append(std::max(blue, 0));
 
     bytes.append( leds.at(i).getLEDnr() );
     bytes.append( std::max(red, 0) );
@@ -111,10 +104,7 @@ LEDController::send(const Frame &frame)
     {
       std::cout << "LEDController::send() - error: " << error.message() << std::endl;
     }
-//    std::cout << "LEDController::send() - write success!" << std::endl;
-//    std::cout << "LEDController::send() - message: " << message << std::endl;
 
-//    m_port->write(bytes);
     bytes.clear();
   }
 
@@ -124,8 +114,6 @@ LEDController::send(const Frame &frame)
     m_fpsHistory.pop_front();
   }
   m_timer.restart();
-
-  std::cout << "LEDController::send() - time to send: " <<  m_timer2.elapsed() << " m" << std::endl;
 
   clearAll();
 }

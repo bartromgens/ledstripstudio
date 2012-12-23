@@ -56,7 +56,7 @@ private:
   mutable boost::mutex m_mutex;
 
   boost::asio::io_service* m_io_service;
-  boost::asio::serial_port* m_serialPort; // the serial port this instance is connected to
+  std::unique_ptr<boost::asio::serial_port> m_serialPort; // the serial port this instance is connected to
 };
 
 #endif // LEDCONTROLLER_H

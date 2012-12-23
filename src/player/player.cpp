@@ -11,8 +11,7 @@ Player::Player()
   //  const QString serialPortName = "COM11"; // windows
   m_ledController = createLedController(serialPortName);
 
-//  sleep(10*1000); // let the LED strip initialise
-  universalsleep::sleep_ms(10); // let the LED strip initialise
+  universalsleep::sleep_ms(100); // let the LED strip initialise
 }
 
 
@@ -23,6 +22,8 @@ Player::~Player()
 
 std::unique_ptr<LEDController> Player::createLedController(QString serialPortName)
 {
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
   std::unique_ptr<LEDController> ledController( new LEDController() );
   ledController->setSerialPortName(serialPortName);
   ledController->connect();
@@ -40,9 +41,7 @@ Player::getFPS() const
 Frame
 Player::getLastFrame() const
 {
-//  m_mutex.lock();
-//  Frame frame = m_lastFrame;
-//  m_mutex.unlock();
+  boost::lock_guard<boost::mutex> lock(m_mutex);
   return m_lastFrame;
 }
 
@@ -50,7 +49,7 @@ Player::getLastFrame() const
 void
 Player::addAnimation(const Animation& animation)
 {
-  m_mutex.lock();
+  boost::lock_guard<boost::mutex> lock(m_mutex);
   if (!m_mainAnimation.getFrames().empty())
   {
     m_mainAnimation = animation.combineTwoAnimations(animation, m_mainAnimation);
@@ -59,7 +58,6 @@ Player::addAnimation(const Animation& animation)
   {
     m_mainAnimation = animation;
   }
-  m_mutex.unlock();
 }
 
 
@@ -76,12 +74,12 @@ Player::playAllAnimations()
 void
 Player::playFrame()
 {
-  m_mutex.lock();
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
   const std::deque<Frame>& frames = m_mainAnimation.getFrames();
   m_lastFrame = frames.front();
   m_ledController->send(frames.front());
   m_mainAnimation.pop_frontFrame();
-  m_mutex.unlock();
 }
 
 
