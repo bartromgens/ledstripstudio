@@ -1,7 +1,7 @@
 #ifndef LEDSTRIPEMULATOR_H
 #define LEDSTRIPEMULATOR_H
 
-#include "src/basic/frame.h"
+#include "basic/frame.h"
 
 #include <QWidget>
 

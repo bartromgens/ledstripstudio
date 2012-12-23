@@ -1,21 +1,21 @@
 #ifndef AUDIOINPUT_H
 #define AUDIOINPUT_H
 
-#include "portaudio.h"
+#include "portaudio/portaudio.h"
 #include "userdata.h"
 //#include "recordCallback.h"
 
-#include "src/basic/color.h"
-#include "src/basic/animation.h"
-#include "src/player/player.h"
-#include "src/settings/controlsettings.h"
+#include "basic/color.h"
+#include "basic/animation.h"
+#include "player/player.h"
+#include "settings/controlsettings.h"
 
 #include <QTime>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <mutex>
+//#include <mutex>
 
 class AudioInput
 {

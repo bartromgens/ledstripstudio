@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "src/basic/animation.h"
+#include "basic/animation.h"
 
 #include <QMainWindow>
 #include <QToolBar>

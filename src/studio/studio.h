@@ -1,7 +1,7 @@
 #ifndef STUDIO_H
 #define STUDIO_H
 
-#include "src/basic/animation.h"
+#include "basic/animation.h"
 
 class Studio
 {

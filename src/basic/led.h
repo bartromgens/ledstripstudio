@@ -1,7 +1,7 @@
 #ifndef LED_H
 #define LED_H
 
-#include "src/basic/color.h"
+#include "basic/color.h"
 
 class LED
 {
