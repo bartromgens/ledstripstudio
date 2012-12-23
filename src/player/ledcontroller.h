@@ -42,14 +42,12 @@ public:
 private:
   void read();
   void disconnect();
-//  std::unique_ptr<QextSerialPort> createPort();
 
 private:
   std::vector<int> m_ledNr;
   std::vector<Color> m_color;
   std::vector<std::vector<Color> > m_colorOld;
 
-//  std::unique_ptr<QextSerialPort> m_port ;
   QByteArray m_byteMessage;
   QString m_serialPortName;
   QTime m_timer;

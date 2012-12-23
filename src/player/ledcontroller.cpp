@@ -1,27 +1,47 @@
 #include "ledcontroller.h"
 
 //#include "qextserialport.h"
-#include "/home/bart/prog/arduinoControl/qextserialport-1.2beta2/src/qextserialport.h"
+//#include "/home/bart/prog/arduinoControl/qextserialport-1.2beta2/src/qextserialport.h"
 
-#include <unistd.h>  // for (u)sleep on Linux
+//#include <unistd.h>  // for (u)sleep on Linux
+#include <Windows.h>
 
 LEDController::LEDController()
-  : m_port(),
-    m_serialPortName("/dev/ttyACM0"),
+//  : m_serialPortName("/dev/ttyACM0"),
+  : m_serialPortName("COM7"),
     m_timer(),
     m_timer2(),
     m_fpsHistory(),
     m_io_service(new boost::asio::io_service()),
-    m_serialPort(new boost::asio::serial_port(*m_io_service, m_serialPortName.toStdString()))
+    m_serialPort()
 {
+
+  try
+  {
+    m_serialPort = new boost::asio::serial_port(*m_io_service, m_serialPortName.toStdString());
+  }
+  catch(...)
+  {
+    std::cout << "boom!" << std::endl;
+  }
+
   m_timer.start();
   m_timer2.start();
-  usleep(10*1000);
+  //usleep(10*1000);
+  Sleep(10);
 
+//  unsigned int baud = 921600;
   unsigned int baud = 2000000;
-//  unsigned int baud = 9600;
   boost::asio::serial_port_base::baud_rate baud_option(baud);
+  boost::asio::serial_port_base::flow_control flowControl(boost::asio::serial_port_base::flow_control::none);
+  boost::asio::serial_port_base::parity parityType(boost::asio::serial_port_base::parity::none);
+  boost::asio::serial_port_base::stop_bits stopBits(boost::asio::serial_port_base::stop_bits::two);
+
   m_serialPort->set_option(baud_option); // set the baud rate after the port has been opened
+  m_serialPort->set_option(flowControl);
+  m_serialPort->set_option(parityType);
+  m_serialPort->set_option(boost::asio::serial_port_base::character_size(8));
+  m_serialPort->set_option(stopBits);
 }
 
 
@@ -33,33 +53,16 @@ LEDController::~LEDController()
   delete m_io_service;
 }
 
-
-std::unique_ptr<QextSerialPort>
-LEDController::createPort()
-{
-  std::cout << "LEDController::createPort() - port name: " << m_serialPortName.toStdString() << std::endl;
-  std::unique_ptr<QextSerialPort> port(new QextSerialPort(m_serialPortName, QextSerialPort::EventDriven));
-  port->setBaudRate(BAUD2000000);
-  port->setFlowControl(FLOW_OFF);
-  port->setParity(PAR_NONE);
-  port->setDataBits(DATA_8);
-  port->setStopBits(STOP_2);
-
-  return port;
-}
-
-
 void
 LEDController::connect()
 {
-//  m_port = createPort();
-//  m_port->open(QIODevice::ReadWrite);
+
 }
 
 void
 LEDController::disconnect()
 {
- m_port->close();
+
 }
 
 
@@ -78,11 +81,12 @@ LEDController::send(const Frame &frame)
 
   if (toSleep > 0)
   {
-    usleep(toSleep*1000);
+    //usleep(toSleep*1000);
+    Sleep(toSleep);
   }
 
 //  std::cout << "send() time to sleep: " << toSleep << std::endl;
-//  std::cout << "LEDController::send() - elapsed since last send: " <<  m_timer2.elapsed() << "[ms]" << std::endl;
+  std::cout << "LEDController::send() - elapsed since last send: " <<  m_timer2.elapsed() << "[ms]" << std::endl;
   m_timer2.restart();
 
   // send the frame
@@ -96,6 +100,8 @@ LEDController::send(const Frame &frame)
     message += std::max(red, 0);
     message += std::max(green, 0);
     message += std::max(blue, 0);
+
+//    std::cout << red << std::endl;
 //    message.append(std::max(red, 0));
 //    message.append(std::max(green, 0));
 //    message.append(std::max(blue, 0));
@@ -125,7 +131,7 @@ LEDController::send(const Frame &frame)
   }
   m_timer.restart();
 
-//  std::cout << 1000/timerSend.elapsed() << " fps" << std::endl;
+  std::cout << "LEDController::send() - time to send: " <<  m_timer2.elapsed() << " m" << std::endl;
 
   clearAll();
 }
@@ -134,14 +140,7 @@ LEDController::send(const Frame &frame)
 void
 LEDController::read()
 {
-  QByteArray result;
-  int bytesAvailable = m_port->bytesAvailable();
-  result.resize(bytesAvailable);
-  m_port->read(result.data(), result.size());
-  for (int i = 0; i < result.size(); ++i)
-  {
-    std::cout << int(result[i]) << std::endl;
-  }
+
 }
 
 
