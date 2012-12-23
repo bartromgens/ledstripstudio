@@ -107,12 +107,14 @@ ControlSettings::getStatusFPS() const
 bool
 ControlSettings::isActive() const
 {
+  boost::lock_guard<boost::mutex> lock(m_mutex);
   return m_isActive;
 }
 
 
 void ControlSettings::setActive(bool isActive)
 {
+  boost::lock_guard<boost::mutex> lock(m_mutex);
   m_isActive = isActive;
 }
 
