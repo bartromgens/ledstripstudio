@@ -58,7 +58,7 @@ unix:LIBS += -lboost_system152
 unix:QMAKE_CXXFLAGS += -std=c++0x
 
 #unix:QMAKE_CXXFLAGS += -fopenmp
-QMAKE_CXXFLAGS += -Wall
+unix:QMAKE_CXXFLAGS += -Wall
 QMAKE_LFLAGS += -time
 
 OBJECTS_DIR = ./tmp/
