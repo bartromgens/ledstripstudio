@@ -9,12 +9,12 @@
 
 namespace universalsleep
 {
-  static void sleep_ms(unsigned int)
+  static void sleep_ms(unsigned int sleepTime_ms)
   {
     #ifdef WIN32
-      Sleep(10);
+      Sleep(sleepTime_ms);
     #else
-      usleep(10*1000);
+      usleep(sleepTime_ms*1000);
     #endif
   }
 }
