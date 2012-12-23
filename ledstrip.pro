@@ -48,15 +48,15 @@ unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/
 unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/fftwpp/
 unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/boost/
 
-win32:INCLUDEPATH += C:/prog/ledstrip/include/portaudio/
+win32:INCLUDEPATH += C:/prog/ledstrip/include/
 win32:INCLUDEPATH += C:/prog/ledstrip/include/fftwpp/
 win32:INCLUDEPATH += C:/prog/tools/boost_1_50_0_build/include/
 
 # library locations
-unix:LIBS += -L/home/bart/prog/ledstrip/lib/
-unix:LIBS += -L/home/bart/prog/1_tools/boost_1_52_0/stage/
+unix:LIBS += -L/home/bart/prog/ledstrip/lib/ # location of FFTW and AudioPort libraries
+unix:LIBS += -L/home/bart/prog/1_tools/boost_1_52_0/stage/ # location of boost ./lib/ directory
 
-win32:LIBS += -LC:/prog/ledstrip/lib/vs2010x86/
+win32:LIBS += -LC:/prog/ledstrip/lib/vs2010x86/ # location of FFTW and AudioPort libraries for windows
 win32:LIBS += -LC:/prog/tools/boost_1_50_0_build/lib/
 
 # libraries
