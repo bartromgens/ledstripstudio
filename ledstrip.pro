@@ -2,36 +2,37 @@ TEMPLATE = app
 CONFIG += core gui
 
 SOURCES += \
-    gui/mainwindow.cpp \
     audioinput/audioinput.cpp \
     audioinput/userdata.cpp \
     basic/animation.cpp \
     basic/color.cpp \
     basic/frame.cpp \
     basic/led.cpp \
-    spectrum/fftw++.cpp \
-    spectrum/spectrumanalyser.cpp \
+    gui/mainwindow.cpp \
+    gui/ledstripemulator.cpp \
     player/ledcontroller.cpp \
     player/player.cpp \
     settings/controlsettings.cpp \
+    spectrum/fftw++.cpp \
+    spectrum/spectrumanalyser.cpp \
     studio/studio.cpp \
     main.cpp \
-    gui/ledstripemulator.cpp
 
 HEADERS += \
     audioinput/audioinput.h \
     audioinput/userdata.h \
-    gui/mainwindow.h \
-    spectrum/spectrumanalyser.h \
     basic/animation.h \
     basic/color.h \
     basic/frame.h \
     basic/led.h \
+    basic/universalsleep.h \
+    gui/mainwindow.h \
+    gui/ledstripemulator.h \
     player/ledcontroller.h \
     player/player.h \
     settings/controlsettings.h \
+    spectrum/spectrumanalyser.h \
     studio/studio.h \
-    gui/ledstripemulator.h
 
 FORMS += \
     gui/mainwindow.ui
