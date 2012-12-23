@@ -1,12 +1,11 @@
-#include "src/audioinput/audioinput.h"
-#include "src/spectrum/spectrumanalyser.h"
+#include "audioinput/audioinput.h"
+#include "spectrum/spectrumanalyser.h"
 
-
-std::mutex g_pages_mutex;
+#include <cmath>
 
 AudioInput::AudioInput()
   : m_sampleRate(44100),
-    m_nSamples(pow(2, 16)),
+    m_nSamples( static_cast<int>(std::pow(2.0, 16)) ),
     m_framesPerBuffer(512),
     m_nChannels(2),
     m_data(),
@@ -14,7 +13,6 @@ AudioInput::AudioInput()
     m_controlSettings(0),
     m_nUpdates(0)
 {
-  std::cout << "AudioInput::AudioInput()" << std::endl;
   initializeUserData(); // From now on, recordedSamples is initialised.
 }
 
