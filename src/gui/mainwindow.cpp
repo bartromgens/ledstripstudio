@@ -4,9 +4,7 @@
 #include "audioinput/audioinput.h"
 #include "studio/studio.h"
 
-//#include <thread>
-
-
+#include <boost/thread.hpp>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),

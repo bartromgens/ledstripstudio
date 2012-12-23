@@ -1,7 +1,7 @@
 #ifndef SPECTRUMANALYSER_H
 #define SPECTRUMANALYSER_H
 
-#include "./fftwpp/fftw++.h"
+#include "fftw++.h"
 
 #include <algorithm>
 #include <deque>

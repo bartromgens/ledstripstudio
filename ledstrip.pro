@@ -44,8 +44,9 @@ FORMS += \
 OTHER_FILES +=
 
 #library header file directories
-unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/portaudio/
+unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/
 unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/fftwpp/
+unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/boost/
 
 win32:INCLUDEPATH += C:/prog/ledstrip/include/portaudio/
 win32:INCLUDEPATH += C:/prog/ledstrip/include/fftwpp/
@@ -53,13 +54,14 @@ win32:INCLUDEPATH += C:/prog/tools/boost_1_50_0_build/include/
 
 # library locations
 unix:LIBS += -L/home/bart/prog/ledstrip/lib/
+unix:LIBS += -L/home/bart/prog/1_tools/boost_1_52_0/stage/
 
 win32:LIBS += -LC:/prog/ledstrip/lib/vs2010x86/
-win32:LIBS += -LC:/prog/tools/boost_1_50_0_build/lib
+win32:LIBS += -LC:/prog/tools/boost_1_50_0_build/lib/
 
 # libraries
-unix:LIBS += -lportaudio -lasound -lfftw3_omp -lfftw3 -lgomp -lpthread -lm
-unix:LIBS += -lboost_system152
+unix:LIBS += -lportaudio -lasound -lfftw3 -lm
+unix:LIBS += -lboost_thread -lboost_system
 
 win32:LIBS += -lportaudio -llibfftw3-3
 
