@@ -1,6 +1,8 @@
 #include "player.h"
 
-#include <unistd.h>  // for (u)sleep on Linux
+//#include <unistd.h>  // for (u)sleep on Linux
+
+#include <windows.h> // for sleep on Windows
 
 Player::Player()
   : m_ledController(),
@@ -12,7 +14,8 @@ Player::Player()
   //  const QString serialPortName = "COM11"; // windows
   m_ledController = createLedController(serialPortName);
 
-  sleep(2); // let the LED strip initialise
+//  sleep(10*1000); // let the LED strip initialise
+  Sleep(10); // let the LED strip initialise
 }
 
 
