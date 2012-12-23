@@ -2,39 +2,39 @@ TEMPLATE = app
 CONFIG += core gui
 
 SOURCES += \
-    src/gui/mainwindow.cpp \
-    src/audioinput/audioinput.cpp \
-    src/audioinput/userdata.cpp \
-    src/basic/animation.cpp \
-    src/basic/color.cpp \
-    src/basic/frame.cpp \
-    src/basic/led.cpp \
-    src/spectrum/fftw++.cpp \
-    src/spectrum/spectrumanalyser.cpp \
-    src/player/ledcontroller.cpp \
-    src/player/player.cpp \
-    src/settings/controlsettings.cpp \
-    src/studio/studio.cpp \
-    src/main.cpp \
-    src/gui/ledstripemulator.cpp
+    gui/mainwindow.cpp \
+    audioinput/audioinput.cpp \
+    audioinput/userdata.cpp \
+    basic/animation.cpp \
+    basic/color.cpp \
+    basic/frame.cpp \
+    basic/led.cpp \
+    spectrum/fftw++.cpp \
+    spectrum/spectrumanalyser.cpp \
+    player/ledcontroller.cpp \
+    player/player.cpp \
+    settings/controlsettings.cpp \
+    studio/studio.cpp \
+    main.cpp \
+    gui/ledstripemulator.cpp
 
 HEADERS += \
-    src/audioinput/audioinput.h \
-    src/audioinput/userdata.h \
-    src/gui/mainwindow.h \
-    src/spectrum/spectrumanalyser.h \
-    src/basic/animation.h \
-    src/basic/color.h \
-    src/basic/frame.h \
-    src/basic/led.h \
-    src/player/ledcontroller.h \
-    src/player/player.h \
-    src/settings/controlsettings.h \
-    src/studio/studio.h \
-    src/gui/ledstripemulator.h
+    audioinput/audioinput.h \
+    audioinput/userdata.h \
+    gui/mainwindow.h \
+    spectrum/spectrumanalyser.h \
+    basic/animation.h \
+    basic/color.h \
+    basic/frame.h \
+    basic/led.h \
+    player/ledcontroller.h \
+    player/player.h \
+    settings/controlsettings.h \
+    studio/studio.h \
+    gui/ledstripemulator.h
 
 FORMS += \
-    src/gui/mainwindow.ui
+    gui/mainwindow.ui
 
 OTHER_FILES +=
 
