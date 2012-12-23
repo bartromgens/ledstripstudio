@@ -14,7 +14,7 @@
   #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 #endif
  
-struct timezoneFFTW
+struct timezone
 {
   int  tz_minuteswest; /* minutes W of Greenwich */
   int  tz_dsttime;     /* type of dst correction */
@@ -22,7 +22,7 @@ struct timezoneFFTW
  
 // Definition of a gettimeofday function
  
-inline int gettimeofdayfftw(struct timeval *tv, struct timezoneFFTW *tz)
+inline int gettimeofday(struct timeval *tv, struct timezone *tz)
 {
 // Define a structure to receive the current Windows filetime
   FILETIME ft;
@@ -80,7 +80,7 @@ inline int gettimeofdayfftw(struct timeval *tv, struct timezoneFFTW *tz)
 inline double totalseconds()
 {
   timeval tv;
-  gettimeofdayfftw(&tv,NULL);
+  gettimeofday(&tv,NULL);
   return tv.tv_sec+tv.tv_usec/1000000.0;
 }
 
