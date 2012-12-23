@@ -26,6 +26,9 @@
 #include <fftw3.h>
 #include <cerrno>
 
+// WARNING BR: added to remove the dependency on OpenMP. Should be removed when threading is required.
+#define FFTWPP_SINGLE_THREAD
+
 #ifndef FFTWPP_SINGLE_THREAD
 #include <omp.h>
 #endif

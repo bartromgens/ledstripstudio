@@ -2,8 +2,6 @@
 
 #include <QTime>
 
-#define FFTWPP_SINGLE_THREAD
-
 using namespace fftwpp;
 
 #define _USE_MATH_DEFINES
