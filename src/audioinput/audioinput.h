@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-//#include <mutex>
+#include <memory>
 
 class AudioInput
 {
@@ -31,7 +31,7 @@ public:
 
   void openStream();
   void startStream();
-  void closeStream();
+  bool closeStream();
 
   void setLedPlayer(std::shared_ptr<Player> ledPlayer);
   void setControlSettings(std::shared_ptr<ControlSettings> settings);

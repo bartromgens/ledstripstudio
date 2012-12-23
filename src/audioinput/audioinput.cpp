@@ -22,8 +22,11 @@ AudioInput::~AudioInput()
   std::cout << "AudioInput::~AudioInput()" << std::endl;
   if (Pa_IsStreamActive( m_stream ))
   {
-    closeStream();
-    terminatePortAudio(paNoError);
+    bool closeSuccess = closeStream();
+    if (closeSuccess)
+    {
+      terminatePortAudio(paNoError);
+    }
   }
 }
 
@@ -65,7 +68,8 @@ AudioInput::openStream()
   PaStreamParameters inputParameters;
 
   inputParameters.device = Pa_GetDefaultInputDevice(); // default input device
-  if (inputParameters.device == paNoDevice) {
+  if (inputParameters.device == paNoDevice)
+  {
     fprintf(stderr,"Error: No default input device.\n");
     terminatePortAudio(err);
   }
@@ -73,10 +77,10 @@ AudioInput::openStream()
   inputParameters.channelCount = 2;                    // stereo input
   inputParameters.sampleFormat = paFloat32;
   inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
-  std::cout << "AudioInput::openStream() - suggested latency: " << inputParameters.suggestedLatency << std::endl;
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
-  // Record some audio. --------------------------------------------
+  std::cout << "AudioInput::openStream() - suggested latency: " << inputParameters.suggestedLatency << std::endl;
+
   err = Pa_OpenStream( &m_stream,
                        &inputParameters,
                        NULL,                  // &outputParameters,
@@ -197,25 +201,32 @@ AudioInput::startStream()
 
   QTime timer;
 
+  int counter = 0;
+
   bool run = true;
   while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
          && run)
   {
     timer.start();
-    Pa_Sleep(15);
+    Pa_Sleep(30);
 
-    m_controlSettings->lock();
     run = m_controlSettings->isActive();
-    m_controlSettings->unlock();
 
     if (m_data.recordedSamplesVec.size() >= spectrumAnalyser.getNSamples())
     {
       if (m_data.data_mutex.try_lock())
       {
+
         std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::linear);
         m_data.data_mutex.unlock();
         updateLEDs(spectrum);
+
+        if (counter++ % 100 == 1)
+        {
+          std::cout << "AudioInput::startStrea() - spectrum time: " << timer.elapsed() << std::endl;
+          timer.restart();
 //        drawSpectrumInConsole(spectrum, minFreq, maxFreq);
+        }
       }
     }
   }
@@ -226,7 +237,7 @@ AudioInput::startStream()
 }
 
 
-void
+bool
 AudioInput::closeStream()
 {
   std::cout << "AudioInput::closeStream()" << std::endl;
@@ -237,7 +248,10 @@ AudioInput::closeStream()
   {
     std::cout << "AudioInput::closeStream() - ERROR: terminatePortAudio" << std::endl;
     terminatePortAudio(err);
+    return false;
   }
+
+  return true;
 }
 
 
@@ -253,7 +267,8 @@ AudioInput::recordCallback( const void *inputBuffer, void *outputBuffer,
   timer.start();
 
   paUserData *data = (paUserData*)userData;
-  data->data_mutex.lock();
+
+  boost::lock_guard<boost::mutex> lock(data->data_mutex);
 
   const float *rptr = (const float*)inputBuffer;
 //  float *wptr = &data->recordedSamples[data->frameIndex * data->nChannels];
@@ -291,7 +306,7 @@ AudioInput::recordCallback( const void *inputBuffer, void *outputBuffer,
   }
 //  data->frameIndex += framesToCalc;
 //  std::cout << "time elapsed: " << timer.elapsed() << std::endl;
-  data->data_mutex.unlock();
+
   return finished;
 }
 
