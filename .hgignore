@@ -21,3 +21,4 @@ ledstrip.pro.user.2.6pre1
 tmp/moc_player.cpp
 tmp/moc_ledstripemulator.cpp
 wisdom3.txt
+tmp/*
