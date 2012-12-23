@@ -1,11 +1,15 @@
 #include "gui/mainwindow.h"
 
-//#include "windows.h"
+#include "windows.h"
+#include <ctime>
 
+#include <iostream>
 #include <QApplication>
 
-int main(int argc,char *argv[])
+int main(int argc, char *argv[])
 {
+  std::cout << "main()" << std::endl;
+
   srand(time(NULL));
 
   QApplication app(argc, argv);
