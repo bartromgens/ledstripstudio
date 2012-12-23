@@ -6,6 +6,8 @@
 
 using namespace fftwpp;
 
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 SpectrumAnalyser::SpectrumAnalyser(int nSamples)
   : m_nSamples(nSamples),
