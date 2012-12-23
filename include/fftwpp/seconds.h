@@ -64,7 +64,7 @@ inline int gettimeofdayfftw(struct timeval *tv, struct timezoneFFTW *tz)
     }
   
 // Adjust for the timezone west of Greenwich
-      tz->tz_minuteswest = _timezone / 60;
+    tz->tz_minuteswest = _timezone / 60;
     tz->tz_dsttime = _daylight;
   }
  
