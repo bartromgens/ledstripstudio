@@ -216,8 +216,8 @@ AudioInput::startStream()
     {
       if (m_data.data_mutex.try_lock())
       {
-
         std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::linear);
+        std::cout << "AudioInput::startStream() - computeSpectrum time: " << timer.elapsed() << std::endl;
         m_data.data_mutex.unlock();
         updateLEDs(spectrum);
 
