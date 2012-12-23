@@ -1,10 +1,5 @@
 #include "ledcontroller.h"
-
-//#include "qextserialport.h"
-//#include "/home/bart/prog/arduinoControl/qextserialport-1.2beta2/src/qextserialport.h"
-
-//#include <unistd.h>  // for (u)sleep on Linux
-#include <Windows.h>
+#include "basic/universalsleep.h"
 
 LEDController::LEDController()
 //  : m_serialPortName("/dev/ttyACM0"),
@@ -27,8 +22,8 @@ LEDController::LEDController()
 
   m_timer.start();
   m_timer2.start();
-  //usleep(10*1000);
-  Sleep(10);
+
+  universalsleep::sleep_ms(10);
 
 //  unsigned int baud = 921600;
   unsigned int baud = 2000000;
@@ -81,8 +76,7 @@ LEDController::send(const Frame &frame)
 
   if (toSleep > 0)
   {
-    //usleep(toSleep*1000);
-    Sleep(toSleep);
+    universalsleep::sleep_ms(10);
   }
 
 //  std::cout << "send() time to sleep: " << toSleep << std::endl;

@@ -1,6 +1,9 @@
 #include "gui/mainwindow.h"
 
-#include "windows.h"
+#ifdef WIN32
+  #include "windows.h"
+#endif
+
 #include <ctime>
 
 #include <iostream>

@@ -1,8 +1,5 @@
 #include "player.h"
-
-//#include <unistd.h>  // for (u)sleep on Linux
-
-#include <windows.h> // for sleep on Windows
+#include "basic/universalsleep.h"
 
 Player::Player()
   : m_ledController(),
@@ -15,7 +12,7 @@ Player::Player()
   m_ledController = createLedController(serialPortName);
 
 //  sleep(10*1000); // let the LED strip initialise
-  Sleep(10); // let the LED strip initialise
+  universalsleep::sleep_ms(10); // let the LED strip initialise
 }
 
 
