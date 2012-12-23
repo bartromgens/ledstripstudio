@@ -62,6 +62,6 @@ Frame::amplifyRGB(double facR, double facG, double facB)
   for (std::size_t i = 0; i < m_leds.size(); ++i)
   {
     const Color& colorOld = m_leds[i].getColor();
-    m_leds[i].setColor(Color(colorOld.r * facR, colorOld.g * facG, colorOld.b * facB));
+    m_leds[i].setColor( Color(int(colorOld.r * facR), int(colorOld.g * facG), int(colorOld.b * facB)) );
   }
 }
