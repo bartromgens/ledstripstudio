@@ -1,17 +1,18 @@
 #ifndef LEDCONTROLLER_H
 #define LEDCONTROLLER_H
 
-#include "src/basic/color.h"
-#include "src/basic/frame.h"
+#include "basic/color.h"
+#include "basic/frame.h"
 
 #include <QString>
 #include <QTime>
 
 #include <boost/asio.hpp>
 #include <boost/asio/serial_port.hpp>
+#include <boost/thread.hpp>
 
 #include <deque>
-#include <mutex>
+//#include <mutex>
 #include <memory>
 #include <vector>
 
@@ -41,20 +42,20 @@ public:
 private:
   void read();
   void disconnect();
-  std::unique_ptr<QextSerialPort> createPort();
+//  std::unique_ptr<QextSerialPort> createPort();
 
 private:
   std::vector<int> m_ledNr;
   std::vector<Color> m_color;
   std::vector<std::vector<Color> > m_colorOld;
 
-  std::unique_ptr<QextSerialPort> m_port ;
+//  std::unique_ptr<QextSerialPort> m_port ;
   QByteArray m_byteMessage;
   QString m_serialPortName;
   QTime m_timer;
   QTime m_timer2;
   std::deque<int> m_fpsHistory;
-  mutable std::mutex m_mutex;
+  mutable boost::mutex m_mutex;
 
   boost::asio::io_service* m_io_service;
   boost::asio::serial_port* m_serialPort; // the serial port this instance is connected to

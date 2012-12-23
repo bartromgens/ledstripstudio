@@ -3,10 +3,10 @@
 
 #include "ledcontroller.h"
 
-#include "src/basic/animation.h"
+#include "basic/animation.h"
 
 #include <memory>
-#include <mutex>
+//#include <mutex>
 
 class Player
 {
@@ -32,7 +32,7 @@ private:
   std::unique_ptr<LEDController> m_ledController;
   Frame m_lastFrame;
   Animation m_mainAnimation;
-  mutable std::mutex m_mutex;
+  mutable boost::mutex m_mutex;
 };
 
 #endif // PLAYER_H

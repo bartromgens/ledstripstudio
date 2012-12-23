@@ -1,12 +1,10 @@
 #include "mainwindow.h"
-#include "src/gui/ui_mainwindow.h"
+#include "gui/ui_mainwindow.h"
 
-#include "src/audioinput/audioinput.h"
-#include "src/studio/studio.h"
+#include "audioinput/audioinput.h"
+#include "studio/studio.h"
 
-
-
-#include <thread>
+//#include <thread>
 
 
 
@@ -93,7 +91,7 @@ MainWindow::startAudioInputThread()
 {
   m_isAudioOn = true;
   std::cout << "MainWindow::startAudioInputThread()" << std::endl;
-  std::thread t1(&MainWindow::startAudioInput, this);
+  boost::thread t1(&MainWindow::startAudioInput, this);
   t1.detach();
 }
 
@@ -113,7 +111,7 @@ void
 MainWindow::startAnimationThread() const
 {
   std::cout << "MainWindow::startAnimation()" << std::endl;
-  std::thread t1(&MainWindow::startAnimation, this);
+  boost::thread t1(&MainWindow::startAnimation, this);
   t1.detach();
 }
 

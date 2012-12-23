@@ -5,7 +5,8 @@
 #include <stack>
 #include <deque>
 
-#include <mutex>
+#include <boost/thread.hpp>
+//#include <mutex>
 
 class paUserData
 {
@@ -17,7 +18,7 @@ public:
 //  std::mutex g_mutexer;
 //  int frameIndex;  //Index into sample array
 //  int maxFrameIndex;
-  std::mutex data_mutex;
+  boost::mutex data_mutex;
 
   std::deque<float> recordedSamplesVec;
   int nChannels;
