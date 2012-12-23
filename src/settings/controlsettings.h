@@ -3,8 +3,9 @@
 
 #include <QSettings>
 
-#include <atomic>
-#include <mutex>
+//#include <atomic>
+//#include <mutex>
+#include <boost/thread.hpp>
 #include <vector>
 
 class ControlSettings : public QSettings
@@ -41,9 +42,9 @@ public:
 
 
 private:
-  mutable std::mutex m_mutex;
-  std::atomic<int> m_statusFPS;
-  std::atomic<bool> m_isActive;
+  mutable boost::mutex m_mutex;
+  int m_statusFPS;
+  bool m_isActive;
 };
 
 #endif // CONTROLSETTINGS_H

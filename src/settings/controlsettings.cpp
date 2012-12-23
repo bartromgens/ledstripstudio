@@ -93,26 +93,26 @@ void ControlSettings::unlock()
 void
 ControlSettings::setStatusFPS(int fps)
 {
-  m_statusFPS.store(fps);
+  m_statusFPS = fps;
 }
 
 
 int
 ControlSettings::getStatusFPS() const
 {
-  return m_statusFPS.load();
+  return m_statusFPS;
 }
 
 
 bool
 ControlSettings::isActive() const
 {
-  return m_isActive.load();
+  return m_isActive;
 }
 
 
 void ControlSettings::setActive(bool isActive)
 {
-  m_isActive.store(isActive);
+  m_isActive = isActive;
 }
 
