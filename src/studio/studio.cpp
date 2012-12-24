@@ -72,6 +72,10 @@ Studio::createRandomMovingDots(int nDots, int nFrames)
       positions[i] += speeds[i];
 
       int pos = int(positions[i]) % m_nLEDs;
+      if (pos < 0)
+      {
+        pos = m_nLEDs + pos;
+      }
       LED led(pos, colors[i]);
       frame.addLED(led);
       usedPositions.push_back(pos);
