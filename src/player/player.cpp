@@ -50,6 +50,7 @@ void
 Player::addAnimation(const Animation& animation)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
+
   if (!m_mainAnimation.getFrames().empty())
   {
     m_mainAnimation = animation.combineTwoAnimations(animation, m_mainAnimation);
@@ -74,12 +75,17 @@ Player::playAllAnimations()
 void
 Player::playFrame()
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+//  std::cout << "Player::playFrame()" << std::endl;
 
-  const std::deque<Frame>& frames = m_mainAnimation.getFrames();
-  m_lastFrame = frames.front();
-  m_ledController->send(frames.front());
-  m_mainAnimation.pop_frontFrame();
+  {
+    boost::lock_guard<boost::mutex> lock(m_mutex);
+
+    const std::deque<Frame>& frames = m_mainAnimation.getFrames();
+    m_lastFrame = frames.front();
+    m_mainAnimation.pop_frontFrame();
+  }
+
+  m_ledController->send(m_lastFrame);
 }
 
 
