@@ -643,7 +643,6 @@
               <height>30</height>
              </size>
             </property>
-            <zorder>verticalSpacer_3</zorder>
            </widget>
           </item>
          </layout>
