@@ -16,6 +16,8 @@ public:
   Animation createMovingRainbow();
   Color wheel(int wheelPos);
   Animation createRandomMovingDots(int nDots, int nFrames);
+  Animation createCellularAutomata();
+  std::vector<int> rule(const std::vector<int>& state);
 private:
 
 private:

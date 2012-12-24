@@ -1,6 +1,7 @@
 #include "studio.h"
 
 #include <algorithm>
+#include <random>
 
 Studio::Studio(int m_nLEDs)
   : m_nLEDs(m_nLEDs)
@@ -27,7 +28,7 @@ Studio::createRandomMovingDots(int nDots, int nFrames)
   {
     double speed = (rand() % 1000) / 2000.0;
     speeds.push_back(speed);
-    int startPos = i*30;
+    int startPos = (rand() % m_nLEDs);
     positions.push_back(startPos);
     positions_int.push_back(startPos);
 
@@ -124,6 +125,10 @@ Studio::createMovingLine(int nFrames, const Color& color, double speed)
   for (int i = 0; i < nFrames; ++i)
   {
     double pos = int(i*speed+1) % m_nLEDs;
+    if (pos < 0)
+    {
+      pos = m_nLEDs + pos;
+    }
     double dx = std::fabs(int(pos)-pos);
     double dx1 = std::fabs(int(pos+1)-pos);
     double dx2 = std::fabs(int(pos-1)-pos);
@@ -232,4 +237,87 @@ Studio::wheel(int wheelPos)
       break;
   }
   return Color(r, g, b);
+}
+
+
+Animation
+Studio::createCellularAutomata()
+{
+  std::cout << "Studio::createCellularAutomata()" << std::endl;
+  Animation animation;
+  std::size_t nSteps = 1000;
+  std::vector<int> state(m_nLEDs, 0);
+  state[m_nLEDs-1] = 1;
+
+
+  for (std::size_t i = 0; i < nSteps; ++i)
+  {
+    state = rule(state);
+    Frame frame(m_nLEDs);
+
+    for (int i = 0; i < m_nLEDs; i++)
+    {
+      Color color;
+      if (state[i] == 1)
+      {
+        color = Color(127, 0, 0);
+      }
+
+      LED led(i, color);
+      frame.addLED(led);
+    }
+
+    animation.addFrame(frame);
+    animation.addFrame(frame);
+    animation.addFrame(frame);
+    animation.addFrame(frame);
+    animation.addFrame(frame);
+  }
+
+  return animation;
+}
+
+
+std::vector<int>
+Studio::rule(const std::vector<int>& state)
+{
+  std::vector<int> stateNew(state.size(), 0);
+
+  for (std::size_t i = 1; i < state.size()-1; ++i)
+  {
+    if(state[i-1] == 0 && state[i] == 0 && state[i+1] == 0)
+    {
+      stateNew[i] = 0;
+    }
+    else if(state[i-1] == 0 && state[i] == 0 && state[i+1] == 1)
+    {
+      stateNew[i] = 1;
+    }
+    else if(state[i-1] == 0 && state[i] == 1 && state[i+1] == 0)
+    {
+      stateNew[i] = 1;
+    }
+    else if(state[i-1] == 0 && state[i] == 1 && state[i+1] == 1)
+    {
+      stateNew[i] = 1;
+    }
+    else if(state[i-1] == 1 && state[i] == 0 && state[i+1] == 0)
+    {
+      stateNew[i] = 0;
+    }
+    else if(state[i-1] == 1 && state[i] == 0 && state[i+1] == 1)
+    {
+      stateNew[i] = 1;
+    }
+    else if(state[i-1] == 1 && state[i] == 1 && state[i+1] == 0)
+    {
+      stateNew[i] = 1;
+    }
+    else if(state[i-1] == 1 && state[i] == 1 && state[i+1] == 1)
+    {
+      stateNew[i] = 0;
+    }
+  }
+
+  return stateNew;
 }
