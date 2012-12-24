@@ -1,5 +1,7 @@
 #include "animation.h"
 
+#include <QTime>
+
 #include "assert.h"
 
 Animation::Animation()
@@ -51,6 +53,9 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
 {
   Animation animation;
 
+  QTime time;
+  time.start();
+
   const std::deque<Frame>& framesA = animationA.getFrames();
   const std::deque<Frame>& framesB = animationB.getFrames();
   std::size_t maxFrames = std::max(framesA.size(), framesB.size());
@@ -80,21 +85,27 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
   }
 
   // check who has more frames
-  std::deque<Frame> frames;
+  // fill the frames with the one that still has some left
+  time.restart();
+  // TODO BR: This is very inefficient when one animation has . Do not create a new animation.
   if (framesA.size() > framesB.size())
   {
-    frames = animationA.getFrames();
+    const std::deque<Frame>& frames = animationA.getFrames();
+    for (std::size_t i = minFrames ; i < maxFrames; ++i)
+    {
+      animation.addFrame(frames[i]);
+    }
   }
   else
   {
-    frames = animationB.getFrames();
+    const std::deque<Frame>& frames = animationB.getFrames();
+    for (std::size_t i = minFrames ; i < maxFrames; ++i)
+    {
+      animation.addFrame(frames[i]);
+    }
   }
 
-  // fill the frames with the one that still has some left
-  for (std::size_t i = minFrames ; i < maxFrames; ++i)
-  {
-    animation.addFrame(frames[i]);
-  }
+//  std::cout << "Animation::combineTwoAnimations - fill last frames time: " << time.elapsed() << std::endl;
 
   return animation;
 }
