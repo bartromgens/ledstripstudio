@@ -2,8 +2,8 @@
 #include "basic/universalsleep.h"
 
 LEDController::LEDController()
-//  : m_serialPortName("/dev/ttyACM0"),
-  : m_serialPortName("COM7"),
+  : m_serialPortName("/dev/ttyACM0"),
+//  : m_serialPortName("COM7"),
     m_timer(),
     m_timer2(),
     m_fpsHistory(),
@@ -15,16 +15,15 @@ LEDController::LEDController()
   {
     m_serialPort.reset( new boost::asio::serial_port(*m_io_service, m_serialPortName.toStdString()) );
   }
-  catch(...)
+  catch( std::exception& e )
   {
-    std::cout << "boom!" << std::endl;
+    std::cout << "LEDController::LEDController() - warning: " << e.what() << std::endl;
+    std::cout << "LEDController::LEDController() - could not create a serial connection on " << m_serialPortName.toStdString() << std::endl;
     return;
   }
 
   m_timer.start();
   m_timer2.start();
-
-  universalsleep::sleep_ms(100);
 
 //  unsigned int baud = 921600;
   unsigned int baud = 2000000;
@@ -43,9 +42,12 @@ LEDController::LEDController()
 
 LEDController::~LEDController()
 {
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
   std::cout << "LEDController::~LEDController()" << std::endl;
   disconnect();
 }
+
 
 void
 LEDController::connect()
@@ -63,11 +65,7 @@ LEDController::disconnect()
 void
 LEDController::send(const Frame &frame)
 {
-  if (!m_serialPort)
-  {
-    return;
-  }
-
+  boost::lock_guard<boost::mutex> lock(m_mutex);
   QByteArray bytes;
 
   const std::vector<LED>& leds = frame.getLEDs();
@@ -80,6 +78,12 @@ LEDController::send(const Frame &frame)
   if (toSleep > 0)
   {
     universalsleep::sleep_ms(toSleep);
+  }
+
+  if (!m_serialPort)
+  {
+    m_timer.restart();
+    return;
   }
 
 //  std::cout << "send() time to sleep: " << toSleep << std::endl;
