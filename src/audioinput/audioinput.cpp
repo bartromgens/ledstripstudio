@@ -199,15 +199,13 @@ AudioInput::startStream()
 
   SpectrumAnalyser spectrumAnalyser(m_nSamples);
 
-  QTime timer;
-
-  int counter = 0;
+//  QTime timer;
+//  timer.start();
 
   bool run = true;
   while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
          && run)
   {
-    timer.start();
     Pa_Sleep(30);
 
     run = m_controlSettings->isActive();
@@ -217,16 +215,11 @@ AudioInput::startStream()
       if (m_data.data_mutex.try_lock())
       {
         std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::linear);
-        std::cout << "AudioInput::startStream() - computeSpectrum time: " << timer.elapsed() << std::endl;
+//        std::cout << "AudioInput::startStream() - computeSpectrum time: " << timer.elapsed() << std::endl;
         m_data.data_mutex.unlock();
         updateLEDs(spectrum);
 
-        if (counter++ % 100 == 1)
-        {
-          std::cout << "AudioInput::startStrea() - spectrum time: " << timer.elapsed() << std::endl;
-          timer.restart();
 //        drawSpectrumInConsole(spectrum, minFreq, maxFreq);
-        }
       }
     }
   }
