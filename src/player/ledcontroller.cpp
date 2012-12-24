@@ -42,8 +42,6 @@ LEDController::LEDController()
 
 LEDController::~LEDController()
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
-
   std::cout << "LEDController::~LEDController()" << std::endl;
   disconnect();
 }
@@ -66,6 +64,7 @@ void
 LEDController::send(const Frame &frame)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
+
   QByteArray bytes;
 
   const std::vector<LED>& leds = frame.getLEDs();
@@ -78,6 +77,7 @@ LEDController::send(const Frame &frame)
   if (toSleep > 0)
   {
     universalsleep::sleep_ms(toSleep);
+//    std::cout << "send() time to sleep: " << toSleep << std::endl;
   }
 
   if (!m_serialPort)
@@ -86,7 +86,6 @@ LEDController::send(const Frame &frame)
     return;
   }
 
-//  std::cout << "send() time to sleep: " << toSleep << std::endl;
   m_timer2.restart();
 
   // send the frame
