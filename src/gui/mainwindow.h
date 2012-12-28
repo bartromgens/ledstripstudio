@@ -67,7 +67,7 @@ private slots:
   void update();
 
 private:
-  std::unique_ptr<Ui::MainWindow> ui;
+  Ui::MainWindow* ui;
   QColorDialog m_colorDialog;
   std::size_t m_nLedsTotal;
 

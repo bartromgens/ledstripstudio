@@ -8,7 +8,7 @@
 
 #include <boost/thread.hpp>
 
-const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 16));
+const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+  delete ui;
 }
 
 
@@ -164,6 +165,18 @@ MainWindow::stopAudioInput()
   m_audioControlSettings->setActive(false);
   m_isAudioOn = false;
 }
+
+
+void
+MainWindow::notifySpectrum(std::map<double, double> spectrum)
+{
+  //  std::cout << "MainWindow::notifySpectrum()" << std::endl;
+  int minFreq = 200;
+  int maxFreq = 1000;
+  m_spectrumStudio->drawSpectrumInConsole(spectrum, minFreq, maxFreq);
+  updateLEDs(spectrum);
+}
+
 
 void
 MainWindow::connectAllSlots() const
@@ -298,41 +311,48 @@ MainWindow::update()
 //  std::cout << "update" << std::endl;
   int fps = m_audioControlSettings->getStatusFPS();
   ui->fpsLcd->setText(QString::number(fps));
-  ui->ledStripEmulator->update();
+//  ui->ledStripEmulator->update();
 }
 
 
 void
 MainWindow::slotPlayerPlayed()
 {
-  ui->ledStripEmulator->setHeight(ui->ledStripEmulator->size().height());
-  ui->ledStripEmulator->setWidth(ui->ledStripEmulator->size().width()/m_nLedsTotal);
-  ui->ledStripEmulatorRed->setHeight(ui->ledStripEmulatorRed->size().height());
-  ui->ledStripEmulatorRed->setWidth(ui->ledStripEmulatorRed->size().width()/m_nLedsTotal);
-  ui->ledStripEmulatorGreen->setHeight(ui->ledStripEmulatorGreen->size().height());
-  ui->ledStripEmulatorGreen->setWidth(ui->ledStripEmulatorGreen->size().width()/m_nLedsTotal);
-  ui->ledStripEmulatorBlue->setHeight(ui->ledStripEmulatorBlue->size().height());
-  ui->ledStripEmulatorBlue->setWidth(ui->ledStripEmulatorBlue->size().width()/m_nLedsTotal);
-
   Frame frame = m_player->getLastFrame();
 
-  Frame frameR = frame;
-  Frame frameG = frame;
-  Frame frameB = frame;
+  if (ui->enableEmulator->isChecked())
+  {
+    ui->ledStripEmulator->setHeight(ui->ledStripEmulator->size().height());
+    ui->ledStripEmulator->setWidth(ui->ledStripEmulator->size().width()/m_nLedsTotal);
+    ui->ledStripEmulator->setFrame(frame);
+    ui->ledStripEmulator->update();
+  }
 
-  frameR.amplifyRGB(1.0, 0.0, 0.0);
-  frameG.amplifyRGB(0.0, 1.0, 0.0);
-  frameB.amplifyRGB(0.0, 0.0, 1.0);
+  if (ui->enableEmulatorRGB->isChecked())
+  {
+    ui->ledStripEmulatorRed->setHeight(ui->ledStripEmulatorRed->size().height());
+    ui->ledStripEmulatorRed->setWidth(ui->ledStripEmulatorRed->size().width()/m_nLedsTotal);
+    ui->ledStripEmulatorGreen->setHeight(ui->ledStripEmulatorGreen->size().height());
+    ui->ledStripEmulatorGreen->setWidth(ui->ledStripEmulatorGreen->size().width()/m_nLedsTotal);
+    ui->ledStripEmulatorBlue->setHeight(ui->ledStripEmulatorBlue->size().height());
+    ui->ledStripEmulatorBlue->setWidth(ui->ledStripEmulatorBlue->size().width()/m_nLedsTotal);
 
-  ui->ledStripEmulator->setFrame(frame);
-  ui->ledStripEmulatorRed->setFrame(frameR);
-  ui->ledStripEmulatorGreen->setFrame(frameG);
-  ui->ledStripEmulatorBlue->setFrame(frameB);
+    Frame frameR = frame;
+    Frame frameG = frame;
+    Frame frameB = frame;
 
-  ui->ledStripEmulator->update();
-  ui->ledStripEmulatorRed->update();
-  ui->ledStripEmulatorGreen->update();
-  ui->ledStripEmulatorBlue->update();
+    frameR.amplifyRGB(1.0, 0.0, 0.0);
+    frameG.amplifyRGB(0.0, 1.0, 0.0);
+    frameB.amplifyRGB(0.0, 0.0, 1.0);
+
+    ui->ledStripEmulatorRed->setFrame(frameR);
+    ui->ledStripEmulatorGreen->setFrame(frameG);
+    ui->ledStripEmulatorBlue->setFrame(frameB);
+
+    ui->ledStripEmulatorRed->update();
+    ui->ledStripEmulatorGreen->update();
+    ui->ledStripEmulatorBlue->update();
+  }
 }
 
 
@@ -397,12 +417,4 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
 //  }
 
   m_player->playFrame();
-}
-
-
-void
-MainWindow::notifySpectrum(std::map<double, double> spectrum)
-{
-//  std::cout << "MainWindow::notifySpectrum()" << std::endl;
-  updateLEDs(spectrum);
 }

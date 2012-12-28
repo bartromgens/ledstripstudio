@@ -41,8 +41,9 @@ void
 SpectrumAnalyser::notifyAudioData(const std::deque<float>& audioData, int sampleRate)
 {
 //  std::cout << "SpectrumAnalyser::notifyAudioData() - audio data size: " << audioData.size() << std::endl;
-  computeSpectrumThread(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
+//  computeSpectrumThread(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
 //  computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
+  computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::hann);
 }
 
 

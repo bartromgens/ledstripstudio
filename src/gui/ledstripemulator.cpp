@@ -11,9 +11,11 @@ LedStripEmulator::LedStripEmulator(QWidget* parent)
 {
 }
 
+
 LedStripEmulator::~LedStripEmulator()
 {
 }
+
 
 void
 LedStripEmulator::setFrame(const Frame& frame)
@@ -21,17 +23,20 @@ LedStripEmulator::setFrame(const Frame& frame)
   m_frame = frame;
 }
 
+
 void
 LedStripEmulator::setHeight(int height)
 {
   m_height = height;
 }
 
+
 void
 LedStripEmulator::setWidth(int width)
 {
   m_width = width;
 }
+
 
 void
 LedStripEmulator::paintEvent(QPaintEvent* e)
@@ -41,6 +46,7 @@ LedStripEmulator::paintEvent(QPaintEvent* e)
   drawStrip(&qp);
 }
 
+
 void
 LedStripEmulator::drawStrip(QPainter* qp)
 {
@@ -49,10 +55,13 @@ LedStripEmulator::drawStrip(QPainter* qp)
 
   const std::vector<LED>& leds = m_frame.getLEDs();
 
+  int widgetWith = size().width();
+  int border = (widgetWith - leds.size()*m_width)/2;
+
   for (std::size_t i = 0; i < leds.size(); ++i)
   {
     LED led = leds.at(i);
-    int x = (i*m_width);
+    int x = (i*m_width)+border;
     int y = 2;
     QRect rect(x, y, m_width, m_height-2);
     qp->drawRect(rect);
