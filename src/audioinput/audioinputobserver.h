@@ -9,7 +9,7 @@ public:
   AudioInputObserver();
   ~AudioInputObserver();
 
-  virtual void notifyAudioData(std::deque<float> audioData) = 0;
+  virtual void notifyAudioData(std::deque<float> audioData, int sampleRate) = 0;
 };
 
 #endif // AUDIOINPUTOBSERVER_H

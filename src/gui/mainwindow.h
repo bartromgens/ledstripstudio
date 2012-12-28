@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "basic/animation.h"
+#include "spectrum/spectrumobserver.h"
 
 #include <QMainWindow>
 #include <QToolBar>
@@ -12,17 +13,18 @@
 #include <memory>
 
 class AudioInput;
-class AudioInputObserver;
 class ControlSettings;
 class LedStripEmulator;
 class Player;
+class SpectrumAnalyser;
+class SpectrumStudio;
 class Studio;
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow, SpectrumObserver
 {
   Q_OBJECT
   
@@ -33,6 +35,9 @@ public:
   Animation createAnimationTest1();
   Animation createAnimationTest2();
 
+  virtual void notifySpectrum(std::map<double, double> spectrum);
+
+  void updateLEDs(const std::map<double, double> &spectrum);
 public slots:
   void slotPlayerPlayed();
 
@@ -71,7 +76,8 @@ private:
   std::unique_ptr<Studio> m_studio;
   std::unique_ptr<AudioInput> m_audioInput;
   std::shared_ptr<ControlSettings> m_audioControlSettings;
-  std::shared_ptr<AudioInputObserver> m_spectrumAnalyser;
+  std::shared_ptr<SpectrumAnalyser> m_spectrumAnalyser;
+  std::unique_ptr<SpectrumStudio> m_spectrumStudio;
 
 //  LedStripEmulator* m_ledStripEmulator;
 

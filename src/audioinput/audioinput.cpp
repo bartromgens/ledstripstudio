@@ -9,7 +9,6 @@ AudioInput::AudioInput(unsigned int nSamples)
     m_nSamples(nSamples),
     m_nChannels(2),
     m_data(),
-    m_ledPlayer(0),
     m_controlSettings(0),
     m_nUpdates(0),
     m_nLEDs(160),
@@ -33,13 +32,6 @@ AudioInput::~AudioInput()
       terminatePortAudio(paNoError);
     }
   }
-}
-
-
-void
-AudioInput::setLedPlayer(std::shared_ptr<Player>  ledPlayer)
-{
-  m_ledPlayer = ledPlayer;
 }
 
 
@@ -103,69 +95,6 @@ AudioInput::openStream()
 
 
 void
-AudioInput::updateLEDs(const std::map<double, double>& spectrum)
-{
-  double brightnessRed = 0.0;
-  double brightnessGreen = 0.0;
-  double brightnessBlue = 0.0;
-
-  m_controlSettings->lock();
-  double amplifyFactor = m_controlSettings->volumeTotal/1000.0;
-  double amplifyFactorRed = m_controlSettings->volumeRed/25.0;
-  double amplifyFactorGreen = m_controlSettings->volumeGreen/50.0;
-  double amplifyFactorBlue = m_controlSettings->volumeBlue/100.0;
-
-  int freqRmin = m_controlSettings->freqRedMin;
-  int freqRmax = m_controlSettings->freqRedMax;
-  int freqGmin = m_controlSettings->freqGreenMin;
-  int freqGmax = m_controlSettings->freqGreenMax;
-  int freqBmin = m_controlSettings->freqBlueMin;
-  int freqBmax = m_controlSettings->freqBlueMax;
-
-  m_controlSettings->unlock();
-
-  m_controlSettings->setStatusFPS(m_ledPlayer->getFPS());
-
-  for (std::map<double, double>::const_iterator iter = spectrum.begin();
-       iter != spectrum.end(); ++iter)
-  {
-    double frequency = iter->first;
-    double amplitude = iter->second;
-
-    if (frequency > freqRmin && frequency < freqRmax)
-    {
-        brightnessRed += amplitude*amplifyFactor*amplifyFactorRed;
-    }
-
-    if (frequency > freqGmin && frequency < freqGmax)
-    {
-      brightnessGreen += amplitude*amplifyFactor*amplifyFactorGreen;
-    }
-
-    if (frequency > freqBmin && frequency < freqBmax)
-    {
-      brightnessBlue += amplitude*amplifyFactor*amplifyFactorBlue;
-    }
-  }
-
-  Animation animation = createWaveformAnimationCentral(m_nLEDs, brightnessRed, brightnessGreen, brightnessBlue);
-  m_ledPlayer->addAnimation(animation);
-
-  //  Studio studio(nLEDs);
-//  if (m_nUpdates++ % (nLEDs/30) == 1)
-//  {
-//    double speed = 1.0;
-//    m_ledPlayer->addAnimation( studio.createMovingLine(nLEDs/speed,
-//                                                       Color(std::abs(cos(m_nUpdates/5.0+1)*127), std::abs(sin(m_nUpdates/8.0)*127), std::abs(sin(m_nUpdates/23.0+5)*127)),
-//                                                       speed)
-//                             );
-//  }
-
-  m_ledPlayer->playFrame();
-}
-
-
-void
 AudioInput::drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const
 {
   for (std::map<double, double>::const_iterator iter = spectrum.begin();
@@ -200,8 +129,6 @@ AudioInput::startStream()
     terminatePortAudio(err);
   }
 
-  SpectrumAnalyser spectrumAnalyser(m_nSamples);
-
   ToneAnalyser toneAnalyser;
 
   QTime timer;
@@ -220,9 +147,6 @@ AudioInput::startStream()
       if (m_data.data_mutex.try_lock())
       {
 //        timer.restart();
-        std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::linear);
-//        std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::hann);
-
         notifyObservers(m_data.recordedSamplesVec);
         m_data.data_mutex.unlock();
 
@@ -233,8 +157,6 @@ AudioInput::startStream()
 //        m_ledPlayer->playFrame();
 
 //        std::cout << "AudioInput::startStream() - computeSpectrum time: " << timer.elapsed() << std::endl;
-
-        updateLEDs(spectrum);
 
 //        drawSpectrumInConsole(spectrum, minFreq, maxFreq);
       }
@@ -335,71 +257,6 @@ AudioInput::terminatePortAudio(PaError err)
     err = 1;          // Always return 0 or 1, but no other return codes.
   }
 }
-
-
-Animation
-AudioInput::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int brightnessGreen, int brightnessBlue)
-{
-  Animation animation;
-  Frame frame(nLEDs);
-
-  int centreLedNr = nLEDs/2;
-
-//  int maxRGB = std::max(brightnessBlue, std::max(brightnessRed, brightnessGreen));
-//  brightnessRed *= 127.0/maxRGB;
-//  brightnessGreen *= 127.0/maxRGB;
-//  brightnessBlue *= 127.0/maxRGB;
-
-  for (int i = 0; i < centreLedNr; ++i)
-  {
-    int scaleFact = (i * 127) / centreLedNr;
-//    int scaleFact = 0.0;
-
-    int r = brightnessRed - scaleFact;
-    int g = brightnessGreen - scaleFact;
-    int b = brightnessBlue - scaleFact;
-
-    if (r > 127.0)
-    {
-      r = 127.0;
-    }
-    if (g > 127.0)
-    {
-      g = 127.0;
-    }
-    if (b > 127.0)
-    {
-      b = 127.0;
-    }
-
-    if (r < 0.0)
-    {
-      r = 0.0;
-    }
-    if (g < 0.0)
-    {
-      g = 0.0;
-    }
-    if (b < 0.0)
-    {
-      b = 0.0;
-    }
-
-    int offSet = 0;
-    int ledNr1 = (centreLedNr + i + 1 + offSet) % nLEDs;
-    int ledNr2 = (centreLedNr - i + offSet) % nLEDs;
-
-    LED led(ledNr1, Color(r, g, b));
-    frame.addLED(led);
-
-    LED led2(ledNr2, Color(r, g, b));
-    frame.addLED(led2);
-  }
-
-  animation.addFrame(frame);
-  return animation;
-}
-
 
 Animation
 AudioInput::createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones)
@@ -546,6 +403,6 @@ AudioInput::notifyObservers(const std::deque<float>& audioData)
 
   for (std::size_t i = 0; i < m_audioObservers.size(); ++i)
   {
-    m_audioObservers[i]->notifyAudioData(audioData);
+    m_audioObservers[i]->notifyAudioData(audioData, m_sampleRate);
   }
 }

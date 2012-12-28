@@ -36,7 +36,6 @@ public:
   void startStream();
   bool closeStream();
 
-  void setLedPlayer(std::shared_ptr<Player> ledPlayer);
   void setControlSettings(std::shared_ptr<ControlSettings> settings);
 
   Animation createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones);
@@ -60,8 +59,6 @@ private:
 
   void terminatePortAudio(PaError err);
   void drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const;
-  void updateLEDs(const std::map<double, double>& spectrum);
-  Animation createWaveformAnimationCentral(int nLEDs, int brightnessRed, int brightnessGreen, int brightnessBlue);
 
 private:
 
@@ -71,7 +68,6 @@ private:
 //  int m_nSamples;
   PaStream* m_stream;
   paUserData m_data;
-  std::shared_ptr<Player> m_ledPlayer;
   std::shared_ptr<ControlSettings> m_controlSettings;
   int m_nUpdates;
 

@@ -4,6 +4,7 @@
 #include "audioinput/audioinput.h"
 #include "spectrum/spectrumanalyser.h"
 #include "studio/studio.h"
+#include "studio/spectrumstudio.h"
 
 #include <boost/thread.hpp>
 
@@ -11,6 +12,7 @@ const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 16));
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
+  SpectrumObserver(),
   ui(new Ui::MainWindow),
   m_colorDialog(),
   m_nLedsTotal(160),
@@ -19,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_audioInput(new AudioInput(SPECTRUM_SAMPLES)),
   m_audioControlSettings(new ControlSettings()),
   m_spectrumAnalyser(new SpectrumAnalyser(SPECTRUM_SAMPLES)),
+  m_spectrumStudio(new SpectrumStudio()),
   m_isAudioOn(false),
   m_timer(0)
 {
@@ -48,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_timerEmulator->start();
 
   m_audioInput->registerObserver(m_spectrumAnalyser);
+  m_spectrumAnalyser->registerObserver(this);
 //  startAnimationThread();
 }
 
@@ -104,7 +108,6 @@ MainWindow::startAudioInput()
   m_audioControlSettings->setActive(true);
 
   m_audioInput->openStream();
-  m_audioInput->setLedPlayer(m_player);
   m_audioInput->startStream();
   m_audioInput->closeStream();
 }
@@ -349,4 +352,76 @@ MainWindow::slotPlayerPlayed()
   ui->ledStripEmulatorRed->update();
   ui->ledStripEmulatorGreen->update();
   ui->ledStripEmulatorBlue->update();
+}
+
+
+void
+MainWindow::updateLEDs(const std::map<double, double>& spectrum)
+{
+//  std::cout << "MainWindow::updateLEDs" << std::endl;
+  double brightnessRed = 0.0;
+  double brightnessGreen = 0.0;
+  double brightnessBlue = 0.0;
+
+  m_audioControlSettings->lock();
+  double amplifyFactor = m_audioControlSettings->volumeTotal/1000.0;
+  double amplifyFactorRed = m_audioControlSettings->volumeRed/25.0;
+  double amplifyFactorGreen = m_audioControlSettings->volumeGreen/50.0;
+  double amplifyFactorBlue = m_audioControlSettings->volumeBlue/100.0;
+
+  int freqRmin = m_audioControlSettings->freqRedMin;
+  int freqRmax = m_audioControlSettings->freqRedMax;
+  int freqGmin = m_audioControlSettings->freqGreenMin;
+  int freqGmax = m_audioControlSettings->freqGreenMax;
+  int freqBmin = m_audioControlSettings->freqBlueMin;
+  int freqBmax = m_audioControlSettings->freqBlueMax;
+
+  m_audioControlSettings->unlock();
+
+  m_audioControlSettings->setStatusFPS(m_player->getFPS());
+
+  for (std::map<double, double>::const_iterator iter = spectrum.begin();
+       iter != spectrum.end(); ++iter)
+  {
+    double frequency = iter->first;
+    double amplitude = iter->second;
+
+    if (frequency > freqRmin && frequency < freqRmax)
+    {
+        brightnessRed += amplitude*amplifyFactor*amplifyFactorRed;
+    }
+
+    if (frequency > freqGmin && frequency < freqGmax)
+    {
+      brightnessGreen += amplitude*amplifyFactor*amplifyFactorGreen;
+    }
+
+    if (frequency > freqBmin && frequency < freqBmax)
+    {
+      brightnessBlue += amplitude*amplifyFactor*amplifyFactorBlue;
+    }
+  }
+
+  Animation animation = m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, brightnessRed, brightnessGreen, brightnessBlue);
+  m_player->addAnimation(animation);
+
+  //  Studio studio(nLEDs);
+//  if (m_nUpdates++ % (nLEDs/30) == 1)
+//  {
+//    double speed = 1.0;
+//    m_ledPlayer->addAnimation( studio.createMovingLine(nLEDs/speed,
+//                                                       Color(std::abs(cos(m_nUpdates/5.0+1)*127), std::abs(sin(m_nUpdates/8.0)*127), std::abs(sin(m_nUpdates/23.0+5)*127)),
+//                                                       speed)
+//                             );
+//  }
+
+  m_player->playFrame();
+}
+
+
+void
+MainWindow::notifySpectrum(std::map<double, double> spectrum)
+{
+//  std::cout << "MainWindow::notifySpectrum()" << std::endl;
+  updateLEDs(spectrum);
 }
