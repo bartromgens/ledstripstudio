@@ -1,18 +1,23 @@
 #include "audioinput/audioinput.h"
 #include "spectrum/spectrumanalyser.h"
+#include "spectrum/toneanalyser.h"
 
 #include <cmath>
 
 AudioInput::AudioInput()
   : m_sampleRate(44100),
     m_nSamples( static_cast<int>(std::pow(2.0, 16)) ),
-    m_framesPerBuffer(512),
     m_nChannels(2),
     m_data(),
     m_ledPlayer(0),
     m_controlSettings(0),
-    m_nUpdates(0)
+    m_nUpdates(0),
+    m_nLEDs(160),
+    m_audioObservers(),
+    m_mutex()
 {
+  std::cout << "AudioInput::AudioInput() - sample size: " << m_nSamples << std::endl;
+
   initializeUserData(); // From now on, recordedSamples is initialised.
 }
 
@@ -85,7 +90,7 @@ AudioInput::openStream()
                        &inputParameters,
                        NULL,                  // &outputParameters,
                        m_sampleRate,
-                       m_framesPerBuffer,
+                       paFramesPerBufferUnspecified, // accept buffers of any size
                        paClipOff,      // we won't output out of range samples so don't bother clipping them
                        recordCallback,
                        &m_data );
@@ -143,9 +148,7 @@ AudioInput::updateLEDs(const std::map<double, double>& spectrum)
     }
   }
 
-  int nLEDs = 160;
-
-  Animation animation = createWaveformAnimationCentral(nLEDs, brightnessRed, brightnessGreen, brightnessBlue);
+  Animation animation = createWaveformAnimationCentral(m_nLEDs, brightnessRed, brightnessGreen, brightnessBlue);
   m_ledPlayer->addAnimation(animation);
 
   //  Studio studio(nLEDs);
@@ -186,8 +189,8 @@ AudioInput::drawSpectrumInConsole(const std::map<double, double>& spectrum, int 
 void
 AudioInput::startStream()
 {
-//  int minFreq = 100;
-//  int maxFreq = 600;
+  int minFreq = 400;
+  int maxFreq = 800;
 
   PaError err = paNoError;
 
@@ -198,6 +201,7 @@ AudioInput::startStream()
   }
 
   SpectrumAnalyser spectrumAnalyser(m_nSamples);
+  ToneAnalyser toneAnalyser;
 
   QTime timer;
   timer.start();
@@ -206,7 +210,7 @@ AudioInput::startStream()
   while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
          && run)
   {
-    Pa_Sleep(18);
+    Pa_Sleep(5);
 
     run = m_controlSettings->isActive();
 
@@ -216,8 +220,17 @@ AudioInput::startStream()
       {
 //        timer.restart();
         std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::linear);
-//        std::cout << "AudioInput::startStream() - computeSpectrum time: " << timer.elapsed() << std::endl;
+//        std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::hann);
         m_data.data_mutex.unlock();
+
+//        std::map<std::string, double> tones = toneAnalyser.computeToneAmplitude(spectrum);
+
+//        Animation animation = createToneAnimation(m_nLEDs, tones);
+//        m_ledPlayer->addAnimation(animation);
+//        m_ledPlayer->playFrame();
+
+//        std::cout << "AudioInput::startStream() - computeSpectrum time: " << timer.elapsed() << std::endl;
+
         updateLEDs(spectrum);
 
 //        drawSpectrumInConsole(spectrum, minFreq, maxFreq);
@@ -382,4 +395,154 @@ AudioInput::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int bri
 
   animation.addFrame(frame);
   return animation;
+}
+
+
+Animation
+AudioInput::createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones)
+{
+  Animation animation;
+
+  Frame frame(nLEDs);
+
+//  for (auto iter = tones.begin(); iter != tones.end(); ++iter)
+//  {
+//    std::cout << "Tone: " << iter->first << " : " ;
+//    for (std::size_t i = 0; i < iter->second/15; ++i)
+//    {
+//      std::cout << "-";
+//    }
+//    std::cout << std::endl;
+//  }
+
+  double currentMax = 0.0;
+  std::string maxTone;
+
+  for(auto it = tones.cbegin(); it != tones.cend(); ++it )
+  {
+    if (it->second > currentMax)
+    {
+      maxTone = it->first;
+      currentMax = it->second;
+    }
+  }
+
+//          std::cout << "AudioInput::createToneAnimation() - maxTone: " << maxTone << std::endl;
+
+  for (unsigned int i = 0; i < nLEDs; ++i)
+  {
+//    double r = 0.0;
+//    double g = 0.0;
+//    double b = 0.0;
+
+//    for (auto iter = tones.begin(); iter != tones.end(); ++iter)
+//    {
+//      if (iter->first == "C")
+//      {
+//        r += iter->second;
+//      }
+//      else if (iter->first == "D")
+//      {
+//        r += iter->second/2.0;
+////        g += iter->second/2.0;
+//      }
+//      else if (iter->first == "E")
+//      {
+//        g += iter->second;
+//      }
+//      else if (iter->first == "F")
+//      {
+//        g += iter->second/2.0;
+////        b += iter->second/2.0;
+//      }
+//      else if (iter->first == "G")
+//      {
+//        b += iter->second;
+//      }
+//      else if (iter->first == "A")
+//      {
+//        b += iter->second/2.0;
+////        r += iter->second/2.0;
+//      }
+//      else if (iter->first == "B")
+//      {
+//        r += iter->second;
+//      }
+//    }
+
+//    int norm = sqrt(r*r+g*g+b*b);
+//    int rNorm = r/norm*127;
+//    int gNorm = g/norm*127;
+//    int bNorm = b/norm*127;
+
+//    Color color(rNorm, gNorm, bNorm);
+
+    Color color;
+    if (maxTone == "C")
+    {
+      color = Color(127, 0, 0);
+    }
+    else if (maxTone == "D")
+    {
+      color = Color(127, 127, 0);
+    }
+    else if (maxTone == "E")
+    {
+      color = Color(0, 127, 0);
+    }
+    else if (maxTone == "F")
+    {
+      color = Color(0, 127, 127);
+    }
+    else if (maxTone == "G")
+    {
+      color = Color(0, 0, 127);
+    }
+    else if (maxTone == "A")
+    {
+      color = Color(127, 0, 127);
+    }
+    else if (maxTone == "B")
+    {
+      color = Color(127, 50, 50);
+    }
+
+    LED led(i, color);
+    frame.addLED(led);
+  }
+
+  animation.addFrame(frame);
+
+  return animation;
+}
+
+
+void
+AudioInput::registerObserver(AudioInputObserver* observer)
+{
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
+  assert(observer);
+  m_audioObservers.push_back(observer);
+}
+
+
+void
+AudioInput::unregisterObserver(AudioInputObserver* observer)
+{
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
+  m_audioObservers.erase( std::find(m_audioObservers.begin(), m_audioObservers.end(), observer) );
+}
+
+
+void
+AudioInput::notifyObservers(const std::deque<float>& audioData)
+{
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
+  for (std::size_t i = 0; i < m_audioObservers.size(); ++i)
+  {
+    m_audioObservers[i]->notifyAudioData(audioData);
+  }
 }

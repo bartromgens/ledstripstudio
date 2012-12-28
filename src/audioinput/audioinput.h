@@ -1,16 +1,19 @@
 #ifndef AUDIOINPUT_H
 #define AUDIOINPUT_H
 
-#include "portaudio/portaudio.h"
 #include "userdata.h"
-//#include "recordCallback.h"
+#include "audioinputobserver.h"
 
 #include "basic/color.h"
 #include "basic/animation.h"
 #include "player/player.h"
 #include "settings/controlsettings.h"
 
+#include "portaudio/portaudio.h"
+
 #include <QTime>
+
+#include <boost/thread.hpp>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,6 +39,12 @@ public:
   void setLedPlayer(std::shared_ptr<Player> ledPlayer);
   void setControlSettings(std::shared_ptr<ControlSettings> settings);
 
+  Animation createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones);
+
+  void registerObserver(AudioInputObserver* observer);
+  void unregisterObserver(AudioInputObserver* observer);
+  void notifyObservers(const std::deque<float>& audioData);
+
 private:
 
   void initializeUserData();
@@ -58,7 +67,6 @@ private:
 
   double m_sampleRate;
   int m_nSamples;
-  unsigned long m_framesPerBuffer;
   int m_nChannels;
 //  int m_nSamples;
   PaStream* m_stream;
@@ -68,6 +76,11 @@ private:
   int m_nUpdates;
 
   int m_offSet;
+  int m_nLEDs;
+
+  std::vector<AudioInputObserver*> m_audioObservers;
+
+  mutable boost::mutex m_mutex;
 };
 
 #endif // AUDIOINPUT_H

@@ -116,10 +116,10 @@ SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in) const
 
   std::deque<float> out(sizeIn, 0.0);
 
-  if (in.size() < 65537)
-  {
-    std::cout << in.size() << std::endl;
-  }
+//  if (in.size() < 65537)
+//  {
+//    std::cout << in.size() << std::endl;
+//  }
 
   QTime timer;
   timer.start();
@@ -138,10 +138,10 @@ SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
 
   std::deque<float> out(sizeIn, 0.0);
 
-  if (in.size() < 65537)
-  {
-    std::cout << in.size() << std::endl;
-  }
+//  if (in.size() < 65537)
+//  {
+//    std::cout << in.size() << std::endl;
+//  }
 
   QTime timer;
   timer.start();

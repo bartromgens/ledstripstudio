@@ -21,6 +21,9 @@ SOURCES += \
     spectrum/spectrumanalyser.cpp \
     studio/studio.cpp \
     main.cpp \
+    src/spectrum/toneanalyser.cpp \
+    src/studio/spectrumstudio.cpp \
+    src/audioinput/audioinputobserver.cpp
 
 HEADERS += \
     audioinput/audioinput.h \
@@ -37,6 +40,9 @@ HEADERS += \
     settings/controlsettings.h \
     spectrum/spectrumanalyser.h \
     studio/studio.h \
+    src/spectrum/toneanalyser.h \
+    src/studio/spectrumstudio.h \
+    src/audioinput/audioinputobserver.h
 
 FORMS += \
     gui/mainwindow.ui
