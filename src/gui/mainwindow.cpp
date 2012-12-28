@@ -46,9 +46,9 @@ MainWindow::MainWindow(QWidget *parent) :
   m_timer->start();
 
   m_timerEmulator = new QTimer(this);
-  m_timerEmulator->setInterval(30);
-  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
-  m_timerEmulator->start();
+//  m_timerEmulator->setInterval(30);
+//  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
+//  m_timerEmulator->start();
 
   m_audioInput->registerObserver(m_spectrumAnalyser);
   m_spectrumAnalyser->registerObserver(this);
@@ -73,6 +73,7 @@ MainWindow::createActions()
   connect(openColorPickerAct, SIGNAL(triggered()), this, SLOT(slotOpenColorPicker()));
 }
 
+
 void
 MainWindow::createToolbar()
 {
@@ -80,6 +81,7 @@ MainWindow::createToolbar()
   fileToolBar->addAction(newAct);
   fileToolBar->addAction(openColorPickerAct);
 }
+
 
 void
 MainWindow::createMenus()
@@ -101,6 +103,7 @@ MainWindow::startAudioInputThread()
   boost::thread t1(&MainWindow::startAudioInput, this);
   t1.detach();
 }
+
 
 void
 MainWindow::startAudioInput()

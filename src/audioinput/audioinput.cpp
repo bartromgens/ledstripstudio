@@ -138,7 +138,7 @@ AudioInput::startStream()
   while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
          && run)
   {
-    Pa_Sleep(15);
+    Pa_Sleep(20);
 
     run = m_controlSettings->isActive();
 
@@ -146,9 +146,13 @@ AudioInput::startStream()
     {
       if (m_data.data_mutex.try_lock())
       {
-//        timer.restart();
-        notifyObservers(m_data.recordedSamplesVec);
+
+        std::deque<float> samples = m_data.recordedSamplesVec;
         m_data.data_mutex.unlock();
+
+        timer.restart();
+        notifyObservers(samples);
+        std::cout << "AudioInput::startStream() - notifyObservers time: " << timer.elapsed() << std::endl;
 
 //        std::map<std::string, double> tones = toneAnalyser.computeToneAmplitude(spectrum);
 
@@ -156,7 +160,6 @@ AudioInput::startStream()
 //        m_ledPlayer->addAnimation(animation);
 //        m_ledPlayer->playFrame();
 
-//        std::cout << "AudioInput::startStream() - computeSpectrum time: " << timer.elapsed() << std::endl;
 
 //        drawSpectrumInConsole(spectrum, minFreq, maxFreq);
       }
