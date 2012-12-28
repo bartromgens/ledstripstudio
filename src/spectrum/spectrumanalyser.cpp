@@ -77,37 +77,6 @@ SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 }
 
 
-unsigned int
-SpectrumAnalyser::getNSamples() const
-{
-  return m_nSamples;
-}
-
-
-std::map<double, double>
-SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sampleRate) const
-{
-  std::map<double, double> hist;
-  double binWidth = sampleRate/nBins;
-//  std::cout << "buildHist() - min, max: " << min << ", " << max << std::endl;
-
-  int max = data.size();
-  int min = 0;
-
-  for (std::size_t i = 0; i < data.size(); ++i)
-  {
-    int bin = static_cast<int>( (i-min) / ((max-min)/(nBins)) );
-
-    if ( (bin >= 0) && ( bin < nBins) && (bin*binWidth < sampleRate/2))
-    {
-      hist[bin*binWidth] += data[i];
-    }
-  }
-
-  return hist;
-}
-
-
 void
 SpectrumAnalyser::computeSpectrumThread(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType)
 {
@@ -136,7 +105,6 @@ SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampl
   {
     realInWindowed = realIn;
   }
-
 
 //  timer.restart();
 
@@ -185,6 +153,7 @@ SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in) const
   return out;
 }
 
+
 std::deque<float>
 SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
 {
@@ -200,6 +169,37 @@ SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
   }
 
   return out;
+}
+
+
+std::map<double, double>
+SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sampleRate) const
+{
+  std::map<double, double> hist;
+  double binWidth = sampleRate/nBins;
+//  std::cout << "buildHist() - min, max: " << min << ", " << max << std::endl;
+
+  int max = data.size();
+  int min = 0;
+
+  for (std::size_t i = 0; i < data.size(); ++i)
+  {
+    int bin = static_cast<int>( (i-min) / ((max-min)/(nBins)) );
+
+    if ( (bin >= 0) && ( bin < nBins) && (bin*binWidth < sampleRate/2))
+    {
+      hist[bin*binWidth] += data[i];
+    }
+  }
+
+  return hist;
+}
+
+
+unsigned int
+SpectrumAnalyser::getNSamples() const
+{
+  return m_nSamples;
 }
 
 

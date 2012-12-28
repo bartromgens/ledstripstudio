@@ -71,7 +71,7 @@ AudioInput::openStream()
     terminatePortAudio(err);
   }
 
-  inputParameters.channelCount = 2;                    // stereo input
+  inputParameters.channelCount = m_nChannels;                    // stereo input
   inputParameters.sampleFormat = paFloat32;
   inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
   inputParameters.hostApiSpecificStreamInfo = NULL;
@@ -94,33 +94,27 @@ AudioInput::openStream()
 }
 
 
-void
-AudioInput::drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const
+bool
+AudioInput::closeStream()
 {
-  for (std::map<double, double>::const_iterator iter = spectrum.begin();
-       iter != spectrum.end(); ++iter)
+  std::cout << "AudioInput::closeStream()" << std::endl;
+  PaError err = paNoError;
+
+  err = Pa_CloseStream( m_stream );
+  if( err != paNoError )
   {
-    int frequency = iter->first;
-    if (frequency > minFreq && frequency < maxFreq)
-    {
-      std::cout << frequency << " :";
-      for (std::size_t j = 0; j < iter->second; ++j)
-      {
-        std::cout << "=";
-      }
-      std::cout << std::endl;
-    }
+    std::cout << "AudioInput::closeStream() - ERROR: terminatePortAudio" << std::endl;
+    terminatePortAudio(err);
+    return false;
   }
-  std::cout << std::endl;
+
+  return true;
 }
 
 
 void
 AudioInput::startStream()
 {
-//  int minFreq = 400;
-//  int maxFreq = 800;
-
   PaError err = paNoError;
 
   err = Pa_StartStream( m_stream );
@@ -152,7 +146,7 @@ AudioInput::startStream()
 
         timer.restart();
         notifyObservers(samples);
-        std::cout << "AudioInput::startStream() - notifyObservers time: " << timer.elapsed() << std::endl;
+//        std::cout << "AudioInput::startStream() - notifyObservers time: " << timer.elapsed() << std::endl;
 
 //        std::map<std::string, double> tones = toneAnalyser.computeToneAmplitude(spectrum);
 
@@ -160,7 +154,8 @@ AudioInput::startStream()
 //        m_ledPlayer->addAnimation(animation);
 //        m_ledPlayer->playFrame();
 
-
+//        int minFreq = 400;
+//        int maxFreq = 800;
 //        drawSpectrumInConsole(spectrum, minFreq, maxFreq);
       }
     }
@@ -169,24 +164,6 @@ AudioInput::startStream()
   {
     terminatePortAudio(err);
   }
-}
-
-
-bool
-AudioInput::closeStream()
-{
-  std::cout << "AudioInput::closeStream()" << std::endl;
-  PaError err = paNoError;
-
-  err = Pa_CloseStream( m_stream );
-  if( err != paNoError )
-  {
-    std::cout << "AudioInput::closeStream() - ERROR: terminatePortAudio" << std::endl;
-    terminatePortAudio(err);
-    return false;
-  }
-
-  return true;
 }
 
 
@@ -260,6 +237,7 @@ AudioInput::terminatePortAudio(PaError err)
     err = 1;          // Always return 0 or 1, but no other return codes.
   }
 }
+
 
 Animation
 AudioInput::createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones)
@@ -408,4 +386,25 @@ AudioInput::notifyObservers(const std::deque<float>& audioData)
   {
     m_audioObservers[i]->notifyAudioData(audioData, m_sampleRate);
   }
+}
+
+
+void
+AudioInput::drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const
+{
+  for (std::map<double, double>::const_iterator iter = spectrum.begin();
+       iter != spectrum.end(); ++iter)
+  {
+    int frequency = iter->first;
+    if (frequency > minFreq && frequency < maxFreq)
+    {
+      std::cout << frequency << " :";
+      for (std::size_t j = 0; j < iter->second; ++j)
+      {
+        std::cout << "=";
+      }
+      std::cout << std::endl;
+    }
+  }
+  std::cout << std::endl;
 }

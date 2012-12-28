@@ -46,9 +46,9 @@ MainWindow::MainWindow(QWidget *parent) :
   m_timer->start();
 
   m_timerEmulator = new QTimer(this);
-//  m_timerEmulator->setInterval(30);
-//  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
-//  m_timerEmulator->start();
+  m_timerEmulator->setInterval(30);
+  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
+  m_timerEmulator->start();
 
   m_audioInput->registerObserver(m_spectrumAnalyser);
   m_spectrumAnalyser->registerObserver(this);
