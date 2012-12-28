@@ -5,14 +5,19 @@
 
 #include "fftw++.h"
 
+#include <boost/thread.hpp>
+
 #include <algorithm>
 #include <deque>
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <stdio.h>
 #include <vector>
 
+
+class SpectrumObserver;
 
 class SpectrumAnalyser : public AudioInputObserver
 {
@@ -28,7 +33,11 @@ public:
   SpectrumAnalyser(int nSamples);
   ~SpectrumAnalyser();
 
-  virtual void notifyAudioData(std::deque<float> audioData);
+  virtual void notifyAudioData(std::deque<float> audioData, int sampleRate);
+
+  void registerObserver(SpectrumObserver* observer);
+  void unregisterObserver(SpectrumObserver* observer);
+  void notifyObservers(const std::map<double, double>& spectrum);
 
   std::map<double, double> computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType) ;
 
@@ -49,6 +58,10 @@ private:
   //The last useful bin (for practical aplications) is at N / 2 - 1,
 
   fftwpp::rcfft1d* m_forward;
+
+  std::vector< SpectrumObserver* > m_observers;
+
+  mutable boost::mutex m_mutex;
 };
 
 #endif // SPECTRUMANALYSER_H

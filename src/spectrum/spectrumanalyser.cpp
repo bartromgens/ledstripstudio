@@ -1,6 +1,9 @@
 #include "spectrumanalyser.h"
+#include "spectrumobserver.h"
 
 #include <QTime>
+
+#include <boost/thread.hpp>
 
 using namespace fftwpp;
 
@@ -10,7 +13,9 @@ using namespace fftwpp;
 SpectrumAnalyser::SpectrumAnalyser(int nSamples)
   : AudioInputObserver(),
     m_nSamples(nSamples),
-    m_np(nSamples/2+1)
+    m_np(nSamples/2+1),
+    m_observers(),
+    m_mutex()
 {
   fftw::maxthreads = 1; // single thread is faster for the size the input data
 
@@ -33,9 +38,43 @@ SpectrumAnalyser::~SpectrumAnalyser()
 
 
 void
-SpectrumAnalyser::notifyAudioData(std::deque<float> audioData)
+SpectrumAnalyser::notifyAudioData(std::deque<float> audioData, int sampleRate)
 {
-  std::cout << "SpectrumAnalyser::notifyAudioData() - audio data size: " << audioData.size() << std::endl;
+//  std::cout << "SpectrumAnalyser::notifyAudioData() - audio data size: " << audioData.size() << std::endl;
+
+  std::map<double, double> spectrum = computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
+  notifyObservers(spectrum);
+}
+
+
+void
+SpectrumAnalyser::registerObserver(SpectrumObserver* observer)
+{
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
+  assert(observer);
+  m_observers.push_back(observer);
+}
+
+
+void
+SpectrumAnalyser::unregisterObserver(SpectrumObserver* observer)
+{
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
+  m_observers.erase( std::find(m_observers.begin(), m_observers.end(), observer) );
+}
+
+
+void
+SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
+{
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
+  for (std::size_t i = 0; i < m_observers.size(); ++i)
+  {
+    m_observers[i]->notifySpectrum(spectrum);
+  }
 }
 
 
