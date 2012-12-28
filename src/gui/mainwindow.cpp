@@ -169,9 +169,6 @@ void
 MainWindow::connectAllSlots() const
 {
   connect( &m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
-  connect( ui->brightnessRedSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
-  connect( ui->brightnessGreenSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
-  connect( ui->brightnessBlueSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged() ) );
 
   connect( ui->volumeTotalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
   connect( ui->volumeRedSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
@@ -269,25 +266,6 @@ MainWindow::slotFrequencyChanged()
 
     m_audioControlSettings->unlock();
   }
-}
-
-
-void
-MainWindow::slotBrightnessChanged()
-{
-  int red = ui->brightnessRedSlider->value();
-  int green = ui->brightnessGreenSlider->value();
-  int blue = ui->brightnessBlueSlider->value();
-  m_audioControlSettings->setValue("brightnessRed", red);
-  m_audioControlSettings->setValue("brightnessGreen", green);
-  m_audioControlSettings->setValue("brightnessBlue", blue);
-
-  Color color(red, green, blue);
-
-  Animation animation = m_studio->createSingleColorSingleFrameAnimation(color);
-  m_player->addAnimation(animation);
-
-  m_player->playFrame();
 }
 
 

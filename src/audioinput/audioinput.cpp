@@ -71,7 +71,7 @@ AudioInput::openStream()
     terminatePortAudio(err);
   }
 
-  inputParameters.channelCount = m_nChannels;                    // stereo input
+  inputParameters.channelCount = m_nChannels;
   inputParameters.sampleFormat = paFloat32;
   inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
   inputParameters.hostApiSpecificStreamInfo = NULL;
