@@ -8,7 +8,8 @@ using namespace fftwpp;
 #include <math.h>
 
 SpectrumAnalyser::SpectrumAnalyser(int nSamples)
-  : m_nSamples(nSamples),
+  : AudioInputObserver(),
+    m_nSamples(nSamples),
     m_np(nSamples/2+1)
 {
   fftw::maxthreads = 1; // single thread is faster for the size the input data
@@ -28,6 +29,12 @@ SpectrumAnalyser::~SpectrumAnalyser()
   FFTWdelete(m_f);
 
   delete m_forward;
+}
+
+
+void
+SpectrumAnalyser::notifyAudioData(std::deque<float> audioData)
+{
 }
 
 

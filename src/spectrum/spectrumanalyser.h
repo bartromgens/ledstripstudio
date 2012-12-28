@@ -1,6 +1,8 @@
 #ifndef SPECTRUMANALYSER_H
 #define SPECTRUMANALYSER_H
 
+#include "audioinput/audioinputobserver.h"
+
 #include "fftw++.h"
 
 #include <algorithm>
@@ -12,7 +14,7 @@
 #include <vector>
 
 
-class SpectrumAnalyser
+class SpectrumAnalyser : AudioInputObserver
 {
 public:
   enum windowingType
@@ -25,6 +27,8 @@ public:
 public:
   SpectrumAnalyser(int nSamples);
   ~SpectrumAnalyser();
+
+  virtual void notifyAudioData(std::deque<float> audioData);
 
   std::map<double, double> computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType) ;
 
