@@ -12,6 +12,7 @@
 #include <memory>
 
 class AudioInput;
+class AudioInputObserver;
 class ControlSettings;
 class LedStripEmulator;
 class Player;
@@ -65,10 +66,12 @@ private:
   std::unique_ptr<Ui::MainWindow> ui;
   QColorDialog m_colorDialog;
   std::size_t m_nLedsTotal;
+
   std::shared_ptr<Player> m_player;
   std::unique_ptr<Studio> m_studio;
   std::unique_ptr<AudioInput> m_audioInput;
   std::shared_ptr<ControlSettings> m_audioControlSettings;
+  std::shared_ptr<AudioInputObserver> m_spectrumAnalyser;
 
 //  LedStripEmulator* m_ledStripEmulator;
 

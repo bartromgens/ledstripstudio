@@ -29,7 +29,7 @@ public:
   };
 
 public:
-  AudioInput();
+  AudioInput(unsigned int nSamples);
   ~AudioInput();
 
   void openStream();
@@ -41,8 +41,8 @@ public:
 
   Animation createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones);
 
-  void registerObserver(AudioInputObserver* observer);
-  void unregisterObserver(AudioInputObserver* observer);
+  void registerObserver(std::shared_ptr<AudioInputObserver> observer);
+  void unregisterObserver(std::shared_ptr<AudioInputObserver> observer);
   void notifyObservers(const std::deque<float>& audioData);
 
 private:
@@ -66,7 +66,7 @@ private:
 private:
 
   double m_sampleRate;
-  int m_nSamples;
+  unsigned int m_nSamples;
   int m_nChannels;
 //  int m_nSamples;
   PaStream* m_stream;
@@ -78,7 +78,7 @@ private:
   int m_offSet;
   int m_nLEDs;
 
-  std::vector<AudioInputObserver*> m_audioObservers;
+  std::vector< std::shared_ptr<AudioInputObserver> > m_audioObservers;
 
   mutable boost::mutex m_mutex;
 };

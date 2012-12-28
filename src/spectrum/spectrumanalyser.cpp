@@ -35,10 +35,12 @@ SpectrumAnalyser::~SpectrumAnalyser()
 void
 SpectrumAnalyser::notifyAudioData(std::deque<float> audioData)
 {
+  std::cout << "SpectrumAnalyser::notifyAudioData() - audio data size: " << audioData.size() << std::endl;
 }
 
 
-unsigned int SpectrumAnalyser::getNSamples() const
+unsigned int
+SpectrumAnalyser::getNSamples() const
 {
   return m_nSamples;
 }

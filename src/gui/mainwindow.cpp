@@ -2,9 +2,12 @@
 #include "gui/ui_mainwindow.h"
 
 #include "audioinput/audioinput.h"
+#include "spectrum/spectrumanalyser.h"
 #include "studio/studio.h"
 
 #include <boost/thread.hpp>
+
+const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 16));
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -13,8 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
   m_nLedsTotal(160),
   m_player(new Player()),
   m_studio(new Studio(m_nLedsTotal)),
-  m_audioInput(new AudioInput()),
+  m_audioInput(new AudioInput(SPECTRUM_SAMPLES)),
   m_audioControlSettings(new ControlSettings()),
+  m_spectrumAnalyser(new SpectrumAnalyser(SPECTRUM_SAMPLES)),
   m_isAudioOn(false),
   m_timer(0)
 {
@@ -43,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
 
+  m_audioInput->registerObserver(m_spectrumAnalyser);
 //  startAnimationThread();
 }
 
@@ -124,7 +129,7 @@ MainWindow::startAnimation() const
     Color colorC(0, 0, 127);
     Color colorD(127, 0, 127);
 
-//    int nFrames = 1000;
+//    int nFrames = 10000;
 
 //    Animation animationA = m_studio->createMovingDot(0, nFrames, colorA, 2.5);
 //    Animation animationB = m_studio->createMovingDot(0, nFrames, colorB, 1.5);
@@ -132,13 +137,15 @@ MainWindow::startAnimation() const
 //    Animation animationD = m_studio->createMovingDot(0, nFrames, colorD, 0.7);
 //    Animation animationA = m_studio->createMovingDot(colorB, 1.0);
 
-//    Animation animationA = m_studio->createMovingLine(nFrames, colorA, 1.5);
-//    m_player->addAnimation(animationA);
+//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorA, 1.1));
+//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorB, -0.4));
+//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorC, 0.2));
 
 //    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
 
 //    m_player->addAnimation(m_studio->createMovingRainbow());
-    m_player->addAnimation(m_studio->createRandomMovingDots(14, 20000));
+//    m_player->addAnimation(m_studio->createRandomMovingDots(20, nFrames));
+    m_player->addAnimation(m_studio->createCellularAutomata());
     m_player->playAllAnimations();
   }
 }

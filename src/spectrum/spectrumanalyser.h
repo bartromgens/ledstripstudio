@@ -14,7 +14,7 @@
 #include <vector>
 
 
-class SpectrumAnalyser : AudioInputObserver
+class SpectrumAnalyser : public AudioInputObserver
 {
 public:
   enum windowingType

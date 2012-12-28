@@ -4,9 +4,9 @@
 
 #include <cmath>
 
-AudioInput::AudioInput()
+AudioInput::AudioInput(unsigned int nSamples)
   : m_sampleRate(44100),
-    m_nSamples( static_cast<int>(std::pow(2.0, 16)) ),
+    m_nSamples(nSamples),
     m_nChannels(2),
     m_data(),
     m_ledPlayer(0),
@@ -189,8 +189,8 @@ AudioInput::drawSpectrumInConsole(const std::map<double, double>& spectrum, int 
 void
 AudioInput::startStream()
 {
-  int minFreq = 400;
-  int maxFreq = 800;
+//  int minFreq = 400;
+//  int maxFreq = 800;
 
   PaError err = paNoError;
 
@@ -201,6 +201,7 @@ AudioInput::startStream()
   }
 
   SpectrumAnalyser spectrumAnalyser(m_nSamples);
+
   ToneAnalyser toneAnalyser;
 
   QTime timer;
@@ -210,17 +211,19 @@ AudioInput::startStream()
   while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
          && run)
   {
-    Pa_Sleep(5);
+    Pa_Sleep(15);
 
     run = m_controlSettings->isActive();
 
-    if (m_data.recordedSamplesVec.size() >= spectrumAnalyser.getNSamples())
+    if (m_data.recordedSamplesVec.size() >= m_nSamples)
     {
       if (m_data.data_mutex.try_lock())
       {
 //        timer.restart();
         std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::linear);
 //        std::map<double, double> spectrum = spectrumAnalyser.computeSpectrum(m_data.recordedSamplesVec, 4000, m_sampleRate, SpectrumAnalyser::hann);
+
+        notifyObservers(m_data.recordedSamplesVec);
         m_data.data_mutex.unlock();
 
 //        std::map<std::string, double> tones = toneAnalyser.computeToneAmplitude(spectrum);
@@ -518,7 +521,7 @@ AudioInput::createToneAnimation(unsigned int nLEDs, std::map<std::string, double
 
 
 void
-AudioInput::registerObserver(AudioInputObserver* observer)
+AudioInput::registerObserver(std::shared_ptr<AudioInputObserver> observer)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
@@ -528,7 +531,7 @@ AudioInput::registerObserver(AudioInputObserver* observer)
 
 
 void
-AudioInput::unregisterObserver(AudioInputObserver* observer)
+AudioInput::unregisterObserver(std::shared_ptr<AudioInputObserver> observer)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
