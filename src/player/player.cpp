@@ -82,6 +82,16 @@ Player::playFrame()
 
 //  QTime time;
 //  time.start();
+  boost::thread t1(&Player::playFrameThread, this);
+  t1.detach();
+
+  //  std::cout << "Player::playFrame() - time :" << time.elapsed() << std::endl;
+}
+
+
+void
+Player::playFrameThread()
+{
   {
     boost::lock_guard<boost::mutex> lock(m_mutex);
 
@@ -91,9 +101,7 @@ Player::playFrame()
   }
 
   m_ledController->send(m_lastFrame);
-  //  std::cout << "Player::playFrame() - time :" << time.elapsed() << std::endl;
 }
-
 
 Frame
 Player::smoothenFrames(const Frame& firstFrame, const Frame& secondFrame, int /*nFrames*/)

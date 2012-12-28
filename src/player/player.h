@@ -14,8 +14,6 @@ public:
   Player();
   ~Player();
 
-  std::unique_ptr<LEDController> createLedController(QString serialPortName);
-
   void addAnimation(const Animation &animation);
 
   void playFrame();
@@ -23,10 +21,14 @@ public:
   int getFPS() const;
   Frame getLastFrame() const;
 
-  // experimental
-  Frame smoothenFrames(const Frame &firstFrame, const Frame &secondFrame, int nFrames = 1);
-
   void playAllAnimations();
+
+private:
+  std::unique_ptr<LEDController> createLedController(QString serialPortName);
+
+  void playFrameThread();
+
+  Frame smoothenFrames(const Frame &firstFrame, const Frame &secondFrame, int nFrames = 1);
 
 private:
   std::unique_ptr<LEDController> m_ledController;
