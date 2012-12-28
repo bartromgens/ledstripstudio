@@ -69,3 +69,24 @@ SpectrumStudio::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int
   animation.addFrame(frame);
   return animation;
 }
+
+
+void
+SpectrumStudio::drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const
+{
+  for (std::map<double, double>::const_iterator iter = spectrum.begin();
+       iter != spectrum.end(); ++iter)
+  {
+    int frequency = iter->first;
+    if (frequency > minFreq && frequency < maxFreq)
+    {
+      std::cout << frequency << " :";
+      for (std::size_t j = 0; j < iter->second/4; ++j)
+      {
+        std::cout << ".";
+      }
+      std::cout << std::endl;
+    }
+  }
+  std::cout << std::endl;
+}

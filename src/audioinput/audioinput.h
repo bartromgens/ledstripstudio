@@ -58,7 +58,6 @@ private:
                              void *userData );
 
   void terminatePortAudio(PaError err);
-  void drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const;
 
 private:
 

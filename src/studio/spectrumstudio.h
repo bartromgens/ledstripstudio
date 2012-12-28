@@ -11,6 +11,8 @@ public:
   SpectrumStudio();
 
   Animation createWaveformAnimationCentral(int nLEDs, int brightnessRed, int brightnessGreen, int brightnessBlue);
+
+  void drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const;
 };
 
 #endif // SPECTRUMSTUDIO_H

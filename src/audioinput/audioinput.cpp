@@ -153,10 +153,6 @@ AudioInput::startStream()
 //        Animation animation = createToneAnimation(m_nLEDs, tones);
 //        m_ledPlayer->addAnimation(animation);
 //        m_ledPlayer->playFrame();
-
-//        int minFreq = 400;
-//        int maxFreq = 800;
-//        drawSpectrumInConsole(spectrum, minFreq, maxFreq);
       }
     }
   }
@@ -386,25 +382,4 @@ AudioInput::notifyObservers(const std::deque<float>& audioData)
   {
     m_audioObservers[i]->notifyAudioData(audioData, m_sampleRate);
   }
-}
-
-
-void
-AudioInput::drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const
-{
-  for (std::map<double, double>::const_iterator iter = spectrum.begin();
-       iter != spectrum.end(); ++iter)
-  {
-    int frequency = iter->first;
-    if (frequency > minFreq && frequency < maxFreq)
-    {
-      std::cout << frequency << " :";
-      for (std::size_t j = 0; j < iter->second; ++j)
-      {
-        std::cout << "=";
-      }
-      std::cout << std::endl;
-    }
-  }
-  std::cout << std::endl;
 }
