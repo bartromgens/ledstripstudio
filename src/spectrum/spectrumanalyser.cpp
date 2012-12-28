@@ -38,12 +38,11 @@ SpectrumAnalyser::~SpectrumAnalyser()
 
 
 void
-SpectrumAnalyser::notifyAudioData(std::deque<float> audioData, int sampleRate)
+SpectrumAnalyser::notifyAudioData(const std::deque<float>& audioData, int sampleRate)
 {
 //  std::cout << "SpectrumAnalyser::notifyAudioData() - audio data size: " << audioData.size() << std::endl;
-
-  std::map<double, double> spectrum = computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
-  notifyObservers(spectrum);
+  computeSpectrumThread(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
+//  computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
 }
 
 
@@ -108,11 +107,20 @@ SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sa
   return hist;
 }
 
-std::map<double, double>
-SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType)
+
+void
+SpectrumAnalyser::computeSpectrumThread(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType)
 {
-  QTime timer;
-  timer.start();
+  boost::thread t1(&SpectrumAnalyser::computeSpectrum, this, realIn, nBins, sampleRate, windowType);
+  t1.detach();
+}
+
+
+std::map<double, double>
+SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType)
+{
+//  QTime timer;
+//  timer.start();
 
   std::deque<float> realInWindowed;
 
@@ -129,17 +137,17 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, in
     realInWindowed = realIn;
   }
 
-//  std::cout << "SpectrumAnalyser::computeSpectrum() - hannWindowFunction time: " << timer.elapsed() << std::endl;
 
-  timer.restart();
+//  timer.restart();
 
   for(unsigned int i = 0; (i < m_nSamples) && (i < realIn.size()); i++)
   {
-//    m_f[i] = realIn[i];
     m_f[i] = realInWindowed[i];
   }
 
-  timer.restart();
+//  std::cout << "SpectrumAnalyser::computeSpectrum() - hannWindowFunction time: " << timer.elapsed() << std::endl;
+//  timer.restart();
+
   // forward FFT real to complex
   m_forward->fft(m_f, m_g);
 
@@ -153,6 +161,9 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, in
   std::map<double, double> bins = binSpectrum(magnitude, nBins, sampleRate);
 
 //  std::cout << "SpectrumAnalyser::computeSpectrum() - end. timer: " << timer.elapsed() << std::endl;
+
+  notifyObservers(bins);
+
   return bins;
 }
 
@@ -163,11 +174,6 @@ SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in) const
   std::size_t sizeIn = in.size();
 
   std::deque<float> out(sizeIn, 0.0);
-
-//  if (in.size() < 65537)
-//  {
-//    std::cout << in.size() << std::endl;
-//  }
 
   QTime timer;
   timer.start();
@@ -185,11 +191,6 @@ SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
   std::size_t sizeIn = in.size();
 
   std::deque<float> out(sizeIn, 0.0);
-
-//  if (in.size() < 65537)
-//  {
-//    std::cout << in.size() << std::endl;
-//  }
 
   QTime timer;
   timer.start();

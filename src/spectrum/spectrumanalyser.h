@@ -33,15 +33,17 @@ public:
   SpectrumAnalyser(int nSamples);
   ~SpectrumAnalyser();
 
-  virtual void notifyAudioData(std::deque<float> audioData, int sampleRate);
+  virtual void notifyAudioData(const std::deque<float>& audioData, int sampleRate);
 
   void registerObserver(SpectrumObserver* observer);
   void unregisterObserver(SpectrumObserver* observer);
   void notifyObservers(const std::map<double, double>& spectrum);
 
-  std::map<double, double> computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType) ;
+  void computeSpectrumThread(const std::deque<float> &realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType);
+  std::map<double, double> computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType) ;
 
   unsigned int getNSamples() const;
+
 
 private:
   std::map<double, double> binSpectrum(const std::vector<double>& data, int nBins, int sampleRate) const;
