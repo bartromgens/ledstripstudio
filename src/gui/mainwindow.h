@@ -57,7 +57,8 @@ private slots:
   void slotColorSelected(const QColor& color);
 
   void slotToggleAudioInput(bool isChecked);
-  void slotToggleSpectrumAnalysis() const;
+  void slotToggleSpectrumAnalysis(bool isChecked) const;
+  void slotToggleToneAnalysis(bool isChecked) const;
 
   void slotVolumeChanged();
   void slotFrequencyChanged();
@@ -103,9 +104,10 @@ private:
   QMenu* editMenu;
   QMenu* helpMenu;
 
-  QPushButton* newAct;
-  QAction* m_spectrumAction;
-  QAction* openColorPickerAct;
+  QAction* m_audioToggleButton;
+  QAction* m_spectrumToggleButton;
+  QAction* m_toneToggleButton;
+  QAction* m_openColorPickerAct;
 
   bool m_isAudioOn;
 

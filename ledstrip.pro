@@ -51,7 +51,15 @@ HEADERS += \
 FORMS += \
     gui/mainwindow.ui
 
-OTHER_FILES +=
+OTHER_FILES += \
+    icons/audio-volume-high.png \
+    icons/wave_high_frequency.png \
+    icons/color_wheel.png \
+    icons/audio-volume-muted.svg \
+    icons/audio-volume-high.svg \
+    icons/audio-x-generic.svg \
+    icons/audio-x-generic.png \
+    icons/audio-volume-muted.png
 
 #library header file directories
 unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/

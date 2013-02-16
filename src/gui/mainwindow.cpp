@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneAnalyser->registerObserver(this);
 
   startSpectrumAnalyser();
-  startToneAnalyser();
+//  startToneAnalyser();
 
 //  startAnimationThread();
 }
@@ -75,13 +75,15 @@ void
 MainWindow::slotToggleAudioInput(bool isChecked)
 {
   std::cout << "MainWindow::slotToggleAudioInput()" << std::endl;
-  if (!isChecked)
+  if (isChecked)
   {
-    stopAudioInput();
+    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-high.svg"));
+    startAudioInputThread();
   }
   else
   {
-    startAudioInputThread();
+    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.svg"));
+    stopAudioInput();
   }
 }
 
@@ -138,9 +140,16 @@ MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 
 
 void
-MainWindow::slotToggleSpectrumAnalysis() const
+MainWindow::slotToggleSpectrumAnalysis(bool isChecked) const
 {
-
+  if (isChecked)
+  {
+    startSpectrumAnalyser();
+  }
+  else
+  {
+    stopSpectrumAnalyser();
+  }
 }
 
 
@@ -155,6 +164,20 @@ void
 MainWindow::stopSpectrumAnalyser() const
 {
   m_audioInput->unregisterObserver(m_spectrumAnalyser);
+}
+
+
+void
+MainWindow::slotToggleToneAnalysis(bool isChecked) const
+{
+  if (isChecked)
+  {
+    startToneAnalyser();
+  }
+  else
+  {
+    stopToneAnalyser();
+  }
 }
 
 
@@ -175,18 +198,28 @@ MainWindow::stopToneAnalyser() const
 void
 MainWindow::createActions()
 {
-  newAct = new QPushButton(tr("&Toggle Audio"), this);
-  newAct->setStatusTip(tr("Start Audio Input Control Panel"));
-  newAct->setCheckable(true);
-  connect(newAct, SIGNAL(clicked(bool)), this, SLOT(slotToggleAudioInput(bool)));
+  m_audioToggleButton = new QAction(this);
+  m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.svg"));
+  m_audioToggleButton->setStatusTip(tr("Start audio input control panel"));
+  m_audioToggleButton->setCheckable(true);
+  connect(m_audioToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleAudioInput(bool)));
 
-  m_spectrumAction = new QAction(tr("&Toggle Spectrum"), this);
-  m_spectrumAction->setStatusTip(tr("Start the spectrum analysis."));
-  connect(m_spectrumAction, SIGNAL(triggered()), this, SLOT(slotToggleSpectrumAnalysis()));
+  m_spectrumToggleButton = new QAction(this);
+  m_spectrumToggleButton->setStatusTip(tr("Start the spectrum analysis."));
+  m_spectrumToggleButton->setIcon(QIcon("./icons/wave_high_frequency.png"));
+  m_spectrumToggleButton->setCheckable(true);
+  connect(m_spectrumToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpectrumAnalysis(bool)));
 
-  openColorPickerAct = new QAction(tr("Pick Colour"), this);
-  openColorPickerAct->setStatusTip(tr("Open colour picker"));
-  connect(openColorPickerAct, SIGNAL(triggered()), this, SLOT(slotOpenColorPicker()));
+  m_toneToggleButton = new QAction(this);
+  m_toneToggleButton->setStatusTip(tr("Start the tone analysis."));
+  m_toneToggleButton->setIcon(QIcon("./icons/audio-x-generic.svg"));
+  m_toneToggleButton->setCheckable(true);
+  connect(m_toneToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneAnalysis(bool)));
+
+  m_openColorPickerAct = new QAction(this);
+  m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel.png"));
+  m_openColorPickerAct->setStatusTip(tr("Open colour picker"));
+  connect(m_openColorPickerAct, SIGNAL(triggered()), this, SLOT(slotOpenColorPicker()));
 }
 
 
@@ -194,9 +227,13 @@ void
 MainWindow::createToolbar()
 {
   fileToolBar = addToolBar(tr("File"));
-  fileToolBar->addWidget(newAct);
-  fileToolBar->addAction(m_spectrumAction);
-  fileToolBar->addAction(openColorPickerAct);
+  fileToolBar->addAction(m_audioToggleButton);
+  fileToolBar->addSeparator();
+  fileToolBar->addAction(m_spectrumToggleButton);
+  fileToolBar->addAction(m_toneToggleButton);
+  fileToolBar->addSeparator();
+  fileToolBar->addAction(m_openColorPickerAct);
+  fileToolBar->setIconSize(QSize(45, 45));
 }
 
 
