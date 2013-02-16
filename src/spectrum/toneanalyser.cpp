@@ -74,7 +74,7 @@ void
 ToneAnalyser::registerObserver(ToneObserver* observer)
 {
   assert(observer);
-  m_observers.push_back(observer);
+  m_observers.insert(observer);
 }
 
 
@@ -88,8 +88,13 @@ ToneAnalyser::unregisterObserver(ToneObserver* observer)
 void
 ToneAnalyser::notifyObservers(const std::map<std::string, double>& toneAmplitudes)
 {
-  for (std::size_t i = 0; i < m_observers.size(); ++i)
+//  for (std::size_t i = 0; i < m_observers.size(); ++i)
+//  {
+//    m_observers[i]->notifyTone(toneAmplitudes);
+//  }
+
+  for (auto iter = m_observers.begin(); iter != m_observers.end(); ++iter)
   {
-    m_observers[i]->notifyTone(toneAmplitudes);
+    (*iter)->notifyTone(toneAmplitudes);
   }
 }

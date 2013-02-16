@@ -358,7 +358,7 @@ AudioInput::registerObserver(std::shared_ptr<AudioInputObserver> observer)
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
   assert(observer);
-  m_audioObservers.push_back(observer);
+  m_audioObservers.insert(observer);
 }
 
 
@@ -376,8 +376,8 @@ AudioInput::notifyObservers(const std::deque<float>& audioData)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
-  for (std::size_t i = 0; i < m_audioObservers.size(); ++i)
+  for (auto iter = m_audioObservers.begin(); iter != m_audioObservers.end(); ++iter)
   {
-    m_audioObservers[i]->notifyAudioData(audioData, m_sampleRate);
+    (*iter)->notifyAudioData(audioData, m_sampleRate);
   }
 }

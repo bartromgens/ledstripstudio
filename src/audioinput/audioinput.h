@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <memory>
+#include <set>
 
 class AudioInput
 {
@@ -73,7 +74,7 @@ private:
   int m_offSet;
   int m_nLEDs;
 
-  std::vector< std::shared_ptr<AudioInputObserver> > m_audioObservers;
+  std::set< std::shared_ptr<AudioInputObserver> > m_audioObservers;
 
   mutable boost::mutex m_mutex;
 };

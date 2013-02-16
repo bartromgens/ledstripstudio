@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
 
 class ToneAnalyser : public SpectrumObserver
 {
@@ -23,7 +24,7 @@ public:
 
 private:
   std::map<std::string, double> m_baseTones;
-  std::vector< ToneObserver* > m_observers;
+  std::set< ToneObserver* > m_observers;
 };
 
 #endif // TONEANALYSER_H

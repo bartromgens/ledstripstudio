@@ -16,6 +16,7 @@
 #include <map>
 #include <memory>
 #include <stdio.h>
+#include <set>
 #include <vector>
 
 
@@ -63,7 +64,7 @@ private:
 
   fftwpp::rcfft1d* m_forward;
 
-  std::vector< SpectrumObserver* > m_observers;
+  std::set< SpectrumObserver* > m_observers;
 
   mutable boost::mutex m_mutex;
 

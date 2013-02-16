@@ -7,6 +7,8 @@
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
 
+#include <QPushButton>
+
 #include <boost/thread.hpp>
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 16));
@@ -53,10 +55,10 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
 
-  m_audioInput->registerObserver(m_spectrumAnalyser);
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
 
+  startSpectrumAnalyser();
   startToneAnalyser();
 
 //  startAnimationThread();
@@ -66,6 +68,21 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
   delete ui;
+}
+
+
+void
+MainWindow::slotToggleAudioInput(bool isChecked)
+{
+  std::cout << "MainWindow::slotToggleAudioInput()" << std::endl;
+  if (!isChecked)
+  {
+    stopAudioInput();
+  }
+  else
+  {
+    startAudioInputThread();
+  }
 }
 
 
@@ -121,6 +138,27 @@ MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 
 
 void
+MainWindow::slotToggleSpectrumAnalysis() const
+{
+
+}
+
+
+void
+MainWindow::startSpectrumAnalyser() const
+{
+  m_audioInput->registerObserver(m_spectrumAnalyser);
+}
+
+
+void
+MainWindow::stopSpectrumAnalyser() const
+{
+  m_audioInput->unregisterObserver(m_spectrumAnalyser);
+}
+
+
+void
 MainWindow::startToneAnalyser() const
 {
   m_spectrumAnalyser->registerObserver(m_toneAnalyser.get());
@@ -130,16 +168,21 @@ MainWindow::startToneAnalyser() const
 void
 MainWindow::stopToneAnalyser() const
 {
-  m_spectrumAnalyser->registerObserver(m_toneAnalyser.get());
+  m_spectrumAnalyser->unregisterObserver(m_toneAnalyser.get());
 }
 
 
 void
 MainWindow::createActions()
 {
-  newAct = new QAction(tr("&Toggle Audio"), this);
+  newAct = new QPushButton(tr("&Toggle Audio"), this);
   newAct->setStatusTip(tr("Start Audio Input Control Panel"));
-  connect(newAct, SIGNAL(triggered()), this, SLOT(slotToggleAudioInput()));
+  newAct->setCheckable(true);
+  connect(newAct, SIGNAL(clicked(bool)), this, SLOT(slotToggleAudioInput(bool)));
+
+  m_spectrumAction = new QAction(tr("&Toggle Spectrum"), this);
+  m_spectrumAction->setStatusTip(tr("Start the spectrum analysis."));
+  connect(m_spectrumAction, SIGNAL(triggered()), this, SLOT(slotToggleSpectrumAnalysis()));
 
   openColorPickerAct = new QAction(tr("Pick Colour"), this);
   openColorPickerAct->setStatusTip(tr("Open colour picker"));
@@ -151,7 +194,8 @@ void
 MainWindow::createToolbar()
 {
   fileToolBar = addToolBar(tr("File"));
-  fileToolBar->addAction(newAct);
+  fileToolBar->addWidget(newAct);
+  fileToolBar->addAction(m_spectrumAction);
   fileToolBar->addAction(openColorPickerAct);
 }
 
@@ -160,7 +204,7 @@ void
 MainWindow::createMenus()
 {
   fileMenu = menuBar()->addMenu(tr("&File"));
-  fileMenu->addAction(newAct);
+//  fileMenu->addAction(newAct);
 
   editMenu = menuBar()->addMenu(tr("&Edit"));
 
@@ -309,20 +353,6 @@ MainWindow::slotFrequencyChanged()
     m_audioControlSettings->freqBlueMax = ui->freqBmaxSpin->value();
 
     m_audioControlSettings->unlock();
-  }
-}
-
-
-void
-MainWindow::slotToggleAudioInput()
-{
-  if (m_isAudioOn)
-  {
-    stopAudioInput();
-  }
-  else
-  {
-    startAudioInputThread();
   }
 }
 

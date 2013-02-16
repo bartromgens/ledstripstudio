@@ -58,7 +58,7 @@ SpectrumAnalyser::registerObserver(SpectrumObserver* observer)
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
   assert(observer);
-  m_observers.push_back(observer);
+  m_observers.insert(observer);
 }
 
 
@@ -76,9 +76,9 @@ SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
-  for (std::size_t i = 0; i < m_observers.size(); ++i)
+  for (auto iter = m_observers.begin(); iter != m_observers.end(); ++iter)
   {
-    m_observers[i]->notifySpectrum(spectrum);
+    (*iter)->notifySpectrum(spectrum);
   }
 }
 

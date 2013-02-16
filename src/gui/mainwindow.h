@@ -43,6 +43,7 @@ public:
 
   void updateLEDs(const std::map<double, double> &spectrum);
 
+
 public slots:
   void slotPlayerPlayed();
 
@@ -50,28 +51,36 @@ protected:
   virtual void closeEvent(QCloseEvent* event);
 
 private slots:
+  void update();
+
   void slotOpenColorPicker();
   void slotColorSelected(const QColor& color);
-  void slotToggleAudioInput();
+
+  void slotToggleAudioInput(bool isChecked);
+  void slotToggleSpectrumAnalysis() const;
+
   void slotVolumeChanged();
   void slotFrequencyChanged();
+
 
 private:
   void createMenus();
   void createActions();
   void createToolbar();
-  void startAudioInput();
-  void stopAudioInput();
   void connectAllSlots() const;
+
   void startAudioInputThread();
   void startAnimationThread() const;
   void startAnimation() const;
-  void updateAudioControlGUI();
+
+  void startAudioInput();
+  void stopAudioInput();
+  void startSpectrumAnalyser() const;
+  void stopSpectrumAnalyser() const;
   void startToneAnalyser() const;
   void stopToneAnalyser() const;
   
-private slots:
-  void update();
+  void updateAudioControlGUI();
 
 private:
   Ui::MainWindow* ui;
@@ -94,7 +103,8 @@ private:
   QMenu* editMenu;
   QMenu* helpMenu;
 
-  QAction* newAct;
+  QPushButton* newAct;
+  QAction* m_spectrumAction;
   QAction* openColorPickerAct;
 
   bool m_isAudioOn;
