@@ -9,7 +9,10 @@ public:
   ToneStudio();
   ~ToneStudio();
 
-  Animation createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones);
+  Animation createToneAnimationLoudest(unsigned int nLEDs, std::map<std::string, double> tones);
+  Animation createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::string, double> tones);
+
+  void writeToneToConsole(const std::map<std::string, double>& tones);
 };
 
 #endif // TONESTUDIO_H

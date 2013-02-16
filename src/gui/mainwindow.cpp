@@ -139,7 +139,9 @@ void
 MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 {
   ToneStudio toneStudio;
-  Animation animation = toneStudio.createToneAnimation(m_nLedsTotal, toneAmplitudes);
+  Animation animation;
+  animation = toneStudio.createToneAnimationLoudest(m_nLedsTotal, toneAmplitudes);
+  animation = toneStudio.createToneAnimationLoudest(m_nLedsTotal, toneAmplitudes);
   m_player->addAnimation(animation);
   m_player->playFrame();
 }
