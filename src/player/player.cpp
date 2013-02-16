@@ -96,8 +96,11 @@ Player::playFrameThread()
     boost::lock_guard<boost::mutex> lock(m_mutex);
 
     const std::deque<Frame>& frames = m_mainAnimation.getFrames();
-    m_lastFrame = frames.front();
-    m_mainAnimation.pop_frontFrame();
+    if (!frames.empty())
+    {
+      m_lastFrame = frames.front();
+      m_mainAnimation.pop_frontFrame();
+    }
   }
 
   m_ledController->send(m_lastFrame);

@@ -1,9 +1,12 @@
 #include "toneanalyser.h"
 
+#include <algorithm>
 #include <cmath>
+#include <cassert>
 
 ToneAnalyser::ToneAnalyser()
-  : m_baseTones()
+  : SpectrumObserver(),
+    m_baseTones()
 {
   m_baseTones["C"] = 16.35;
   m_baseTones["D"] = 18.35;
@@ -15,8 +18,16 @@ ToneAnalyser::ToneAnalyser()
 }
 
 
+void
+ToneAnalyser::notifySpectrum(std::map<double, double> spectrum)
+{
+  std::map<std::string, double> toneAmplitude = computeToneAmplitude(spectrum);
+  notifyObservers(toneAmplitude);
+}
+
+
 std::map<std::string, double>
-ToneAnalyser::computeToneAmplitude(std::map<double, double> spectrum)
+ToneAnalyser::computeToneAmplitude(const std::map<double, double>& spectrum)
 {
   double range = 1.0;
 
@@ -56,4 +67,29 @@ ToneAnalyser::computeToneAmplitude(std::map<double, double> spectrum)
   }
 
   return toneAmplitudes;
+}
+
+
+void
+ToneAnalyser::registerObserver(ToneObserver* observer)
+{
+  assert(observer);
+  m_observers.push_back(observer);
+}
+
+
+void
+ToneAnalyser::unregisterObserver(ToneObserver* observer)
+{
+  m_observers.erase( std::find(m_observers.begin(), m_observers.end(), observer) );
+}
+
+
+void
+ToneAnalyser::notifyObservers(const std::map<std::string, double>& toneAmplitudes)
+{
+  for (std::size_t i = 0; i < m_observers.size(); ++i)
+  {
+    m_observers[i]->notifyTone(toneAmplitudes);
+  }
 }

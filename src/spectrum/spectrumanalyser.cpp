@@ -15,7 +15,8 @@ SpectrumAnalyser::SpectrumAnalyser(int nSamples)
     m_nSamples(nSamples),
     m_np(nSamples/2+1),
     m_observers(),
-    m_mutex()
+    m_mutex(),
+    m_time()
 {
   fftw::maxthreads = 1; // single thread is faster for the size the input data
 
@@ -25,6 +26,8 @@ SpectrumAnalyser::SpectrumAnalyser(int nSamples)
   m_g = FFTWComplex(m_np);
 
   m_forward = new fftwpp::rcfft1d(m_nSamples, m_f, m_g);
+
+//  m_time.start();
 }
 
 
@@ -42,8 +45,10 @@ SpectrumAnalyser::notifyAudioData(const std::deque<float>& audioData, int sample
 {
 //  std::cout << "SpectrumAnalyser::notifyAudioData() - audio data size: " << audioData.size() << std::endl;
 //  computeSpectrumThread(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
-//  computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
-  computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::hann);
+//  computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::hann);
+//  m_time.restart();
+  computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
+//  std::cout << "SpectrumAnalyser::notifyAudioData() - computeSpectrum time: " << m_time.elapsed() << std::endl;
 }
 
 
@@ -121,13 +126,14 @@ SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampl
   m_forward->fft(m_f, m_g);
 
   std::vector<double> magnitude(m_np);
-  for(unsigned int i=0; i < m_np; i++)
+  for (unsigned int i = 0; i < m_np; i++)
   {
     magnitude[i] = sqrt( m_g[i].real()*m_g[i].real() + m_g[i].imag()*m_g[i].imag() );
   }
 
+  double upperFrequency = 2000.0;
   // put into bins/buckets (histogram)
-  std::map<double, double> bins = binSpectrum(magnitude, nBins, sampleRate);
+  std::map<double, double> bins = binSpectrum(magnitude, nBins, sampleRate, upperFrequency);
 
 //  std::cout << "SpectrumAnalyser::computeSpectrum() - end. timer: " << timer.elapsed() << std::endl;
 
@@ -174,7 +180,7 @@ SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
 
 
 std::map<double, double>
-SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sampleRate) const
+SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sampleRate, double upperFrequency) const
 {
   std::map<double, double> hist;
   double binWidth = sampleRate/nBins;
@@ -183,13 +189,16 @@ SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sa
   int max = data.size();
   int min = 0;
 
-  for (std::size_t i = 0; i < data.size(); ++i)
+  double frequency = 0.0;
+
+  for (std::size_t i = 0; i < data.size() && frequency < upperFrequency; ++i)
   {
     int bin = static_cast<int>( (i-min) / ((max-min)/(nBins)) );
 
-    if ( (bin >= 0) && ( bin < nBins) && (bin*binWidth < sampleRate/2))
+    frequency = bin*binWidth;
+    if ( (bin >= 0) && ( bin < nBins) && (frequency < sampleRate/2))
     {
-      hist[bin*binWidth] += data[i];
+      hist[frequency] += data[i];
     }
   }
 

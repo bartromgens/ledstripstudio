@@ -123,16 +123,14 @@ AudioInput::startStream()
     terminatePortAudio(err);
   }
 
-  ToneAnalyser toneAnalyser;
-
-  QTime timer;
-  timer.start();
+//  QTime timer;
+//  timer.start();
 
   bool run = true;
   while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
          && run)
   {
-    Pa_Sleep(20);
+    Pa_Sleep(25);
 
     run = m_controlSettings->isActive();
 
@@ -144,7 +142,7 @@ AudioInput::startStream()
         std::deque<float> samples = m_data.recordedSamplesVec;
         m_data.data_mutex.unlock();
 
-        timer.restart();
+//        timer.restart();
         notifyObservers(samples);
 //        std::cout << "AudioInput::startStream() - notifyObservers time: " << timer.elapsed() << std::endl;
 

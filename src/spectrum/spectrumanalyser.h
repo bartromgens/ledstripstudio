@@ -5,6 +5,8 @@
 
 #include "fftw++.h"
 
+#include <QTime>
+
 #include <boost/thread.hpp>
 
 #include <algorithm>
@@ -46,7 +48,7 @@ public:
 
 
 private:
-  std::map<double, double> binSpectrum(const std::vector<double>& data, int nBins, int sampleRate) const;
+  std::map<double, double> binSpectrum(const std::vector<double>& data, int nBins, int sampleRate, double upperFrequency) const;
   std::deque<float> hannWindowFunction(const std::deque<float>& in) const;
   std::deque<float> linearWindowFunction(const std::deque<float>& in) const;
 
@@ -64,6 +66,8 @@ private:
   std::vector< SpectrumObserver* > m_observers;
 
   mutable boost::mutex m_mutex;
+
+  QTime m_time;
 };
 
 #endif // SPECTRUMANALYSER_H

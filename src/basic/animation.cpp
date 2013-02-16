@@ -105,7 +105,7 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
     }
   }
 
-//  std::cout << "Animation::combineTwoAnimations - fill last frames time: " << time.elapsed() << std::endl;
+  std::cout << "Animation::combineTwoAnimations - fill last frames time: " << time.elapsed() << std::endl;
 
   return animation;
 }

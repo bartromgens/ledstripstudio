@@ -3,16 +3,18 @@
 
 #include "audioinput/audioinput.h"
 #include "spectrum/spectrumanalyser.h"
+#include "spectrum/toneanalyser.h"
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
 
 #include <boost/thread.hpp>
 
-const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
+const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 16));
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   SpectrumObserver(),
+  ToneObserver(),
   ui(new Ui::MainWindow),
   m_colorDialog(),
   m_nLedsTotal(160),
@@ -21,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_audioInput(new AudioInput(SPECTRUM_SAMPLES)),
   m_audioControlSettings(new ControlSettings()),
   m_spectrumAnalyser(new SpectrumAnalyser(SPECTRUM_SAMPLES)),
+  m_toneAnalyser(new ToneAnalyser()),
   m_spectrumStudio(new SpectrumStudio()),
   m_isAudioOn(false),
   m_timer(0)
@@ -52,6 +55,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_audioInput->registerObserver(m_spectrumAnalyser);
   m_spectrumAnalyser->registerObserver(this);
+  m_toneAnalyser->registerObserver(this);
+
+  startToneAnalyser();
+
 //  startAnimationThread();
 }
 
@@ -59,6 +66,71 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
   delete ui;
+}
+
+
+void
+MainWindow::startAudioInputThread()
+{
+  m_isAudioOn = true;
+  std::cout << "MainWindow::startAudioInputThread()" << std::endl;
+  boost::thread t1(&MainWindow::startAudioInput, this);
+  t1.detach();
+}
+
+
+void
+MainWindow::startAudioInput()
+{
+  m_audioControlSettings->setActive(true);
+
+  m_audioInput->openStream();
+  m_audioInput->startStream();
+  m_audioInput->closeStream();
+}
+
+
+void
+MainWindow::stopAudioInput()
+{
+  std::cout << "MainWindow::stopAudioInput()" << std::endl;
+  m_audioControlSettings->setActive(false);
+  m_isAudioOn = false;
+}
+
+
+void
+MainWindow::notifySpectrum(std::map<double, double> spectrum)
+{
+//  std::cout << "MainWindow::notifySpectrum()" << std::endl;
+//  int minFreq = 200;
+//  int maxFreq = 1000;
+//  m_spectrumStudio->drawSpectrumInConsole(spectrum, minFreq, maxFreq);
+  updateLEDs(spectrum);
+}
+
+
+void
+MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
+{
+//  for (auto iter = toneAmplitudes.begin(); iter != toneAmplitudes.end(); ++iter)
+//  {
+//    std::cout << iter->first << ": " << iter->second << std::endl;
+//  }
+}
+
+
+void
+MainWindow::startToneAnalyser() const
+{
+  m_spectrumAnalyser->registerObserver(m_toneAnalyser.get());
+}
+
+
+void
+MainWindow::stopToneAnalyser() const
+{
+  m_spectrumAnalyser->registerObserver(m_toneAnalyser.get());
 }
 
 
@@ -93,27 +165,6 @@ MainWindow::createMenus()
   editMenu = menuBar()->addMenu(tr("&Edit"));
 
   helpMenu = menuBar()->addMenu(tr("&Help"));
-}
-
-
-void
-MainWindow::startAudioInputThread()
-{
-  m_isAudioOn = true;
-  std::cout << "MainWindow::startAudioInputThread()" << std::endl;
-  boost::thread t1(&MainWindow::startAudioInput, this);
-  t1.detach();
-}
-
-
-void
-MainWindow::startAudioInput()
-{
-  m_audioControlSettings->setActive(true);
-
-  m_audioInput->openStream();
-  m_audioInput->startStream();
-  m_audioInput->closeStream();
 }
 
 
@@ -155,26 +206,6 @@ MainWindow::startAnimation() const
     m_player->addAnimation(m_studio->createCellularAutomata());
     m_player->playAllAnimations();
   }
-}
-
-
-void
-MainWindow::stopAudioInput()
-{
-  std::cout << "MainWindow::stopAudioInput()" << std::endl;
-  m_audioControlSettings->setActive(false);
-  m_isAudioOn = false;
-}
-
-
-void
-MainWindow::notifySpectrum(std::map<double, double> spectrum)
-{
-  //  std::cout << "MainWindow::notifySpectrum()" << std::endl;
-  int minFreq = 200;
-  int maxFreq = 1000;
-  m_spectrumStudio->drawSpectrumInConsole(spectrum, minFreq, maxFreq);
-  updateLEDs(spectrum);
 }
 
 
@@ -365,6 +396,7 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
   double brightnessBlue = 0.0;
 
   m_audioControlSettings->lock();
+
   double amplifyFactor = m_audioControlSettings->volumeTotal/1000.0;
   double amplifyFactorRed = m_audioControlSettings->volumeRed/25.0;
   double amplifyFactorGreen = m_audioControlSettings->volumeGreen/50.0;
