@@ -57,8 +57,8 @@ private slots:
   void slotColorSelected(const QColor& color);
 
   void slotToggleAudioInput(bool isChecked);
-  void slotToggleSpectrumAnalysis(bool isChecked) const;
-  void slotToggleToneAnalysis(bool isChecked) const;
+  void slotToggleSpectrumAnalysis(bool isChecked);
+  void slotToggleToneAnalysis(bool isChecked);
 
   void slotVolumeChanged();
   void slotFrequencyChanged();
@@ -113,6 +113,9 @@ private:
 
   QTimer* m_timer;
   QTimer* m_timerEmulator;
+
+  bool m_isSpectrumToLeds;
+  bool m_isToneToLeds;
 };
 
 #endif // MAINWINDOW_H

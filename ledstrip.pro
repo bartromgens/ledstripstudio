@@ -25,7 +25,8 @@ SOURCES += \
     src/studio/spectrumstudio.cpp \
     src/audioinput/audioinputobserver.cpp \
     src/spectrum/spectrumobserver.cpp \
-    src/spectrum/toneobserver.cpp
+    src/spectrum/toneobserver.cpp \
+    src/studio/tonestudio.cpp
 
 HEADERS += \
     audioinput/audioinput.h \
@@ -46,7 +47,8 @@ HEADERS += \
     src/studio/spectrumstudio.h \
     src/audioinput/audioinputobserver.h \
     src/spectrum/spectrumobserver.h \
-    src/spectrum/toneobserver.h
+    src/spectrum/toneobserver.h \
+    src/studio/tonestudio.h
 
 FORMS += \
     gui/mainwindow.ui

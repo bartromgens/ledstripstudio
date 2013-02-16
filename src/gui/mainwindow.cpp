@@ -6,6 +6,7 @@
 #include "spectrum/toneanalyser.h"
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
+#include "studio/tonestudio.h"
 
 #include <QPushButton>
 
@@ -28,7 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneAnalyser(new ToneAnalyser()),
   m_spectrumStudio(new SpectrumStudio()),
   m_isAudioOn(false),
-  m_timer(0)
+  m_timer(0),
+  m_isSpectrumToLeds(false),
+  m_isToneToLeds(false)
 {
   setWindowTitle("LED Controller");
 
@@ -58,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
 
-  startSpectrumAnalyser();
+//  startSpectrumAnalyser();
 //  startToneAnalyser();
 
 //  startAnimationThread();
@@ -125,30 +128,39 @@ MainWindow::notifySpectrum(std::map<double, double> spectrum)
 //  int minFreq = 200;
 //  int maxFreq = 1000;
 //  m_spectrumStudio->drawSpectrumInConsole(spectrum, minFreq, maxFreq);
-  updateLEDs(spectrum);
+  if (m_isSpectrumToLeds)
+  {
+    updateLEDs(spectrum);
+  }
 }
 
 
 void
 MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 {
-//  for (auto iter = toneAmplitudes.begin(); iter != toneAmplitudes.end(); ++iter)
-//  {
-//    std::cout << iter->first << ": " << iter->second << std::endl;
-//  }
+  ToneStudio toneStudio;
+  Animation animation = toneStudio.createToneAnimation(m_nLedsTotal, toneAmplitudes);
+  m_player->addAnimation(animation);
+  m_player->playFrame();
 }
 
 
 void
-MainWindow::slotToggleSpectrumAnalysis(bool isChecked) const
+MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 {
+  m_isSpectrumToLeds = isChecked;
   if (isChecked)
   {
+    m_toneToggleButton->setChecked(false);
+    m_isToneToLeds = false;
     startSpectrumAnalyser();
   }
   else
   {
-    stopSpectrumAnalyser();
+    if (!m_isToneToLeds)
+    {
+      stopSpectrumAnalyser();
+    }
   }
 }
 
@@ -168,14 +180,19 @@ MainWindow::stopSpectrumAnalyser() const
 
 
 void
-MainWindow::slotToggleToneAnalysis(bool isChecked) const
+MainWindow::slotToggleToneAnalysis(bool isChecked)
 {
+  m_isToneToLeds = isChecked;
   if (isChecked)
   {
+    m_spectrumToggleButton->setChecked(false);
+    m_isSpectrumToLeds = false;
+    startSpectrumAnalyser();
     startToneAnalyser();
   }
   else
   {
+    stopSpectrumAnalyser();
     stopToneAnalyser();
   }
 }
@@ -233,7 +250,7 @@ MainWindow::createToolbar()
   fileToolBar->addAction(m_toneToggleButton);
   fileToolBar->addSeparator();
   fileToolBar->addAction(m_openColorPickerAct);
-  fileToolBar->setIconSize(QSize(45, 45));
+  fileToolBar->setIconSize(QSize(32, 32));
 }
 
 
