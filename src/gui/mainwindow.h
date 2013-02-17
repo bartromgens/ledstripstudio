@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <QToolBar>
 #include <QColorDialog>
+#include <QDockWidget>
 #include <QTimer>
 
 #include <iostream>
@@ -54,16 +55,20 @@ protected:
 private slots:
   void update();
 
-  void slotToggleSingleColor(bool);
-  void slotColorSelected(const QColor& color);
-
   void slotToggleAudioInput(bool isChecked);
-  void slotToggleSpectrumAnalysis(bool isChecked);
-  void slotToggleSpetrumSettings(bool isChecked);
 
+  void slotToggleSpectrumAnalysis(bool isChecked);
   void slotToggleToneAnalysis(bool isChecked);
+  void slotToggleAnimation(bool isChecked);
+  void slotToggleSingleColor(bool isChecked);
+
+  void slotShowSpetrumSettings();
+
   void slotToggleStepTone(bool isChecked);
   void slotToggleSmoothTone(bool isChecked);
+
+  void slotOpenColorPicker();
+  void slotColorSelected(QColor color);
 
 
 private:
@@ -85,7 +90,7 @@ private:
 
 private:
   Ui::MainWindow* ui;
-  QColorDialog m_colorDialog;
+  QColorDialog* m_colorDialog;
   std::size_t m_nLedsTotal;
 
   std::shared_ptr<Player> m_player;
@@ -97,8 +102,8 @@ private:
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
   std::unique_ptr<ToneStudio> m_toneStudio;
 
+  QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
-  QDialog* m_spectrumSettingsDialog;
 
   QToolBar* m_mainToolBar;
   QToolBar* m_detailsToolBar;
@@ -109,15 +114,21 @@ private:
   QAction* m_audioToggleButton;
   QAction* m_spectrumToggleButton;
   QAction* m_toneToggleButton;
+  QAction* m_animationToggleAct;
+  QAction* m_colorToggleAct;
+
+  QAction* m_openSpectrumSettingsAct;
   QAction* m_stepToneAct;
   QAction* m_smoothToneAct;
+  QAction* m_dotsAnimationAct;
   QAction* m_openColorPickerAct;
-  QAction* m_openSpectrumSettingsAct;
 
   bool m_isAudioOn;
 
   QTimer* m_timer;
   QTimer* m_timerEmulator;
+
+  QColor m_lastSingleColor;
 };
 
 #endif // MAINWINDOW_H

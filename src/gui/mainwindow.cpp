@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
   SpectrumObserver(),
   ToneObserver(),
   ui(new Ui::MainWindow),
-  m_colorDialog(),
+  m_colorDialog(new QColorDialog(this)),
   m_nLedsTotal(160),
   m_player(new Player()),
   m_studio(new Studio(m_nLedsTotal)),
@@ -31,10 +31,11 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneAnalyser(new ToneAnalyser()),
   m_spectrumStudio(new SpectrumStudio()),
   m_toneStudio(new ToneStudio()),
-  m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings)),
-  m_spectrumSettingsDialog(new QDialog(this)),
+  m_spectrumSettingsDialog(new QDockWidget(this)),
+  m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, m_spectrumSettingsDialog)),
   m_isAudioOn(false),
-  m_timer(0)
+  m_timer(0),
+  m_lastSingleColor(0, 0, 0)
 {
   ui->setupUi(this);
 
@@ -47,8 +48,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connectAllSlots();
 
-  QGridLayout* gridLayout = new QGridLayout(m_spectrumSettingsDialog);
-  gridLayout->addWidget(m_spectrumSettingsWidget);
+//  QGridLayout* gridLayout = new QGridLayout(m_spectrumSettingsWidget);
+//  gridLayout->addWidget(m_spectrumSettingsWidget);
+
+  m_spectrumSettingsDialog->setVisible(false);
 
   m_settings->loadSettings();
   m_spectrumSettingsWidget->updateAudioControlGUI();
@@ -74,23 +77,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
   delete ui;
-}
-
-
-void
-MainWindow::slotToggleAudioInput(bool isChecked)
-{
-  std::cout << "MainWindow::slotToggleAudioInput()" << std::endl;
-  if (isChecked)
-  {
-    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-high.svg"));
-    startAudioInputThread();
-  }
-  else
-  {
-    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.svg"));
-    stopAudioInput();
-  }
 }
 
 
@@ -149,6 +135,23 @@ MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 
 
 void
+MainWindow::slotToggleAudioInput(bool isChecked)
+{
+  std::cout << "MainWindow::slotToggleAudioInput()" << std::endl;
+  if (isChecked)
+  {
+    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-high.svg"));
+    startAudioInputThread();
+  }
+  else
+  {
+    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.svg"));
+    stopAudioInput();
+  }
+}
+
+
+void
 MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 {
   m_openSpectrumSettingsAct->setVisible(isChecked);
@@ -156,6 +159,8 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
   if (isChecked)
   {
     m_toneToggleButton->setChecked(false);
+    m_animationToggleAct->setChecked(false);
+    m_colorToggleAct->setChecked(false);
     startSpectrumAnalyser();
   }
   else
@@ -170,20 +175,6 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 
 
 void
-MainWindow::startSpectrumAnalyser() const
-{
-  m_audioInput->registerObserver(m_spectrumAnalyser);
-}
-
-
-void
-MainWindow::stopSpectrumAnalyser() const
-{
-  m_audioInput->unregisterObserver(m_spectrumAnalyser);
-}
-
-
-void
 MainWindow::slotToggleToneAnalysis(bool isChecked)
 {
   m_stepToneAct->setVisible(isChecked);
@@ -192,6 +183,8 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
   if (isChecked)
   {
     m_spectrumToggleButton->setChecked(false);
+    m_animationToggleAct->setChecked(false);
+    m_colorToggleAct->setChecked(false);
     startSpectrumAnalyser();
     startToneAnalyser();
   }
@@ -204,16 +197,41 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
 
 
 void
-MainWindow::startToneAnalyser() const
+MainWindow::slotToggleAnimation(bool isChecked)
 {
-  m_spectrumAnalyser->registerObserver(m_toneAnalyser.get());
+  m_dotsAnimationAct->setVisible(isChecked);
+
+  if (isChecked)
+  {
+    m_spectrumToggleButton->setChecked(false);
+    m_toneToggleButton->setChecked(false);
+    m_colorToggleAct->setChecked(false);
+  }
 }
 
 
 void
-MainWindow::stopToneAnalyser() const
+MainWindow::slotToggleSingleColor(bool isChecked)
 {
-  m_spectrumAnalyser->unregisterObserver(m_toneAnalyser.get());
+  m_openColorPickerAct->setVisible(isChecked);
+
+  if (isChecked)
+  {
+    m_spectrumToggleButton->setChecked(false);
+    m_toneToggleButton->setChecked(false);
+    m_animationToggleAct->setChecked(false);
+    slotColorSelected(m_lastSingleColor);
+  }
+}
+
+
+void
+MainWindow::slotShowSpetrumSettings()
+{
+  m_spectrumSettingsDialog->setFloating(true);
+  m_spectrumSettingsDialog->setWidget(m_spectrumSettingsWidget);
+  m_spectrumSettingsWidget->show();
+  m_spectrumSettingsDialog->setVisible(true);
 }
 
 
@@ -248,6 +266,26 @@ MainWindow::slotToggleSmoothTone(bool isChecked)
 
 
 void
+MainWindow::slotOpenColorPicker()
+{
+  m_colorDialog->setVisible(true);
+}
+
+
+void
+MainWindow::slotColorSelected(QColor color)
+{
+  m_lastSingleColor = color;
+  Color colorNew(color.red()/255.0*127.0, color.green()/255.0*127.0, color.blue()/255.0*127.0);
+
+  Animation animation = m_studio->createSingleColorSingleFrameAnimation(colorNew);
+
+  m_player->addAnimation(animation);
+  m_player->playFrame();
+}
+
+
+void
 MainWindow::createActions()
 {
   m_audioToggleButton = new QAction(this);
@@ -255,31 +293,43 @@ MainWindow::createActions()
   m_audioToggleButton->setStatusTip(tr("Start audio input control panel."));
   m_audioToggleButton->setCheckable(true);
   connect(m_audioToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleAudioInput(bool)));
+//  m_audioToggleButton->setChecked(true);
 
   m_spectrumToggleButton = new QAction(this);
   m_spectrumToggleButton->setIcon(QIcon("./icons/wave_high_frequency.png"));
-  m_spectrumToggleButton->setStatusTip(tr("Start spectrum analysis."));
+  m_spectrumToggleButton->setStatusTip(tr("Start spectrum mode."));
   m_spectrumToggleButton->setCheckable(true);
   connect(m_spectrumToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpectrumAnalysis(bool)));
 
   m_toneToggleButton = new QAction(this);
   m_toneToggleButton->setIcon(QIcon("./icons/audio-x-generic.svg"));
-  m_toneToggleButton->setStatusTip(tr("Start tone analysis."));
+  m_toneToggleButton->setStatusTip(tr("Start tone mode."));
   m_toneToggleButton->setCheckable(true);
   connect(m_toneToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneAnalysis(bool)));
 
-  m_openColorPickerAct = new QAction(this);
-  m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel2.png"));
-  m_openColorPickerAct->setStatusTip(tr("Open colour picker."));
-  m_openColorPickerAct->setCheckable(true);
-  connect(m_openColorPickerAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSingleColor(bool)));
+  m_animationToggleAct = new QAction(this);
+  m_animationToggleAct->setIcon(QIcon("./icons/animation-mode.png"));
+  m_animationToggleAct->setStatusTip(tr("Start animation mode."));
+  m_animationToggleAct->setCheckable(true);
+  connect(m_animationToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleAnimation(bool)));
+
+  m_colorToggleAct = new QAction(this);
+  m_colorToggleAct->setIcon(QIcon("./icons/color_wheel2.png"));
+  m_colorToggleAct->setStatusTip(tr("Start single color mode."));
+  m_colorToggleAct->setCheckable(true);
+  connect(m_colorToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSingleColor(bool)));
 
   m_openSpectrumSettingsAct = new QAction(this);
   m_openSpectrumSettingsAct->setIcon(QIcon("./icons/settings.svg"));
   m_openSpectrumSettingsAct->setStatusTip(tr("Open spectrum settings."));
-  m_openSpectrumSettingsAct->setCheckable(true);
   m_openSpectrumSettingsAct->setVisible(false);
-  connect(m_openSpectrumSettingsAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpetrumSettings(bool)));
+  connect(m_openSpectrumSettingsAct, SIGNAL(triggered()), this, SLOT(slotShowSpetrumSettings()));
+
+  m_openColorPickerAct = new QAction(this);
+  m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel.png"));
+  m_openColorPickerAct->setStatusTip(tr("Open color selector."));
+  m_openColorPickerAct->setVisible(false);
+  connect(m_openColorPickerAct, SIGNAL(triggered()), this, SLOT(slotOpenColorPicker()));
 
   m_stepToneAct = new QAction(this);
   m_stepToneAct->setIcon(QIcon("./icons/step-tone-setting.png"));
@@ -292,8 +342,17 @@ MainWindow::createActions()
   m_smoothToneAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
   m_smoothToneAct->setStatusTip(tr("Set smooth tone mode."));
   m_smoothToneAct->setCheckable(true);
-  m_smoothToneAct->setVisible(false);
   connect(m_smoothToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSmoothTone(bool)));
+  m_smoothToneAct->setChecked(true);
+  m_smoothToneAct->setVisible(false);
+
+  m_dotsAnimationAct = new QAction(this);
+  m_dotsAnimationAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
+  m_dotsAnimationAct->setStatusTip(tr("Toggles dots animation."));
+  m_dotsAnimationAct->setCheckable(true);
+  connect(m_dotsAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleDotAnimation(bool)));
+  m_dotsAnimationAct->setChecked(false);
+  m_dotsAnimationAct->setVisible(false);
 }
 
 
@@ -308,7 +367,8 @@ MainWindow::createToolbars()
   m_mainToolBar->addSeparator();
   m_mainToolBar->addAction(m_spectrumToggleButton);
   m_mainToolBar->addAction(m_toneToggleButton);
-  m_mainToolBar->addAction(m_openColorPickerAct);
+  m_mainToolBar->addAction(m_animationToggleAct);
+  m_mainToolBar->addAction(m_colorToggleAct);
   m_mainToolBar->addSeparator();
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
@@ -322,6 +382,8 @@ MainWindow::createToolbars()
   m_detailsToolBar->addAction(m_openSpectrumSettingsAct);
   m_detailsToolBar->addAction(m_stepToneAct);
   m_detailsToolBar->addAction(m_smoothToneAct);
+  m_detailsToolBar->addAction(m_dotsAnimationAct);
+  m_detailsToolBar->addAction(m_openColorPickerAct);
 }
 
 
@@ -337,32 +399,7 @@ MainWindow::createMenus()
 void
 MainWindow::connectAllSlots() const
 {
-  connect( &m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
-}
-
-
-void
-MainWindow::slotToggleSpetrumSettings(bool isChecked)
-{
-  m_spectrumSettingsDialog->setVisible(isChecked);
-}
-
-void
-MainWindow::slotToggleSingleColor(bool)
-{
-  m_colorDialog.open();
-}
-
-
-void
-MainWindow::slotColorSelected(const QColor &color)
-{
-  Color colorNew(color.red()/255.0*127.0, color.green()/255.0*127.0, color.blue()/255.0*127.0);
-
-  Animation animation = m_studio->createSingleColorSingleFrameAnimation(colorNew);
-
-  m_player->addAnimation(animation);
-  m_player->playFrame();
+  connect( m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
 }
 
 
@@ -527,4 +564,32 @@ MainWindow::startAnimation() const
     m_player->addAnimation(m_studio->createCellularAutomata());
     m_player->playAllAnimations();
   }
+}
+
+
+void
+MainWindow::startSpectrumAnalyser() const
+{
+  m_audioInput->registerObserver(m_spectrumAnalyser);
+}
+
+
+void
+MainWindow::stopSpectrumAnalyser() const
+{
+  m_audioInput->unregisterObserver(m_spectrumAnalyser);
+}
+
+
+void
+MainWindow::startToneAnalyser() const
+{
+  m_spectrumAnalyser->registerObserver(m_toneAnalyser.get());
+}
+
+
+void
+MainWindow::stopToneAnalyser() const
+{
+  m_spectrumAnalyser->unregisterObserver(m_toneAnalyser.get());
 }
