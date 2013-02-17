@@ -272,7 +272,7 @@ MainWindow::createActions()
   m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel2.png"));
   m_openColorPickerAct->setStatusTip(tr("Open colour picker."));
   m_openColorPickerAct->setCheckable(true);
-  connect(m_openColorPickerAct, SIGNAL(toggled(bool)), this, SLOT(slotOpenColorPicker()));
+  connect(m_openColorPickerAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSingleColor(bool)));
 
   m_openSpectrumSettingsAct = new QAction(this);
   m_openSpectrumSettingsAct->setIcon(QIcon("./icons/settings.svg"));
@@ -348,7 +348,7 @@ MainWindow::slotToggleSpetrumSettings(bool isChecked)
 }
 
 void
-MainWindow::slotOpenColorPicker()
+MainWindow::slotToggleSingleColor(bool)
 {
   m_colorDialog.open();
 }

@@ -54,7 +54,7 @@ protected:
 private slots:
   void update();
 
-  void slotOpenColorPicker();
+  void slotToggleSingleColor(bool);
   void slotColorSelected(const QColor& color);
 
   void slotToggleAudioInput(bool isChecked);
