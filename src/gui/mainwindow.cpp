@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "gui/ui_mainwindow.h"
 
+
 #include "audioinput/audioinput.h"
+#include "gui/spectrumsettingswidget.h"
 #include "spectrum/spectrumanalyser.h"
 #include "spectrum/toneanalyser.h"
 #include "studio/studio.h"
@@ -28,14 +30,16 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumAnalyser(new SpectrumAnalyser(SPECTRUM_SAMPLES)),
   m_toneAnalyser(new ToneAnalyser()),
   m_spectrumStudio(new SpectrumStudio()),
+  m_spectrumAnimationSettingsWidget(new SpectrumSettingsWidget(m_audioControlSettings)),
   m_isAudioOn(false),
   m_timer(0),
   m_isSpectrumToLeds(false),
   m_isToneToLeds(false)
 {
-  setWindowTitle("LED Controller");
-
   ui->setupUi(this);
+
+  setWindowTitle("Light Emitting Strip Studio");
+  setWindowIcon(QIcon("./icons/color_wheel2.png"));
 
   createActions();
   createToolbar();
@@ -44,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connectAllSlots();
 
   m_audioControlSettings->loadSettings();
-  updateAudioControlGUI();
+  m_spectrumAnimationSettingsWidget->updateAudioControlGUI();
 
   m_audioInput->setControlSettings(m_audioControlSettings);
 
@@ -60,9 +64,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
-
-//  startSpectrumAnalyser();
-//  startToneAnalyser();
 
 //  startAnimationThread();
 }
@@ -140,8 +141,8 @@ MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 {
   ToneStudio toneStudio;
   Animation animation;
-  animation = toneStudio.createToneAnimationLoudest(m_nLedsTotal, toneAmplitudes);
-  animation = toneStudio.createToneAnimationLoudest(m_nLedsTotal, toneAmplitudes);
+//  animation = toneStudio.createToneAnimationLoudest(m_nLedsTotal, toneAmplitudes);
+  animation = toneStudio.createToneAnimationSmoothSum(m_nLedsTotal, toneAmplitudes);
   m_player->addAnimation(animation);
   m_player->playFrame();
 }
@@ -219,40 +220,48 @@ MainWindow::createActions()
 {
   m_audioToggleButton = new QAction(this);
   m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.svg"));
-  m_audioToggleButton->setStatusTip(tr("Start audio input control panel"));
+  m_audioToggleButton->setStatusTip(tr("Start audio input control panel."));
   m_audioToggleButton->setCheckable(true);
   connect(m_audioToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleAudioInput(bool)));
 
   m_spectrumToggleButton = new QAction(this);
-  m_spectrumToggleButton->setStatusTip(tr("Start the spectrum analysis."));
   m_spectrumToggleButton->setIcon(QIcon("./icons/wave_high_frequency.png"));
+  m_spectrumToggleButton->setStatusTip(tr("Start spectrum analysis."));
   m_spectrumToggleButton->setCheckable(true);
   connect(m_spectrumToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpectrumAnalysis(bool)));
 
   m_toneToggleButton = new QAction(this);
-  m_toneToggleButton->setStatusTip(tr("Start the tone analysis."));
   m_toneToggleButton->setIcon(QIcon("./icons/audio-x-generic.svg"));
+  m_toneToggleButton->setStatusTip(tr("Start tone analysis."));
   m_toneToggleButton->setCheckable(true);
   connect(m_toneToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneAnalysis(bool)));
 
   m_openColorPickerAct = new QAction(this);
-  m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel.png"));
-  m_openColorPickerAct->setStatusTip(tr("Open colour picker"));
+  m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel2.png"));
+  m_openColorPickerAct->setStatusTip(tr("Open colour picker."));
   connect(m_openColorPickerAct, SIGNAL(triggered()), this, SLOT(slotOpenColorPicker()));
+
+  m_openSpectrumSettingsAct = new QAction(this);
+  m_openSpectrumSettingsAct->setIcon(QIcon("./icons/settings.svg"));
+  m_openSpectrumSettingsAct->setStatusTip(tr("Open spectrum settings."));
+  connect(m_openSpectrumSettingsAct, SIGNAL(triggered()), this, SLOT(slotOpenSpetrumSettings()));
 }
 
 
 void
 MainWindow::createToolbar()
 {
-  fileToolBar = addToolBar(tr("File"));
+  fileToolBar = addToolBar(tr("Main toolbar"));
+  fileToolBar->setIconSize(QSize(32, 32));
+
   fileToolBar->addAction(m_audioToggleButton);
   fileToolBar->addSeparator();
   fileToolBar->addAction(m_spectrumToggleButton);
   fileToolBar->addAction(m_toneToggleButton);
   fileToolBar->addSeparator();
   fileToolBar->addAction(m_openColorPickerAct);
-  fileToolBar->setIconSize(QSize(32, 32));
+  fileToolBar->addSeparator();
+  fileToolBar->addAction(m_openSpectrumSettingsAct);
 }
 
 
@@ -260,10 +269,7 @@ void
 MainWindow::createMenus()
 {
   fileMenu = menuBar()->addMenu(tr("&File"));
-//  fileMenu->addAction(newAct);
-
   editMenu = menuBar()->addMenu(tr("&Edit"));
-
   helpMenu = menuBar()->addMenu(tr("&Help"));
 }
 
@@ -313,35 +319,18 @@ void
 MainWindow::connectAllSlots() const
 {
   connect( &m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
-
-  connect( ui->volumeTotalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
-  connect( ui->volumeRedSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
-  connect( ui->volumeGreenSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
-  connect( ui->volumeBlueSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotVolumeChanged() ) );
-
-  connect( ui->freqRmaxSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotFrequencyChanged() ) );
-  connect( ui->freqRminSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotFrequencyChanged() ) );
-  connect( ui->freqGmaxSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotFrequencyChanged() ) );
-  connect( ui->freqGminSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotFrequencyChanged() ) );
-  connect( ui->freqBmaxSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotFrequencyChanged() ) );
-  connect( ui->freqBminSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotFrequencyChanged() ) );
-
-  connect( ui->freqRminSlider, SIGNAL( valueChanged(int) ), ui->freqRminSpin, SLOT(setValue(int)) );
-  connect( ui->freqRminSpin, SIGNAL( valueChanged(int) ), ui->freqRminSlider, SLOT(setValue(int)) );
-  connect( ui->freqRmaxSlider, SIGNAL( valueChanged(int) ), ui->freqRmaxSpin, SLOT(setValue(int)) );
-  connect( ui->freqRmaxSpin, SIGNAL( valueChanged(int) ), ui->freqRmaxSlider, SLOT(setValue(int)) );
-
-  connect( ui->freqGminSlider, SIGNAL( valueChanged(int) ), ui->freqGminSpin, SLOT(setValue(int)) );
-  connect( ui->freqGminSpin, SIGNAL( valueChanged(int) ), ui->freqGminSlider, SLOT(setValue(int)) );
-  connect( ui->freqGmaxSlider, SIGNAL( valueChanged(int) ), ui->freqGmaxSpin, SLOT(setValue(int)) );
-  connect( ui->freqGmaxSpin, SIGNAL( valueChanged(int) ), ui->freqGmaxSlider, SLOT(setValue(int)) );
-
-  connect( ui->freqBminSlider, SIGNAL( valueChanged(int) ), ui->freqBminSpin, SLOT(setValue(int)) );
-  connect( ui->freqBminSpin, SIGNAL( valueChanged(int) ), ui->freqBminSlider, SLOT(setValue(int)) );
-  connect( ui->freqBmaxSlider, SIGNAL( valueChanged(int) ), ui->freqBmaxSpin, SLOT(setValue(int)) );
-  connect( ui->freqBmaxSpin, SIGNAL( valueChanged(int) ), ui->freqBmaxSlider, SLOT(setValue(int)) );
 }
 
+
+void
+MainWindow::slotOpenSpetrumSettings()
+{
+  QDialog* dialog = new QDialog();
+  QGridLayout* gridLayout = new QGridLayout(dialog);
+  gridLayout->addWidget(m_spectrumAnimationSettingsWidget);
+  dialog->show();
+//  m_spectrumAnimationSettingsWidget->show();
+}
 
 void
 MainWindow::slotOpenColorPicker()
@@ -363,57 +352,6 @@ MainWindow::slotColorSelected(const QColor &color)
 
 
 void
-MainWindow::updateAudioControlGUI()
-{
-  m_audioControlSettings->lock();
-  ui->volumeTotalSlider->setValue(m_audioControlSettings->volumeTotal);
-  ui->volumeRedSlider->setValue(m_audioControlSettings->volumeRed);
-  ui->volumeGreenSlider->setValue(m_audioControlSettings->volumeGreen);
-  ui->volumeBlueSlider->setValue(m_audioControlSettings->volumeBlue);
-
-  ui->freqRminSlider->setValue(m_audioControlSettings->freqRedMin);
-  ui->freqRmaxSlider->setValue(m_audioControlSettings->freqRedMax);
-  ui->freqGminSlider->setValue(m_audioControlSettings->freqGreenMin);
-  ui->freqGmaxSlider->setValue(m_audioControlSettings->freqGreenMax);
-  ui->freqBminSlider->setValue(m_audioControlSettings->freqBlueMin);
-  ui->freqBmaxSlider->setValue(m_audioControlSettings->freqBlueMax);
-  m_audioControlSettings->unlock();
-}
-
-
-void
-MainWindow::slotVolumeChanged()
-{
-  if (m_audioControlSettings->try_lock())
-  {
-    m_audioControlSettings->volumeTotal = ui->volumeTotalSlider->value();
-    m_audioControlSettings->volumeRed = ui->volumeRedSlider->value();
-    m_audioControlSettings->volumeGreen = ui->volumeGreenSlider->value();
-    m_audioControlSettings->volumeBlue = ui->volumeBlueSlider->value();
-
-    m_audioControlSettings->unlock();
-  }
-}
-
-
-void
-MainWindow::slotFrequencyChanged()
-{
-  if (m_audioControlSettings->try_lock())
-  {
-    m_audioControlSettings->freqRedMin = ui->freqRminSpin->value();
-    m_audioControlSettings->freqRedMax = ui->freqRmaxSpin->value();
-    m_audioControlSettings->freqGreenMin = ui->freqGminSpin->value();
-    m_audioControlSettings->freqGreenMax = ui->freqGmaxSpin->value();
-    m_audioControlSettings->freqBlueMin = ui->freqBminSpin->value();
-    m_audioControlSettings->freqBlueMax = ui->freqBmaxSpin->value();
-
-    m_audioControlSettings->unlock();
-  }
-}
-
-
-void
 MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
   m_audioControlSettings->setActive(true);
@@ -425,10 +363,8 @@ MainWindow::closeEvent(QCloseEvent* /*event*/)
 void
 MainWindow::update()
 {
-//  std::cout << "update" << std::endl;
   int fps = m_audioControlSettings->getStatusFPS();
   ui->fpsLcd->setText(QString::number(fps));
-//  ui->ledStripEmulator->update();
 }
 
 

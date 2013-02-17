@@ -26,7 +26,8 @@ SOURCES += \
     src/audioinput/audioinputobserver.cpp \
     src/spectrum/spectrumobserver.cpp \
     src/spectrum/toneobserver.cpp \
-    src/studio/tonestudio.cpp
+    src/studio/tonestudio.cpp \
+    src/gui/spectrumsettingswidget.cpp
 
 HEADERS += \
     audioinput/audioinput.h \
@@ -48,10 +49,12 @@ HEADERS += \
     src/audioinput/audioinputobserver.h \
     src/spectrum/spectrumobserver.h \
     src/spectrum/toneobserver.h \
-    src/studio/tonestudio.h
+    src/studio/tonestudio.h \
+    src/gui/spectrumsettingswidget.h
 
 FORMS += \
-    gui/mainwindow.ui
+    gui/mainwindow.ui \
+    src/gui/spectrumsettingswidget.ui
 
 OTHER_FILES += \
     icons/audio-volume-high.png \

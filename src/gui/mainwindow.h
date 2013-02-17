@@ -18,6 +18,7 @@ class ControlSettings;
 class LedStripEmulator;
 class Player;
 class SpectrumAnalyser;
+class SpectrumSettingsWidget;
 class ToneAnalyser;
 class SpectrumStudio;
 class Studio;
@@ -43,7 +44,6 @@ public:
 
   void updateLEDs(const std::map<double, double> &spectrum);
 
-
 public slots:
   void slotPlayerPlayed();
 
@@ -55,13 +55,11 @@ private slots:
 
   void slotOpenColorPicker();
   void slotColorSelected(const QColor& color);
+  void slotOpenSpetrumSettings();
 
   void slotToggleAudioInput(bool isChecked);
   void slotToggleSpectrumAnalysis(bool isChecked);
   void slotToggleToneAnalysis(bool isChecked);
-
-  void slotVolumeChanged();
-  void slotFrequencyChanged();
 
 
 private:
@@ -80,8 +78,6 @@ private:
   void stopSpectrumAnalyser() const;
   void startToneAnalyser() const;
   void stopToneAnalyser() const;
-  
-  void updateAudioControlGUI();
 
 private:
   Ui::MainWindow* ui;
@@ -96,6 +92,8 @@ private:
   std::shared_ptr<ToneAnalyser> m_toneAnalyser;
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
 
+  SpectrumSettingsWidget* m_spectrumAnimationSettingsWidget;
+
 //  LedStripEmulator* m_ledStripEmulator;
 
   QToolBar* fileToolBar;
@@ -108,6 +106,7 @@ private:
   QAction* m_spectrumToggleButton;
   QAction* m_toneToggleButton;
   QAction* m_openColorPickerAct;
+  QAction* m_openSpectrumSettingsAct;
 
   bool m_isAudioOn;
 

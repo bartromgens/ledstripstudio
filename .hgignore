@@ -22,3 +22,4 @@ tmp/moc_player.cpp
 tmp/moc_ledstripemulator.cpp
 wisdom3.txt
 tmp/*
+src/gui/ui_spectrumsettingswidget.h
