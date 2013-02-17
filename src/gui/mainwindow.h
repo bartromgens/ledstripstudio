@@ -17,10 +17,11 @@ class AudioInput;
 class ControlSettings;
 class LedStripEmulator;
 class Player;
-class SpectrumAnalyser;
-class SpectrumSettingsWidget;
 class ToneAnalyser;
+class ToneStudio;
+class SpectrumAnalyser;
 class SpectrumStudio;
+class SpectrumSettingsWidget;
 class Studio;
 
 namespace Ui {
@@ -55,17 +56,20 @@ private slots:
 
   void slotOpenColorPicker();
   void slotColorSelected(const QColor& color);
-  void slotOpenSpetrumSettings();
 
   void slotToggleAudioInput(bool isChecked);
   void slotToggleSpectrumAnalysis(bool isChecked);
+  void slotToggleSpetrumSettings(bool isChecked);
+
   void slotToggleToneAnalysis(bool isChecked);
+  void slotToggleStepTone(bool isChecked);
+  void slotToggleSmoothTone(bool isChecked);
 
 
 private:
   void createMenus();
   void createActions();
-  void createToolbar();
+  void createToolbars();
   void connectAllSlots() const;
 
   void startAudioInputThread();
@@ -87,24 +91,26 @@ private:
   std::shared_ptr<Player> m_player;
   std::unique_ptr<Studio> m_studio;
   std::unique_ptr<AudioInput> m_audioInput;
-  std::shared_ptr<ControlSettings> m_audioControlSettings;
+  std::shared_ptr<ControlSettings> m_settings;
   std::shared_ptr<SpectrumAnalyser> m_spectrumAnalyser;
   std::shared_ptr<ToneAnalyser> m_toneAnalyser;
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
+  std::unique_ptr<ToneStudio> m_toneStudio;
 
-  SpectrumSettingsWidget* m_spectrumAnimationSettingsWidget;
+  SpectrumSettingsWidget* m_spectrumSettingsWidget;
+  QDialog* m_spectrumSettingsDialog;
 
-//  LedStripEmulator* m_ledStripEmulator;
-
-  QToolBar* fileToolBar;
+  QToolBar* m_mainToolBar;
+  QToolBar* m_detailsToolBar;
 
   QMenu* fileMenu;
   QMenu* editMenu;
   QMenu* helpMenu;
-
   QAction* m_audioToggleButton;
   QAction* m_spectrumToggleButton;
   QAction* m_toneToggleButton;
+  QAction* m_stepToneAct;
+  QAction* m_smoothToneAct;
   QAction* m_openColorPickerAct;
   QAction* m_openSpectrumSettingsAct;
 
@@ -112,9 +118,6 @@ private:
 
   QTimer* m_timer;
   QTimer* m_timerEmulator;
-
-  bool m_isSpectrumToLeds;
-  bool m_isToneToLeds;
 };
 
 #endif // MAINWINDOW_H

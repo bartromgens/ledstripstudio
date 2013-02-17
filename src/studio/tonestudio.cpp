@@ -3,12 +3,20 @@
 #include <cmath>
 
 ToneStudio::ToneStudio()
+  : m_animationType(Loudest)
 {
 }
 
 
 ToneStudio::~ToneStudio()
 {
+}
+
+
+void
+ToneStudio::setAnimationType(ToneStudio::ToneAnimationType type)
+{
+  m_animationType = type;
 }
 
 
@@ -24,6 +32,29 @@ ToneStudio::writeToneToConsole(const std::map<std::string, double>& tones)
     }
     std::cout << std::endl;
   }
+}
+
+
+Animation
+ToneStudio::createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones)
+{
+  switch (m_animationType)
+  {
+    case Loudest:
+    {
+      return createToneAnimationLoudest(nLEDs, tones);
+    }
+    case SmoothSum:
+    {
+      return createToneAnimationSmoothSum(nLEDs, tones);
+    }
+    case None:
+    {
+      return Animation();
+    }
+  }
+
+  return Animation();
 }
 
 

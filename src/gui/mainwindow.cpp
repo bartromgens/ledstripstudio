@@ -26,15 +26,15 @@ MainWindow::MainWindow(QWidget *parent) :
   m_player(new Player()),
   m_studio(new Studio(m_nLedsTotal)),
   m_audioInput(new AudioInput(SPECTRUM_SAMPLES)),
-  m_audioControlSettings(new ControlSettings()),
+  m_settings(new ControlSettings()),
   m_spectrumAnalyser(new SpectrumAnalyser(SPECTRUM_SAMPLES)),
   m_toneAnalyser(new ToneAnalyser()),
   m_spectrumStudio(new SpectrumStudio()),
-  m_spectrumAnimationSettingsWidget(new SpectrumSettingsWidget(m_audioControlSettings)),
+  m_toneStudio(new ToneStudio()),
+  m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings)),
+  m_spectrumSettingsDialog(new QDialog(this)),
   m_isAudioOn(false),
-  m_timer(0),
-  m_isSpectrumToLeds(false),
-  m_isToneToLeds(false)
+  m_timer(0)
 {
   ui->setupUi(this);
 
@@ -42,15 +42,18 @@ MainWindow::MainWindow(QWidget *parent) :
   setWindowIcon(QIcon("./icons/color_wheel2.png"));
 
   createActions();
-  createToolbar();
+  createToolbars();
   createMenus();
 
   connectAllSlots();
 
-  m_audioControlSettings->loadSettings();
-  m_spectrumAnimationSettingsWidget->updateAudioControlGUI();
+  QGridLayout* gridLayout = new QGridLayout(m_spectrumSettingsDialog);
+  gridLayout->addWidget(m_spectrumSettingsWidget);
 
-  m_audioInput->setControlSettings(m_audioControlSettings);
+  m_settings->loadSettings();
+  m_spectrumSettingsWidget->updateAudioControlGUI();
+
+  m_audioInput->setControlSettings(m_settings);
 
   m_timer = new QTimer(this);
   m_timer->setInterval(200);
@@ -64,7 +67,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
-
 //  startAnimationThread();
 }
 
@@ -105,7 +107,7 @@ MainWindow::startAudioInputThread()
 void
 MainWindow::startAudioInput()
 {
-  m_audioControlSettings->setActive(true);
+  m_settings->setActive(true);
 
   m_audioInput->openStream();
   m_audioInput->startStream();
@@ -117,7 +119,7 @@ void
 MainWindow::stopAudioInput()
 {
   std::cout << "MainWindow::stopAudioInput()" << std::endl;
-  m_audioControlSettings->setActive(false);
+  m_settings->setActive(false);
   m_isAudioOn = false;
 }
 
@@ -129,7 +131,7 @@ MainWindow::notifySpectrum(std::map<double, double> spectrum)
 //  int minFreq = 200;
 //  int maxFreq = 1000;
 //  m_spectrumStudio->drawSpectrumInConsole(spectrum, minFreq, maxFreq);
-  if (m_isSpectrumToLeds)
+  if (m_spectrumToggleButton->isChecked())
   {
     updateLEDs(spectrum);
   }
@@ -139,10 +141,8 @@ MainWindow::notifySpectrum(std::map<double, double> spectrum)
 void
 MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 {
-  ToneStudio toneStudio;
   Animation animation;
-//  animation = toneStudio.createToneAnimationLoudest(m_nLedsTotal, toneAmplitudes);
-  animation = toneStudio.createToneAnimationSmoothSum(m_nLedsTotal, toneAmplitudes);
+  animation = m_toneStudio->createToneAnimation(m_nLedsTotal, toneAmplitudes);
   m_player->addAnimation(animation);
   m_player->playFrame();
 }
@@ -151,16 +151,17 @@ MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 void
 MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 {
-  m_isSpectrumToLeds = isChecked;
+  m_openSpectrumSettingsAct->setVisible(isChecked);
+
   if (isChecked)
   {
     m_toneToggleButton->setChecked(false);
-    m_isToneToLeds = false;
     startSpectrumAnalyser();
   }
   else
   {
-    if (!m_isToneToLeds)
+    m_openSpectrumSettingsAct->setVisible(false);
+    if (!m_toneToggleButton->isChecked())
     {
       stopSpectrumAnalyser();
     }
@@ -185,11 +186,12 @@ MainWindow::stopSpectrumAnalyser() const
 void
 MainWindow::slotToggleToneAnalysis(bool isChecked)
 {
-  m_isToneToLeds = isChecked;
+  m_stepToneAct->setVisible(isChecked);
+  m_smoothToneAct->setVisible(isChecked);
+
   if (isChecked)
   {
     m_spectrumToggleButton->setChecked(false);
-    m_isSpectrumToLeds = false;
     startSpectrumAnalyser();
     startToneAnalyser();
   }
@@ -212,6 +214,36 @@ void
 MainWindow::stopToneAnalyser() const
 {
   m_spectrumAnalyser->unregisterObserver(m_toneAnalyser.get());
+}
+
+
+void
+MainWindow::slotToggleStepTone(bool isChecked)
+{
+  if (isChecked)
+  {
+    m_smoothToneAct->setChecked(false);
+    m_toneStudio->setAnimationType(ToneStudio::Loudest);
+  }
+  else
+  {
+    m_toneStudio->setAnimationType(ToneStudio::None);
+  }
+}
+
+
+void
+MainWindow::slotToggleSmoothTone(bool isChecked)
+{
+  if (isChecked)
+  {
+    m_stepToneAct->setChecked(false);
+    m_toneStudio->setAnimationType(ToneStudio::SmoothSum);
+  }
+  else
+  {
+    m_toneStudio->setAnimationType(ToneStudio::None);
+  }
 }
 
 
@@ -239,29 +271,57 @@ MainWindow::createActions()
   m_openColorPickerAct = new QAction(this);
   m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel2.png"));
   m_openColorPickerAct->setStatusTip(tr("Open colour picker."));
-  connect(m_openColorPickerAct, SIGNAL(triggered()), this, SLOT(slotOpenColorPicker()));
+  m_openColorPickerAct->setCheckable(true);
+  connect(m_openColorPickerAct, SIGNAL(toggled(bool)), this, SLOT(slotOpenColorPicker()));
 
   m_openSpectrumSettingsAct = new QAction(this);
   m_openSpectrumSettingsAct->setIcon(QIcon("./icons/settings.svg"));
   m_openSpectrumSettingsAct->setStatusTip(tr("Open spectrum settings."));
-  connect(m_openSpectrumSettingsAct, SIGNAL(triggered()), this, SLOT(slotOpenSpetrumSettings()));
+  m_openSpectrumSettingsAct->setCheckable(true);
+  m_openSpectrumSettingsAct->setVisible(false);
+  connect(m_openSpectrumSettingsAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpetrumSettings(bool)));
+
+  m_stepToneAct = new QAction(this);
+  m_stepToneAct->setIcon(QIcon("./icons/step-tone-setting.png"));
+  m_stepToneAct->setStatusTip(tr("Set loudest tone mode."));
+  m_stepToneAct->setCheckable(true);
+  m_stepToneAct->setVisible(false);
+  connect(m_stepToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleStepTone(bool)));
+
+  m_smoothToneAct = new QAction(this);
+  m_smoothToneAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
+  m_smoothToneAct->setStatusTip(tr("Set smooth tone mode."));
+  m_smoothToneAct->setCheckable(true);
+  m_smoothToneAct->setVisible(false);
+  connect(m_smoothToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSmoothTone(bool)));
 }
 
 
 void
-MainWindow::createToolbar()
+MainWindow::createToolbars()
 {
-  fileToolBar = addToolBar(tr("Main toolbar"));
-  fileToolBar->setIconSize(QSize(32, 32));
+  m_mainToolBar = new QToolBar(tr("Main toolbar"), this);
+  addToolBar(Qt::TopToolBarArea, m_mainToolBar);
+  m_mainToolBar->setIconSize(QSize(32, 32));
 
-  fileToolBar->addAction(m_audioToggleButton);
-  fileToolBar->addSeparator();
-  fileToolBar->addAction(m_spectrumToggleButton);
-  fileToolBar->addAction(m_toneToggleButton);
-  fileToolBar->addSeparator();
-  fileToolBar->addAction(m_openColorPickerAct);
-  fileToolBar->addSeparator();
-  fileToolBar->addAction(m_openSpectrumSettingsAct);
+  m_mainToolBar->addAction(m_audioToggleButton);
+  m_mainToolBar->addSeparator();
+  m_mainToolBar->addAction(m_spectrumToggleButton);
+  m_mainToolBar->addAction(m_toneToggleButton);
+  m_mainToolBar->addAction(m_openColorPickerAct);
+  m_mainToolBar->addSeparator();
+
+  m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
+  addToolBar(Qt::LeftToolBarArea, m_detailsToolBar);
+  m_detailsToolBar->setIconSize(QSize(32, 32));
+  m_detailsToolBar->setMinimumSize(32, 32);
+  m_detailsToolBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+  m_detailsToolBar->setOrientation(Qt::Vertical);
+
+  m_detailsToolBar->addSeparator();
+  m_detailsToolBar->addAction(m_openSpectrumSettingsAct);
+  m_detailsToolBar->addAction(m_stepToneAct);
+  m_detailsToolBar->addAction(m_smoothToneAct);
 }
 
 
@@ -275,47 +335,6 @@ MainWindow::createMenus()
 
 
 void
-MainWindow::startAnimationThread() const
-{
-  std::cout << "MainWindow::startAnimation()" << std::endl;
-  boost::thread t1(&MainWindow::startAnimation, this);
-  t1.detach();
-}
-
-
-void
-MainWindow::startAnimation() const
-{
-  for (std::size_t i = 0; i < 1; ++i)
-  {
-    Color colorA(127, 0, 0);
-    Color colorB(0, 127, 0);
-    Color colorC(0, 0, 127);
-    Color colorD(127, 0, 127);
-
-//    int nFrames = 10000;
-
-//    Animation animationA = m_studio->createMovingDot(0, nFrames, colorA, 2.5);
-//    Animation animationB = m_studio->createMovingDot(0, nFrames, colorB, 1.5);
-//    Animation animationC = m_studio->createMovingDot(0, nFrames, colorC, 1.0);
-//    Animation animationD = m_studio->createMovingDot(0, nFrames, colorD, 0.7);
-//    Animation animationA = m_studio->createMovingDot(colorB, 1.0);
-
-//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorA, 1.1));
-//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorB, -0.4));
-//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorC, 0.2));
-
-//    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
-
-//    m_player->addAnimation(m_studio->createMovingRainbow());
-//    m_player->addAnimation(m_studio->createRandomMovingDots(20, nFrames));
-    m_player->addAnimation(m_studio->createCellularAutomata());
-    m_player->playAllAnimations();
-  }
-}
-
-
-void
 MainWindow::connectAllSlots() const
 {
   connect( &m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
@@ -323,13 +342,9 @@ MainWindow::connectAllSlots() const
 
 
 void
-MainWindow::slotOpenSpetrumSettings()
+MainWindow::slotToggleSpetrumSettings(bool isChecked)
 {
-  QDialog* dialog = new QDialog();
-  QGridLayout* gridLayout = new QGridLayout(dialog);
-  gridLayout->addWidget(m_spectrumAnimationSettingsWidget);
-  dialog->show();
-//  m_spectrumAnimationSettingsWidget->show();
+  m_spectrumSettingsDialog->setVisible(isChecked);
 }
 
 void
@@ -354,16 +369,16 @@ MainWindow::slotColorSelected(const QColor &color)
 void
 MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
-  m_audioControlSettings->setActive(true);
+  m_settings->setActive(true);
 
-  m_audioControlSettings->saveSettings();
+  m_settings->saveSettings();
 }
 
 
 void
 MainWindow::update()
 {
-  int fps = m_audioControlSettings->getStatusFPS();
+  int fps = m_settings->getStatusFPS();
   ui->fpsLcd->setText(QString::number(fps));
 }
 
@@ -417,23 +432,23 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
   double brightnessGreen = 0.0;
   double brightnessBlue = 0.0;
 
-  m_audioControlSettings->lock();
+  m_settings->lock();
 
-  double amplifyFactor = m_audioControlSettings->volumeTotal/1000.0;
-  double amplifyFactorRed = m_audioControlSettings->volumeRed/25.0;
-  double amplifyFactorGreen = m_audioControlSettings->volumeGreen/50.0;
-  double amplifyFactorBlue = m_audioControlSettings->volumeBlue/100.0;
+  double amplifyFactor = m_settings->volumeTotal/1000.0;
+  double amplifyFactorRed = m_settings->volumeRed/25.0;
+  double amplifyFactorGreen = m_settings->volumeGreen/50.0;
+  double amplifyFactorBlue = m_settings->volumeBlue/100.0;
 
-  int freqRmin = m_audioControlSettings->freqRedMin;
-  int freqRmax = m_audioControlSettings->freqRedMax;
-  int freqGmin = m_audioControlSettings->freqGreenMin;
-  int freqGmax = m_audioControlSettings->freqGreenMax;
-  int freqBmin = m_audioControlSettings->freqBlueMin;
-  int freqBmax = m_audioControlSettings->freqBlueMax;
+  int freqRmin = m_settings->freqRedMin;
+  int freqRmax = m_settings->freqRedMax;
+  int freqGmin = m_settings->freqGreenMin;
+  int freqGmax = m_settings->freqGreenMax;
+  int freqBmin = m_settings->freqBlueMin;
+  int freqBmax = m_settings->freqBlueMax;
 
-  m_audioControlSettings->unlock();
+  m_settings->unlock();
 
-  m_audioControlSettings->setStatusFPS(m_player->getFPS());
+  m_settings->setStatusFPS(m_player->getFPS());
 
   for (std::map<double, double>::const_iterator iter = spectrum.begin();
        iter != spectrum.end(); ++iter)
@@ -471,4 +486,45 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
 //  }
 
   m_player->playFrame();
+}
+
+
+void
+MainWindow::startAnimationThread() const
+{
+  std::cout << "MainWindow::startAnimation()" << std::endl;
+  boost::thread t1(&MainWindow::startAnimation, this);
+  t1.detach();
+}
+
+
+void
+MainWindow::startAnimation() const
+{
+  for (std::size_t i = 0; i < 1; ++i)
+  {
+    Color colorA(127, 0, 0);
+    Color colorB(0, 127, 0);
+    Color colorC(0, 0, 127);
+    Color colorD(127, 0, 127);
+
+//    int nFrames = 10000;
+
+//    Animation animationA = m_studio->createMovingDot(0, nFrames, colorA, 2.5);
+//    Animation animationB = m_studio->createMovingDot(0, nFrames, colorB, 1.5);
+//    Animation animationC = m_studio->createMovingDot(0, nFrames, colorC, 1.0);
+//    Animation animationD = m_studio->createMovingDot(0, nFrames, colorD, 0.7);
+//    Animation animationA = m_studio->createMovingDot(colorB, 1.0);
+
+//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorA, 1.1));
+//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorB, -0.4));
+//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorC, 0.2));
+
+//    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
+
+//    m_player->addAnimation(m_studio->createMovingRainbow());
+//    m_player->addAnimation(m_studio->createRandomMovingDots(20, nFrames));
+    m_player->addAnimation(m_studio->createCellularAutomata());
+    m_player->playAllAnimations();
+  }
 }
