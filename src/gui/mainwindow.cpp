@@ -200,6 +200,7 @@ void
 MainWindow::slotToggleAnimation(bool isChecked)
 {
   m_dotsAnimationAct->setVisible(isChecked);
+  m_rainbowAnimationAct->setVisible(isChecked);
 
   if (isChecked)
   {
@@ -286,6 +287,27 @@ MainWindow::slotColorSelected(QColor color)
 
 
 void
+MainWindow::slotToggleDotAnimation(bool isChecked)
+{
+  if (isChecked)
+  {
+    startAnimationThread();
+  }
+}
+
+
+void
+MainWindow::slotToggleRainbowAnimation(bool isChecked)
+{
+  if (isChecked)
+  {
+    startAnimationThread();
+  }
+}
+
+
+
+void
 MainWindow::createActions()
 {
   m_audioToggleButton = new QAction(this);
@@ -353,6 +375,14 @@ MainWindow::createActions()
   connect(m_dotsAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleDotAnimation(bool)));
   m_dotsAnimationAct->setChecked(false);
   m_dotsAnimationAct->setVisible(false);
+
+  m_rainbowAnimationAct = new QAction(this);
+  m_rainbowAnimationAct->setIcon(QIcon("./icons/rainbow-animation.png"));
+  m_rainbowAnimationAct->setStatusTip(tr("Toggles rainbow animation."));
+  m_rainbowAnimationAct->setCheckable(true);
+  connect(m_rainbowAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleRainbowAnimation(bool)));
+  m_rainbowAnimationAct->setChecked(false);
+  m_rainbowAnimationAct->setVisible(false);
 }
 
 
@@ -383,6 +413,7 @@ MainWindow::createToolbars()
   m_detailsToolBar->addAction(m_stepToneAct);
   m_detailsToolBar->addAction(m_smoothToneAct);
   m_detailsToolBar->addAction(m_dotsAnimationAct);
+  m_detailsToolBar->addAction(m_rainbowAnimationAct);
   m_detailsToolBar->addAction(m_openColorPickerAct);
 }
 
@@ -545,7 +576,7 @@ MainWindow::startAnimation() const
     Color colorC(0, 0, 127);
     Color colorD(127, 0, 127);
 
-//    int nFrames = 10000;
+    int nFrames = 1000;
 
 //    Animation animationA = m_studio->createMovingDot(0, nFrames, colorA, 2.5);
 //    Animation animationB = m_studio->createMovingDot(0, nFrames, colorB, 1.5);
@@ -553,15 +584,15 @@ MainWindow::startAnimation() const
 //    Animation animationD = m_studio->createMovingDot(0, nFrames, colorD, 0.7);
 //    Animation animationA = m_studio->createMovingDot(colorB, 1.0);
 
-//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorA, 1.1));
+//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorA, 0.5));
 //    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorB, -0.4));
 //    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorC, 0.2));
 
 //    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
 
-//    m_player->addAnimation(m_studio->createMovingRainbow());
+    m_player->addAnimation(m_studio->createMovingRainbow());
 //    m_player->addAnimation(m_studio->createRandomMovingDots(20, nFrames));
-    m_player->addAnimation(m_studio->createCellularAutomata());
+//    m_player->addAnimation(m_studio->createCellularAutomata());
     m_player->playAllAnimations();
   }
 }

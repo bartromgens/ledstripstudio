@@ -70,7 +70,7 @@ Player::playAllAnimations()
 {
   while (!m_mainAnimation.getFrames().empty())
   {
-    playFrame();
+    playFrameThread();
   }
 }
 

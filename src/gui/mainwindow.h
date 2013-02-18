@@ -70,6 +70,9 @@ private slots:
   void slotOpenColorPicker();
   void slotColorSelected(QColor color);
 
+  void slotToggleDotAnimation(bool isChecked);
+  void slotToggleRainbowAnimation(bool isChecked);
+
 
 private:
   void createMenus();
@@ -121,6 +124,7 @@ private:
   QAction* m_stepToneAct;
   QAction* m_smoothToneAct;
   QAction* m_dotsAnimationAct;
+  QAction* m_rainbowAnimationAct;
   QAction* m_openColorPickerAct;
 
   bool m_isAudioOn;
