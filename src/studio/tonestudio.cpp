@@ -1,6 +1,7 @@
 #include "tonestudio.h"
 
 #include <cmath>
+#include <string>
 
 ToneStudio::ToneStudio()
   : m_animationType(Loudest)
@@ -133,7 +134,7 @@ ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::strin
     double g = 0.0;
     double b = 0.0;
 
-    for (auto iter = tones.begin(); iter != tones.end(); ++iter)
+    for (std::map<std::string, double>::const_iterator iter = tones.begin(); iter != tones.end(); ++iter)
     {
       if (iter->first == "C")
       {
@@ -168,10 +169,10 @@ ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::strin
       }
     }
 
-    int norm = std::sqrt(r*r+g*g+b*b);
-    int rNorm = r/norm*127;
-    int gNorm = g/norm*127;
-    int bNorm = b/norm*127;
+    double norm = std::sqrt(r*r+g*g+b*b);
+    int rNorm = static_cast<int>(r/norm*127);
+    int gNorm = static_cast<int>(g/norm*127);
+    int bNorm = static_cast<int>(b/norm*127);
 
     Color color(rNorm, gNorm, bNorm);
 

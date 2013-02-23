@@ -29,30 +29,30 @@ SpectrumStudio::createWaveformAnimationCentral(int nLEDs, int brightnessRed, int
     int g = brightnessGreen - scaleFact;
     int b = brightnessBlue - scaleFact;
 
-    if (r > 127.0)
+    if (r > 127)
     {
-      r = 127.0;
+      r = 127;
     }
-    if (g > 127.0)
+    if (g > 127)
     {
-      g = 127.0;
+      g = 127;
     }
-    if (b > 127.0)
+    if (b > 127)
     {
-      b = 127.0;
+      b = 127;
     }
 
-    if (r < 0.0)
+    if (r < 0)
     {
-      r = 0.0;
+      r = 0;
     }
-    if (g < 0.0)
+    if (g < 0)
     {
-      g = 0.0;
+      g = 0;
     }
-    if (b < 0.0)
+    if (b < 0)
     {
-      b = 0.0;
+      b = 0;
     }
 
     int offSet = 0;
@@ -77,7 +77,7 @@ SpectrumStudio::drawSpectrumInConsole(const std::map<double, double>& spectrum, 
   for (std::map<double, double>::const_iterator iter = spectrum.begin();
        iter != spectrum.end(); ++iter)
   {
-    int frequency = iter->first;
+    int frequency = static_cast<int>(iter->first);
     if (frequency > minFreq && frequency < maxFreq)
     {
       std::cout << frequency << " :";

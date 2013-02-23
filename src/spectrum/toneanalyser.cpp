@@ -40,10 +40,10 @@ ToneAnalyser::computeToneAmplitude(const std::map<double, double>& spectrum)
 
     // find octave above base tones;
     int nOctaves = 0;
-    for (std::size_t j = 1; j < 10; ++j)
+    for (int j = 1; j < 10; ++j)
     {
-      if ( frequency > m_baseTones["C"] * std::pow(2, j) - range * std::pow(2, nOctaves)
-           && frequency < m_baseTones["B"] * std::pow(2, j) + range * std::pow(2, nOctaves) )
+      if ( frequency > m_baseTones["C"] * std::pow(2.0, j) - range * std::pow(2.0, nOctaves)
+           && frequency < m_baseTones["B"] * std::pow(2.0, j) + range * std::pow(2.0, nOctaves) )
       {
 //        std::cout << m_baseTones["C"] * std::pow(2, j) << std::endl;
         nOctaves = j;
@@ -57,8 +57,8 @@ ToneAnalyser::computeToneAmplitude(const std::map<double, double>& spectrum)
     {
       for (auto iterBaseTones = m_baseTones.begin(); iterBaseTones != m_baseTones.end(); ++iterBaseTones)
       {
-        if ( frequency > iterBaseTones->second * std::pow(2, nOctaves) - range * std::pow(2, nOctaves)
-             && frequency < iterBaseTones->second * std::pow(2, nOctaves) + range * std::pow(2, nOctaves))
+        if ( frequency > iterBaseTones->second * std::pow(2.0, nOctaves) - range * std::pow(2.0, nOctaves)
+             && frequency < iterBaseTones->second * std::pow(2.0, nOctaves) + range * std::pow(2.0, nOctaves))
         {
           toneAmplitudes[iterBaseTones->first] += amplitude;
         }
