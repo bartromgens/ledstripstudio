@@ -51,8 +51,7 @@ Player::addAnimation(const Animation& animation)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
-  QTime time;
-  time.start();
+//  QElapsedTimer time;
   if (!m_mainAnimation.getFrames().empty())
   {
     m_mainAnimation = animation.combineTwoAnimations(animation, m_mainAnimation);

@@ -2,8 +2,8 @@
 #include "basic/universalsleep.h"
 
 LEDController::LEDController()
-  : m_serialPortName("/dev/ttyACM0"),
-//  : m_serialPortName("COM7"),
+//  : m_serialPortName("/dev/ttyACM0"),
+  : m_serialPortName("COM7"),
     m_timer(),
     m_timer2(),
     m_fpsHistory(),
@@ -70,14 +70,15 @@ LEDController::send(const Frame &frame)
   const std::vector<LED>& leds = frame.getLEDs();
 
   // make sure n ms has elapsed since the last send, for the Arduino to process the data.
-  int minSleep = 20;
-  int elapsed = m_timer.elapsed();
-  int toSleep = minSleep - elapsed;
+  int minSleep = 21;
+  int elapsed_ms = m_timer.nsecsElapsed()/1000000;
+  int toSleep = minSleep - elapsed_ms;
+  std::cout << "send() elapsed: " << elapsed_ms << std::endl;
 
   if (toSleep > 0)
   {
     universalsleep::sleep_ms(toSleep);
-//    std::cout << "send() time to sleep: " << toSleep << std::endl;
+    std::cout << "send() time to sleep: " << toSleep << std::endl;
   }
 
   if (!m_serialPort)
@@ -110,7 +111,7 @@ LEDController::send(const Frame &frame)
     bytes.clear();
   }
 
-  m_fpsHistory.push_back(1000.0/m_timer.elapsed());
+  m_fpsHistory.push_back( 1000.0 / (m_timer.nsecsElapsed()/1000000) );
   if (m_fpsHistory.size() > 10)
   {
     m_fpsHistory.pop_front();

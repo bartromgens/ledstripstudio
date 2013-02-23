@@ -5,7 +5,7 @@
 #include "basic/frame.h"
 
 #include <QString>
-#include <QTime>
+#include <QElapsedTimer>
 
 #include <boost/asio.hpp>
 #include <boost/asio/serial_port.hpp>
@@ -50,8 +50,8 @@ private:
 
   QByteArray m_byteMessage;
   QString m_serialPortName;
-  QTime m_timer;
-  QTime m_timer2;
+  QElapsedTimer m_timer;
+  QElapsedTimer m_timer2;
   std::deque<int> m_fpsHistory;
   mutable boost::mutex m_mutex;
 
