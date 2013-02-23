@@ -311,7 +311,7 @@ void
 MainWindow::createActions()
 {
   m_audioToggleButton = new QAction(this);
-  m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.svg"));
+  m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.png"));
   m_audioToggleButton->setStatusTip(tr("Start audio input control panel."));
   m_audioToggleButton->setCheckable(true);
   connect(m_audioToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleAudioInput(bool)));
@@ -324,7 +324,7 @@ MainWindow::createActions()
   connect(m_spectrumToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpectrumAnalysis(bool)));
 
   m_toneToggleButton = new QAction(this);
-  m_toneToggleButton->setIcon(QIcon("./icons/audio-x-generic.svg"));
+  m_toneToggleButton->setIcon(QIcon("./icons/audio-x-generic.png"));
   m_toneToggleButton->setStatusTip(tr("Start tone mode."));
   m_toneToggleButton->setCheckable(true);
   connect(m_toneToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneAnalysis(bool)));
@@ -342,7 +342,7 @@ MainWindow::createActions()
   connect(m_colorToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSingleColor(bool)));
 
   m_openSpectrumSettingsAct = new QAction(this);
-  m_openSpectrumSettingsAct->setIcon(QIcon("./icons/settings.svg"));
+  m_openSpectrumSettingsAct->setIcon(QIcon("./icons/preferences-system.png"));
   m_openSpectrumSettingsAct->setStatusTip(tr("Open spectrum settings."));
   m_openSpectrumSettingsAct->setVisible(false);
   connect(m_openSpectrumSettingsAct, SIGNAL(triggered()), this, SLOT(slotShowSpetrumSettings()));

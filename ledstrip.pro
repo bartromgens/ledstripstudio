@@ -60,11 +60,14 @@ OTHER_FILES += \
     icons/audio-volume-high.png \
     icons/wave_high_frequency.png \
     icons/color_wheel.png \
-    icons/audio-volume-muted.svg \
-    icons/audio-volume-high.svg \
-    icons/audio-x-generic.svg \
     icons/audio-x-generic.png \
-    icons/audio-volume-muted.png
+    icons/audio-volume-muted.png \
+    icons/rainbow-animation.png \
+    icons/animation-mode.png \
+    icons/smooth-tone-setting.png \
+    icons/step-tone-setting.png \
+    icons/color_wheel2.png \
+    icons/preferences-system.png
 
 # libraries
 # 3 libraries are used:
