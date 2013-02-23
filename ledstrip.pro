@@ -66,7 +66,13 @@ OTHER_FILES += \
     icons/audio-x-generic.png \
     icons/audio-volume-muted.png
 
-#library header file directories
+# libraries
+# 3 libraries are used:
+# FFTW for the fast fourier transform
+# AudioPort for audio input
+# Boost for serial connection with the Arduino
+
+# library header file directories
 unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/
 unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/fftwpp/
 unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/boost/
