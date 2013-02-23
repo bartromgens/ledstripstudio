@@ -30,7 +30,7 @@ public:
   };
 
 public:
-  AudioInput(unsigned int nSamples);
+  AudioInput(unsigned int nSamples, unsigned int nLEDs);
   ~AudioInput();
 
   void openStream();
@@ -72,7 +72,7 @@ private:
   int m_nUpdates;
 
   int m_offSet;
-  int m_nLEDs;
+  unsigned int m_nLEDs;
 
   std::set< std::shared_ptr<AudioInputObserver> > m_audioObservers;
 
