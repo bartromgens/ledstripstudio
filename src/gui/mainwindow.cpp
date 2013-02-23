@@ -140,12 +140,12 @@ MainWindow::slotToggleAudioInput(bool isChecked)
   std::cout << "MainWindow::slotToggleAudioInput()" << std::endl;
   if (isChecked)
   {
-    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-high.svg"));
+    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-high.png"));
     startAudioInputThread();
   }
   else
   {
-    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.svg"));
+    m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.png"));
     stopAudioInput();
   }
 }
