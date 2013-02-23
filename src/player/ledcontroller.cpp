@@ -2,15 +2,26 @@
 #include "basic/universalsleep.h"
 
 LEDController::LEDController()
-//  : m_serialPortName("/dev/ttyACM0"),
-  : m_serialPortName("COM7"),
+  : m_serialPortName(),
     m_timer(),
     m_timer2(),
     m_fpsHistory(),
     m_io_service(new boost::asio::io_service()),
     m_serialPort()
 {
+}
 
+
+LEDController::~LEDController()
+{
+  std::cout << "LEDController::~LEDController()" << std::endl;
+  disconnect();
+}
+
+
+void
+LEDController::connect()
+{
   try
   {
     m_serialPort.reset( new boost::asio::serial_port(*m_io_service, m_serialPortName.toStdString()) );
@@ -37,20 +48,6 @@ LEDController::LEDController()
   m_serialPort->set_option(parityType);
   m_serialPort->set_option(boost::asio::serial_port_base::character_size(8));
   m_serialPort->set_option(stopBits);
-}
-
-
-LEDController::~LEDController()
-{
-  std::cout << "LEDController::~LEDController()" << std::endl;
-  disconnect();
-}
-
-
-void
-LEDController::connect()
-{
-
 }
 
 void

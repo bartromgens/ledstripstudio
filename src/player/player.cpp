@@ -8,7 +8,7 @@ Player::Player()
     m_mutex()
 {
   const QString serialPortName = "/dev/ttyACM0";
-  //  const QString serialPortName = "COM11"; // windows
+  //  const QString serialPortName = "COM7"; // windows
   m_ledController = createLedController(serialPortName);
 
   universalsleep::sleep_ms(2000); // let the LED strip initialise
@@ -104,6 +104,7 @@ Player::playFrameThread()
 
   m_ledController->send(m_lastFrame);
 }
+
 
 Frame
 Player::smoothenFrames(const Frame& firstFrame, const Frame& secondFrame, int /*nFrames*/)
