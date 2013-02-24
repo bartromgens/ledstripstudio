@@ -67,7 +67,10 @@ SpectrumAnalyser::unregisterObserver(SpectrumObserver* observer)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
-  m_observers.erase( std::find(m_observers.begin(), m_observers.end(), observer) );
+  if (std::find(m_observers.begin(), m_observers.end(), observer) != m_observers.end())
+  {
+    m_observers.erase( std::find(m_observers.begin(), m_observers.end(), observer) );
+  }
 }
 
 
