@@ -11,6 +11,8 @@
 #include <QDockWidget>
 #include <QTimer>
 
+#include <boost/thread.hpp>
+
 #include <iostream>
 #include <memory>
 
@@ -108,6 +110,8 @@ private:
   QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
 
+  boost::thread* m_audioInputThread;
+
   QToolBar* m_mainToolBar;
   QToolBar* m_detailsToolBar;
 
@@ -126,8 +130,6 @@ private:
   QAction* m_dotsAnimationAct;
   QAction* m_rainbowAnimationAct;
   QAction* m_openColorPickerAct;
-
-  bool m_isAudioOn;
 
   QTimer* m_timer;
   QTimer* m_timerEmulator;

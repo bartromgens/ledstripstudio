@@ -24,14 +24,6 @@ AudioInput::AudioInput(unsigned int nSamples, unsigned int nLEDs)
 AudioInput::~AudioInput()
 {
   std::cout << "AudioInput::~AudioInput()" << std::endl;
-  if (Pa_IsStreamActive( m_stream ))
-  {
-    bool closeSuccess = closeStream();
-    if (closeSuccess)
-    {
-      terminatePortAudio(paNoError);
-    }
-  }
 }
 
 
@@ -101,10 +93,10 @@ AudioInput::closeStream()
   PaError err = paNoError;
 
   err = Pa_CloseStream( m_stream );
+  terminatePortAudio(err);
   if( err != paNoError )
   {
     std::cout << "AudioInput::closeStream() - ERROR: terminatePortAudio" << std::endl;
-    terminatePortAudio(err);
     return false;
   }
 
@@ -242,7 +234,10 @@ AudioInput::unregisterObserver(std::shared_ptr<AudioInputObserver> observer)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
-  m_audioObservers.erase( std::find(m_audioObservers.begin(), m_audioObservers.end(), observer) );
+  if ( std::find(m_audioObservers.begin(), m_audioObservers.end(), observer) != m_audioObservers.end() )
+  {
+    m_audioObservers.erase( std::find(m_audioObservers.begin(), m_audioObservers.end(), observer) );
+  }
 }
 
 

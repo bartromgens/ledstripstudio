@@ -12,8 +12,6 @@
 
 #include <QPushButton>
 
-#include <boost/thread.hpp>
-
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 16));
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -33,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneStudio(new ToneStudio()),
   m_spectrumSettingsDialog(new QDockWidget(this)),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, m_spectrumSettingsDialog)),
-  m_isAudioOn(false),
   m_timer(0),
   m_lastSingleColor(0, 0, 0)
 {
@@ -76,17 +73,39 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+  stopToneAnalyser();
+  stopSpectrumAnalyser();
+
   delete ui;
+
+  std::cout << "MainWindow::~MainWindow()" << std::endl;
+}
+
+
+void
+MainWindow::closeEvent(QCloseEvent* /*event*/)
+{
+  std::cout << "MainWindow::closeEvent()" << std::endl;
+
+  m_settings->saveSettings();
+  stopAudioInput();
+
+  if (m_audioInputThread)
+  {
+    if(!m_audioInputThread->timed_join(boost::posix_time::seconds(2)))
+    {
+      m_audioInputThread->interrupt();
+    }
+  }
+
 }
 
 
 void
 MainWindow::startAudioInputThread()
 {
-  m_isAudioOn = true;
   std::cout << "MainWindow::startAudioInputThread()" << std::endl;
-  boost::thread t1(&MainWindow::startAudioInput, this);
-  t1.detach();
+  m_audioInputThread = new boost::thread(&MainWindow::startAudioInput, this);
 }
 
 
@@ -106,7 +125,6 @@ MainWindow::stopAudioInput()
 {
   std::cout << "MainWindow::stopAudioInput()" << std::endl;
   m_settings->setActive(false);
-  m_isAudioOn = false;
 }
 
 
@@ -431,15 +449,6 @@ void
 MainWindow::connectAllSlots() const
 {
   connect( m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
-}
-
-
-void
-MainWindow::closeEvent(QCloseEvent* /*event*/)
-{
-  m_settings->setActive(true);
-
-  m_settings->saveSettings();
 }
 
 
