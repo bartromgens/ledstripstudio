@@ -109,7 +109,7 @@ Player::playFrameThread()
 Frame
 Player::smoothenFrames(const Frame& firstFrame, const Frame& secondFrame, int /*nFrames*/)
 {
-  // NOTE: Not teste very well...
+  // NOTE: Not tested very well...
   std::size_t nLEDs = firstFrame.getLEDs().size();
 
   Frame frameSmooth(nLEDs);
