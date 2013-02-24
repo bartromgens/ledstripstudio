@@ -18,6 +18,12 @@ ToneAnalyser::ToneAnalyser()
 }
 
 
+ToneAnalyser::~ToneAnalyser()
+{
+  std::cout << "ToneAnalyser::~ToneAnalyser()" << std::endl;
+}
+
+
 void
 ToneAnalyser::notifySpectrum(std::map<double, double> spectrum)
 {

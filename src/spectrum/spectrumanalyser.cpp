@@ -37,6 +37,7 @@ SpectrumAnalyser::~SpectrumAnalyser()
   FFTWdelete(m_f);
 
   delete m_forward;
+  std::cout << "SpectrumAnalyser::~SpectrumAnalyser()" << std::endl;
 }
 
 

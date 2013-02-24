@@ -13,6 +13,7 @@ class ToneAnalyser : public SpectrumObserver
 {
 public:
   ToneAnalyser();
+  ~ToneAnalyser();
 
   std::map<std::string, double> computeToneAmplitude(const std::map<double, double>& spectrum);
 
