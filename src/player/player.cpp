@@ -71,7 +71,7 @@ Player::playAllAnimations()
 {
   while (!m_mainAnimation.getFrames().empty())
   {
-    playFrameThread();
+    playFrame();
   }
 }
 
@@ -86,14 +86,14 @@ Player::stopAnimations()
 
 
 void
-Player::playFrame()
+Player::playFrameThread()
 {
-  boost::thread t1(&Player::playFrameThread, this);
+  boost::thread t1(&Player::playFrame, this);
 }
 
 
 void
-Player::playFrameThread()
+Player::playFrame()
 {
   Frame frame(0);
   {

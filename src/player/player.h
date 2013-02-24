@@ -17,6 +17,7 @@ public:
   void addAnimation(const Animation &animation);
 
   void playFrame();
+  void playFrameThread();
 
   void playAllAnimations();
   void stopAnimations();
@@ -27,7 +28,6 @@ public:
 private:
   std::unique_ptr<LEDController> createLedController(QString serialPortName);
 
-  void playFrameThread();
 
   Frame smoothenFrames(const Frame &firstFrame, const Frame &secondFrame, int nFrames = 1);
 
