@@ -74,8 +74,8 @@ LEDController::send(const Frame &frame)
   if (toSleep > 0)
   {
     universalsleep::sleep_ms(toSleep);
-    std::cout << "send() elapsed: " << elapsed_ms << std::endl;
-    std::cout << "send() time to sleep: " << toSleep << std::endl;
+//    std::cout << "send() elapsed: " << elapsed_ms << std::endl;
+//    std::cout << "send() time to sleep: " << toSleep << std::endl;
   }
 
   if (!m_serialPort)

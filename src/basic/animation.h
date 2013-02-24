@@ -24,6 +24,8 @@ public:
 
   const std::deque<Frame>& getFrames() const;
 
+  void clearFrames();
+
   Animation combineAnimations(const std::list<Animation>& animations);
   Animation combineTwoAnimations(const Animation& animationA, const Animation& animationB) const;
 

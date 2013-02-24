@@ -19,6 +19,13 @@ Animation::getFrames() const
 
 
 void
+Animation::clearFrames()
+{
+  m_frames.clear();
+}
+
+
+void
 Animation::addFrame(const Frame& frame)
 {
   m_frames.push_back(frame);

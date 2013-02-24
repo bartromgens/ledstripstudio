@@ -5,6 +5,7 @@ Player::Player()
   : m_ledController(),
     m_lastFrame(0),
     m_mainAnimation(),
+//    m_animationThread(0),
     m_mutex()
 {
   const QString serialPortName = "/dev/ttyACM0";
@@ -76,22 +77,25 @@ Player::playAllAnimations()
 
 
 void
+Player::stopAnimations()
+{
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
+  m_mainAnimation.clearFrames();
+}
+
+
+void
 Player::playFrame()
 {
-//  std::cout << "Player::playFrame()" << std::endl;
-
-//  QTime time;
-//  time.start();
   boost::thread t1(&Player::playFrameThread, this);
-//  t1.detach();
-
-  //  std::cout << "Player::playFrame() - time :" << time.elapsed() << std::endl;
 }
 
 
 void
 Player::playFrameThread()
 {
+  Frame frame(0);
   {
     boost::lock_guard<boost::mutex> lock(m_mutex);
 
@@ -100,9 +104,10 @@ Player::playFrameThread()
     {
       m_lastFrame = frames.front();
       m_mainAnimation.pop_frontFrame();
+      frame = m_lastFrame;
     }
-    m_ledController->send(m_lastFrame);
   }
+  m_ledController->send(frame);
 }
 
 

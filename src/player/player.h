@@ -18,10 +18,11 @@ public:
 
   void playFrame();
 
+  void playAllAnimations();
+  void stopAnimations();
+
   int getFPS() const;
   Frame getLastFrame() const;
-
-  void playAllAnimations();
 
 private:
   std::unique_ptr<LEDController> createLedController(QString serialPortName);
@@ -34,6 +35,9 @@ private:
   std::unique_ptr<LEDController> m_ledController;
   Frame m_lastFrame;
   Animation m_mainAnimation;
+
+//  boost::thread* m_animationThread;
+
   mutable boost::mutex m_mutex;
 };
 
