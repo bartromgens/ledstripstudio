@@ -13,7 +13,7 @@ public:
 
   Animation createMovingLine(int nFrames, const Color& color, double speed);
   Animation createMovingDot(int startPos, int nFrames, const Color& color, double speed);
-  Animation createMovingRainbow();
+  Animation createMovingRainbow(double speed);
   Color wheel(int wheelPos);
   Animation createRandomMovingDots(int nDots, int nFrames);
   Animation createCellularAutomata();

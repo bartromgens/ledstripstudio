@@ -339,32 +339,23 @@ MainWindow::slotToggleDotAnimation(bool isChecked)
 {
   if (isChecked)
   {
-    for (std::size_t i = 0; i < 1; ++i)
+    for (std::size_t i = 0; i < 2; ++i)
     {
-      Color colorA(127, 0, 0);
-      Color colorB(0, 127, 0);
-      Color colorC(0, 0, 127);
-      Color colorD(127, 0, 127);
+      std::vector<Color> colors;
+      colors.push_back(Color(127, 0, 0));
+      colors.push_back(Color(0, 127, 0));
+      colors.push_back(Color(0, 0, 127));
+      colors.push_back(Color(127, 0, 127));
+      colors.push_back(Color(127, 127, 0));
+      colors.push_back(Color(0, 127, 127));
 
       int nFrames = 1000;
 
-      Animation animationA = m_studio->createMovingDot(0, nFrames, colorA, 2.5);
-      Animation animationB = m_studio->createMovingDot(20, nFrames, colorB, 1.5);
-      Animation animationC = m_studio->createMovingDot(30, nFrames, colorC, -1.0);
-      Animation animationD = m_studio->createMovingDot(50, nFrames, colorD, 0.7);
-
-  //    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorA, 0.5));
-  //    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorB, -0.4));
-  //    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorC, 0.2));
-
-  //    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
-
-      m_player->addAnimation(animationA);
-      m_player->addAnimation(animationB);
-      m_player->addAnimation(animationC);
-      m_player->addAnimation(animationD);
-      m_player->addAnimation(animationA);
-
+      for (std::size_t i = 0; i < colors.size(); ++i)
+      {
+        Animation animationA = m_studio->createMovingDot((rand() % m_nLedsTotal), nFrames, colors[i], ((rand() % 400 - 200) / 100.0) ) ;
+        m_player->addAnimation(animationA);
+      }
     }
 
     startAnimationThread();
@@ -381,7 +372,8 @@ MainWindow::slotToggleRainbowAnimation(bool isChecked)
 {
   if (isChecked)
   {
-    m_player->addAnimation(m_studio->createMovingRainbow());
+    double speed = 30;
+    m_player->addAnimation(m_studio->createMovingRainbow(speed));
     startAnimationThread();
   }
   else
