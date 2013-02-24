@@ -153,6 +153,36 @@ MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 
 
 void
+MainWindow::startAnimationThread() const
+{
+  std::cout << "MainWindow::startAnimation()" << std::endl;
+  boost::thread t1(&MainWindow::startAnimation, this);
+  t1.detach();
+}
+
+
+void
+MainWindow::startAnimation() const
+{
+  m_player->playAllAnimations();
+}
+
+
+void
+MainWindow::stopAnimation()
+{
+  m_player->stopAnimations();
+}
+
+
+void
+MainWindow::startSpectrumAnalyser() const
+{
+  m_audioInput->registerObserver(m_spectrumAnalyser);
+}
+
+
+void
 MainWindow::slotToggleAudioInput(bool isChecked)
 {
   std::cout << "MainWindow::slotToggleAudioInput()" << std::endl;
@@ -309,7 +339,39 @@ MainWindow::slotToggleDotAnimation(bool isChecked)
 {
   if (isChecked)
   {
+    for (std::size_t i = 0; i < 1; ++i)
+    {
+      Color colorA(127, 0, 0);
+      Color colorB(0, 127, 0);
+      Color colorC(0, 0, 127);
+      Color colorD(127, 0, 127);
+
+      int nFrames = 1000;
+
+      Animation animationA = m_studio->createMovingDot(0, nFrames, colorA, 2.5);
+      Animation animationB = m_studio->createMovingDot(20, nFrames, colorB, 1.5);
+      Animation animationC = m_studio->createMovingDot(30, nFrames, colorC, -1.0);
+      Animation animationD = m_studio->createMovingDot(50, nFrames, colorD, 0.7);
+
+  //    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorA, 0.5));
+  //    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorB, -0.4));
+  //    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorC, 0.2));
+
+  //    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
+
+      m_player->addAnimation(animationA);
+      m_player->addAnimation(animationB);
+      m_player->addAnimation(animationC);
+      m_player->addAnimation(animationD);
+      m_player->addAnimation(animationA);
+
+    }
+
     startAnimationThread();
+  }
+  else
+  {
+    stopAnimation();
   }
 }
 
@@ -319,7 +381,12 @@ MainWindow::slotToggleRainbowAnimation(bool isChecked)
 {
   if (isChecked)
   {
+    m_player->addAnimation(m_studio->createMovingRainbow());
     startAnimationThread();
+  }
+  else
+  {
+    stopAnimation();
   }
 }
 
@@ -563,54 +630,6 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
 //  }
 
   m_player->playFrame();
-}
-
-
-void
-MainWindow::startAnimationThread() const
-{
-  std::cout << "MainWindow::startAnimation()" << std::endl;
-  boost::thread t1(&MainWindow::startAnimation, this);
-  t1.detach();
-}
-
-
-void
-MainWindow::startAnimation() const
-{
-  for (std::size_t i = 0; i < 1; ++i)
-  {
-    Color colorA(127, 0, 0);
-    Color colorB(0, 127, 0);
-    Color colorC(0, 0, 127);
-    Color colorD(127, 0, 127);
-
-    int nFrames = 1000;
-
-//    Animation animationA = m_studio->createMovingDot(0, nFrames, colorA, 2.5);
-//    Animation animationB = m_studio->createMovingDot(0, nFrames, colorB, 1.5);
-//    Animation animationC = m_studio->createMovingDot(0, nFrames, colorC, 1.0);
-//    Animation animationD = m_studio->createMovingDot(0, nFrames, colorD, 0.7);
-//    Animation animationA = m_studio->createMovingDot(colorB, 1.0);
-
-//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorA, 0.5));
-//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorB, -0.4));
-//    m_player->addAnimation(m_studio->createMovingLine(nFrames, colorC, 0.2));
-
-//    Animation animationA = m_studio->createSingleColorSingleFrameAnimation(colorA);
-
-    m_player->addAnimation(m_studio->createMovingRainbow());
-//    m_player->addAnimation(m_studio->createRandomMovingDots(20, nFrames));
-//    m_player->addAnimation(m_studio->createCellularAutomata());
-    m_player->playAllAnimations();
-  }
-}
-
-
-void
-MainWindow::startSpectrumAnalyser() const
-{
-  m_audioInput->registerObserver(m_spectrumAnalyser);
 }
 
 

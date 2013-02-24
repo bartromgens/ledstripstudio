@@ -85,6 +85,7 @@ private:
   void startAudioInputThread();
   void startAnimationThread() const;
   void startAnimation() const;
+  void stopAnimation();
 
   void startAudioInput();
   void stopAudioInput();
