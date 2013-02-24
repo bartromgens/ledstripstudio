@@ -170,6 +170,10 @@ Studio::createMovingDot(int startPos, int nFrames, const Color &color, double sp
   for (int i = 1; i < nFrames; ++i)
   {
     double pos = int(i*speed+startPos) % m_nLEDs;
+    if (pos < 0)
+    {
+      pos = m_nLEDs + pos;
+    }
 
 //    std::cout << dx1 << ", " << dx2 << ", " << dx3 << ", " << dx4 << std::endl;
 
