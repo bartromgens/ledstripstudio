@@ -17,6 +17,7 @@ Player::Player()
 
 Player::~Player()
 {
+  std::cout << "Player::~Player()" << std::endl;
 }
 
 
@@ -82,7 +83,7 @@ Player::playFrame()
 //  QTime time;
 //  time.start();
   boost::thread t1(&Player::playFrameThread, this);
-  t1.detach();
+//  t1.detach();
 
   //  std::cout << "Player::playFrame() - time :" << time.elapsed() << std::endl;
 }
@@ -100,9 +101,8 @@ Player::playFrameThread()
       m_lastFrame = frames.front();
       m_mainAnimation.pop_frontFrame();
     }
+    m_ledController->send(m_lastFrame);
   }
-
-  m_ledController->send(m_lastFrame);
 }
 
 
