@@ -70,11 +70,11 @@ LEDController::send(const Frame &frame)
   int minSleep = 21;
   int elapsed_ms = m_timer.nsecsElapsed()/1000000;
   int toSleep = minSleep - elapsed_ms;
-  std::cout << "send() elapsed: " << elapsed_ms << std::endl;
 
   if (toSleep > 0)
   {
     universalsleep::sleep_ms(toSleep);
+    std::cout << "send() elapsed: " << elapsed_ms << std::endl;
     std::cout << "send() time to sleep: " << toSleep << std::endl;
   }
 
