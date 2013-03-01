@@ -4,7 +4,8 @@
 #include <string>
 
 ToneStudio::ToneStudio()
-  : m_animationType(Loudest)
+  : m_animationType(Loudest),
+    m_toneHistoryFrame(0)
 {
 }
 
@@ -48,6 +49,10 @@ ToneStudio::createToneAnimation(unsigned int nLEDs, std::map<std::string, double
     case SmoothSum:
     {
       return createToneAnimationSmoothSum(nLEDs, tones);
+    }
+    case History:
+    {
+      return createToneAnimationHistory(nLEDs, tones);
     }
     case None:
     {
@@ -181,6 +186,85 @@ ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::strin
   }
 
   animation.addFrame(frame);
+
+  return animation;
+}
+
+
+Animation
+ToneStudio::createToneAnimationHistory(unsigned int nLEDs, std::map<std::string, double> tones)
+{
+  Animation animation;
+  Frame frame(nLEDs);
+  Color color;
+
+  int speed = 2;
+
+  double currentMax = 0.0;
+  std::string maxTone;
+
+  for (auto it = tones.cbegin(); it != tones.cend(); ++it )
+  {
+    if (it->second > currentMax)
+    {
+      maxTone = it->first;
+      currentMax = it->second;
+    }
+  }
+
+  int brightness = std::min(static_cast<int>(pow(currentMax/25.0, 4)), 127);
+
+  if (maxTone == "C")
+  {
+    color = Color( brightness, brightness/2, 0);
+  }
+  else if (maxTone == "D")
+  {
+    color = Color(brightness, 0, 0);
+  }
+  else if (maxTone == "E")
+  {
+    color = Color(0, brightness, 0);
+  }
+  else if (maxTone == "F")
+  {
+    color = Color(0, brightness, brightness);
+  }
+  else if (maxTone == "G")
+  {
+    color = Color(0, 0, brightness);
+  }
+  else if (maxTone == "A")
+  {
+    color = Color(brightness, 0, brightness);
+  }
+  else if (maxTone == "B")
+  {
+    color = Color(127, 50, 50);
+  }
+
+  std::vector<LED> leds = m_toneHistoryFrame.getLEDs();
+  for (std::size_t i = 0 ; i < leds.size()/2; ++i)
+  {
+    if (i < leds.size()/2-1)
+    {
+      leds[i].setLEDnr(leds[i].getLEDnr() + speed);
+      leds[leds.size()-i].setLEDnr(leds[leds.size()-i].getLEDnr() - speed);
+      frame.addLED(leds[i]);
+      frame.addLED(leds[leds.size()-i]);
+    }
+  }
+
+  for (int i = 1; i <= speed; ++i)
+  {
+    LED led(i, color);
+    frame.addLED(led);
+    LED led2(leds.size()-i, color);
+    frame.addLED(led2);
+  }
+
+  animation.addFrame(frame);
+  m_toneHistoryFrame = frame;
 
   return animation;
 }

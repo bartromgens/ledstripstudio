@@ -12,7 +12,7 @@
 
 #include <QPushButton>
 
-const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 16));
+const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -67,6 +67,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
+
+  slotToggleAudioInput(true);
 //  startAnimationThread();
 }
 
@@ -227,6 +229,7 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
 {
   m_stepToneAct->setVisible(isChecked);
   m_smoothToneAct->setVisible(isChecked);
+  m_historyToneAct->setVisible(isChecked);
 
   if (isChecked)
   {
@@ -290,6 +293,8 @@ MainWindow::slotToggleStepTone(bool isChecked)
   if (isChecked)
   {
     m_smoothToneAct->setChecked(false);
+    m_historyToneAct->setChecked(false);
+
     m_toneStudio->setAnimationType(ToneStudio::Loudest);
   }
   else
@@ -305,7 +310,26 @@ MainWindow::slotToggleSmoothTone(bool isChecked)
   if (isChecked)
   {
     m_stepToneAct->setChecked(false);
+//    m_historyToneAct->setChecked(false);
+
     m_toneStudio->setAnimationType(ToneStudio::SmoothSum);
+  }
+  else
+  {
+    m_toneStudio->setAnimationType(ToneStudio::None);
+  }
+}
+
+
+void
+MainWindow::slotToggleToneHistory(bool isChecked)
+{
+  if (isChecked)
+  {
+    m_stepToneAct->setChecked(false);
+    m_smoothToneAct->setChecked(false);
+
+    m_toneStudio->setAnimationType(ToneStudio::History);
   }
   else
   {
@@ -372,7 +396,7 @@ MainWindow::slotToggleRainbowAnimation(bool isChecked)
 {
   if (isChecked)
   {
-    double speed = 30;
+    double speed = 10;
     m_player->addAnimation(m_studio->createMovingRainbow(speed));
     startAnimationThread();
   }
@@ -445,6 +469,13 @@ MainWindow::createActions()
   m_smoothToneAct->setChecked(true);
   m_smoothToneAct->setVisible(false);
 
+  m_historyToneAct = new QAction(this);
+  m_historyToneAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
+  m_historyToneAct->setStatusTip(tr("Set history tone mode."));
+  m_historyToneAct->setCheckable(true);
+  connect(m_historyToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneHistory(bool)));
+  m_historyToneAct->setVisible(false);
+
   m_dotsAnimationAct = new QAction(this);
   m_dotsAnimationAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
   m_dotsAnimationAct->setStatusTip(tr("Toggles dots animation."));
@@ -489,6 +520,7 @@ MainWindow::createToolbars()
   m_detailsToolBar->addAction(m_openSpectrumSettingsAct);
   m_detailsToolBar->addAction(m_stepToneAct);
   m_detailsToolBar->addAction(m_smoothToneAct);
+  m_detailsToolBar->addAction(m_historyToneAct);
   m_detailsToolBar->addAction(m_dotsAnimationAct);
   m_detailsToolBar->addAction(m_rainbowAnimationAct);
   m_detailsToolBar->addAction(m_openColorPickerAct);

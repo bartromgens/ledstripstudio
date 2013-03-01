@@ -10,7 +10,8 @@ public:
   {
     None,
     Loudest,
-    SmoothSum
+    SmoothSum,
+    History
   };
 public:
   ToneStudio();
@@ -25,9 +26,12 @@ public:
 private:
   Animation createToneAnimationLoudest(unsigned int nLEDs, std::map<std::string, double> tones);
   Animation createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::string, double> tones);
+  Animation createToneAnimationHistory(unsigned int nLEDs, std::map<std::string, double> tones);
 
 private:
   ToneAnimationType m_animationType;
+
+  Frame m_toneHistoryFrame;
 };
 
 #endif // TONESTUDIO_H

@@ -68,6 +68,7 @@ private slots:
 
   void slotToggleStepTone(bool isChecked);
   void slotToggleSmoothTone(bool isChecked);
+  void slotToggleToneHistory(bool isChecked);
 
   void slotOpenColorPicker();
   void slotColorSelected(QColor color);
@@ -128,6 +129,7 @@ private:
   QAction* m_openSpectrumSettingsAct;
   QAction* m_stepToneAct;
   QAction* m_smoothToneAct;
+  QAction* m_historyToneAct;
   QAction* m_dotsAnimationAct;
   QAction* m_rainbowAnimationAct;
   QAction* m_openColorPickerAct;
