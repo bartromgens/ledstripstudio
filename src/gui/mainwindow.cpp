@@ -88,6 +88,14 @@ MainWindow::createTimers()
   m_timerEmulator->setInterval(30);
   connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
+
+//  m_timerEmulator = new QTimer(this);
+//  unsigned int nowMsSinceEpoch = QDateTime::toTime_t();
+//  QDateTime::currentMSecsSinceEpoch();
+
+//  m_timerEmulator->setInterval(30);
+//  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
+//  m_timerEmulator->start();
 }
 
 
@@ -344,7 +352,7 @@ MainWindow::slotToggleStepTone(bool isChecked)
     m_smoothToneAct->setChecked(false);
     m_historyToneAct->setChecked(false);
 
-    m_toneStudio->setAnimationType(ToneStudio::Loudest);
+    m_toneStudio->setAnimationType(ToneStudio::Corner);
   }
   else
   {

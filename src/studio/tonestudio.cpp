@@ -5,7 +5,8 @@
 
 ToneStudio::ToneStudio()
   : m_animationType(Loudest),
-    m_toneHistoryFrame(0)
+    m_toneHistoryFrame(0),
+    m_toneColorMap()
 {
 }
 
@@ -54,6 +55,10 @@ ToneStudio::createToneAnimation(unsigned int nLEDs, std::map<std::string, double
     case History:
     {
       return createToneAnimationHistory(nLEDs, tones, speed);
+    }
+    case Corner:
+    {
+      return createToneAnimationCorners(nLEDs, tones);
     }
     case None:
     {
@@ -199,19 +204,19 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, std::map<std::string,
   Frame frame(nLEDs);
   Color color;
 
-  double currentMax = 0.0;
+  double maxAmplitude = 0.0;
   std::string maxTone;
 
   for (auto it = tones.cbegin(); it != tones.cend(); ++it )
   {
-    if (it->second > currentMax)
+    if (it->second > maxAmplitude)
     {
       maxTone = it->first;
-      currentMax = it->second;
+      maxAmplitude = it->second;
     }
   }
 
-  int brightness = std::min(static_cast<int>(pow(currentMax/25.0, 4)), 127);
+  int brightness = std::min(static_cast<int>(pow(maxAmplitude/25.0, 4)), 127);
 
   if (maxTone == "C")
   {
@@ -266,4 +271,110 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, std::map<std::string,
   m_toneHistoryFrame = frame;
 
   return animation;
+}
+
+
+Animation
+ToneStudio::createToneAnimationCorners(unsigned int nLEDs, std::map<std::string, double> tones)
+{
+  if (m_toneColorMap.empty())
+  {
+    createToneColorMap(tones);
+  }
+
+  Animation animation;
+  Frame frame(nLEDs);
+
+  double maxAmplitude = 0.0;
+  std::string maxTone;
+
+  for (auto it = tones.cbegin(); it != tones.cend(); ++it )
+  {
+    if (it->second > maxAmplitude)
+    {
+      maxTone = it->first;
+      maxAmplitude = it->second;
+    }
+  }
+
+  int toneCounter = 0;
+  for (auto iter = tones.cbegin(); iter != tones.cend(); ++iter)
+  {
+    std::string tone = iter->first;
+    double amplitude = iter->second;
+
+    for (unsigned int i = nLEDs/tones.size() * (toneCounter); i < nLEDs/tones.size() * (toneCounter+1); ++i)
+    {
+      double amplification = amplitude/maxAmplitude;
+      double ampSquare = amplification*amplification;
+      Color color = m_toneColorMap[tone];
+      Color color2(color.r * ampSquare, color.g * ampSquare, color.b * ampSquare);
+
+      LED led(i, color2);
+      frame.addLED(led);
+    }
+    toneCounter++;
+  }
+
+  animation.addFrame(frame);
+
+  return animation;
+}
+
+
+void
+ToneStudio::createRandomToneColorMap(const std::map<std::string, double>& tones)
+{
+  std::map<std::string, Color> toneColorMap;
+  for (auto iter = tones.cbegin(); iter != tones.cend(); ++iter)
+  {
+    std::string tone = iter->first;
+    toneColorMap[tone] = Color::randomColor();
+  }
+
+  m_toneColorMap = toneColorMap;
+}
+
+
+void
+ToneStudio::createToneColorMap(const std::map<std::string, double>& tones)
+{
+  std::map<std::string, Color> toneColorMap;
+  for (auto iter = tones.cbegin(); iter != tones.cend(); ++iter)
+  {
+    Color color;
+    int brightness = 127;
+    std::string tone = iter->first;
+    if (tone == "C")
+    {
+      color = Color(0, brightness, brightness);
+    }
+    else if (tone == "D")
+    {
+      color = Color(brightness, 0, 0);
+    }
+    else if (tone == "E")
+    {
+      color = Color(0, brightness, 0);
+    }
+    else if (tone == "F")
+    {
+      color = Color(0, 0, brightness);
+    }
+    else if (tone == "G")
+    {
+      color = Color(brightness, 34, 4);
+    }
+    else if (tone == "A")
+    {
+      color = Color(50, brightness, 0);
+    }
+    else if (tone == "B")
+    {
+      color = Color(brightness, 75, 0);
+    }
+    toneColorMap[tone] = color;
+  }
+
+  m_toneColorMap = toneColorMap;
 }
