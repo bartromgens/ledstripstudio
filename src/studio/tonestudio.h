@@ -26,7 +26,7 @@ public:
 private:
   static Animation createToneAnimationLoudest(unsigned int nLEDs, std::map<std::string, double> tones);
   static Animation createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::string, double> tones);
-  Animation createToneAnimationHistory(unsigned int nLEDs, std::map<std::string, double> tones);
+  Animation createToneAnimationHistory(unsigned int nLEDs, std::map<std::string, double> tones, unsigned int speed);
 
 private:
   ToneAnimationType m_animationType;

@@ -40,6 +40,7 @@ ToneStudio::writeToneToConsole(const std::map<std::string, double>& tones)
 Animation
 ToneStudio::createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones)
 {
+  unsigned int speed = 1;
   switch (m_animationType)
   {
     case Loudest:
@@ -52,7 +53,7 @@ ToneStudio::createToneAnimation(unsigned int nLEDs, std::map<std::string, double
     }
     case History:
     {
-      return createToneAnimationHistory(nLEDs, tones);
+      return createToneAnimationHistory(nLEDs, tones, speed);
     }
     case None:
     {
@@ -192,13 +193,11 @@ ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::strin
 
 
 Animation
-ToneStudio::createToneAnimationHistory(unsigned int nLEDs, std::map<std::string, double> tones)
+ToneStudio::createToneAnimationHistory(unsigned int nLEDs, std::map<std::string, double> tones, unsigned int speed)
 {
   Animation animation;
   Frame frame(nLEDs);
   Color color;
-
-  int speed = 2;
 
   double currentMax = 0.0;
   std::string maxTone;
@@ -255,7 +254,7 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, std::map<std::string,
     }
   }
 
-  for (int i = 1; i <= speed; ++i)
+  for (unsigned int i = 1; i <= speed; ++i)
   {
     LED led(i, color);
     frame.addLED(led);
