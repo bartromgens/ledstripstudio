@@ -68,8 +68,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
 
-//  slotToggleAudioInput(true);
   m_audioToggleButton->setChecked(true);
+  m_FFT16sizeAct->setChecked(true);
 //  startAnimationThread();
 }
 
@@ -474,20 +474,20 @@ MainWindow::createActions()
   connect(m_animationToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleAnimation(bool)));
 
   m_FFT14sizeAct = new QAction(this);
-  m_FFT14sizeAct->setIcon(QIcon("./icons/animation-mode.png"));
-  m_FFT14sizeAct->setStatusTip(tr("Change FFT sample size."));
+  m_FFT14sizeAct->setIcon(QIcon("./icons/fft14.png"));
+  m_FFT14sizeAct->setStatusTip(tr("Set FFT sample size to 16k."));
   m_FFT14sizeAct->setCheckable(true);
   connect(m_FFT14sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT14sizeAct(bool)));
 
   m_FFT15sizeAct = new QAction(this);
-  m_FFT15sizeAct->setIcon(QIcon("./icons/animation-mode.png"));
-  m_FFT15sizeAct->setStatusTip(tr("Change FFT sample size."));
+  m_FFT15sizeAct->setIcon(QIcon("./icons/fft15.png"));
+  m_FFT15sizeAct->setStatusTip(tr("Set FFT sample size to 32k."));
   m_FFT15sizeAct->setCheckable(true);
   connect(m_FFT15sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT15sizeAct(bool)));
 
   m_FFT16sizeAct = new QAction(this);
-  m_FFT16sizeAct->setIcon(QIcon("./icons/animation-mode.png"));
-  m_FFT16sizeAct->setStatusTip(tr("Change FFT sample size."));
+  m_FFT16sizeAct->setIcon(QIcon("./icons/fft16.png"));
+  m_FFT16sizeAct->setStatusTip(tr("Set FFT sample size to 64k."));
   m_FFT16sizeAct->setCheckable(true);
   connect(m_FFT16sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT16sizeAct(bool)));
 
@@ -556,12 +556,12 @@ MainWindow::createToolbars()
   addToolBar(Qt::TopToolBarArea, m_mainToolBar);
   m_mainToolBar->setIconSize(QSize(32, 32));
 
-  m_mainToolBar->addAction(m_audioToggleButton);
-  m_mainToolBar->addSeparator();
   m_mainToolBar->addAction(m_spectrumToggleButton);
   m_mainToolBar->addAction(m_toneToggleButton);
   m_mainToolBar->addAction(m_animationToggleAct);
   m_mainToolBar->addAction(m_colorToggleAct);
+  m_mainToolBar->addSeparator();
+  m_mainToolBar->addAction(m_audioToggleButton);
   m_mainToolBar->addSeparator();
   m_mainToolBar->addAction(m_FFT14sizeAct);
   m_mainToolBar->addAction(m_FFT15sizeAct);
