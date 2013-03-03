@@ -52,24 +52,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_settings->loadSettings();
   m_spectrumSettingsWidget->updateAudioControlGUI();
-
   m_audioInput->setControlSettings(m_settings);
 
-  m_timer = new QTimer(this);
-  m_timer->setInterval(200);
-  connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
-  m_timer->start();
-
-  m_timerEmulator = new QTimer(this);
-  m_timerEmulator->setInterval(30);
-  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
-  m_timerEmulator->start();
+  createTimers();
 
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
 
-  m_audioToggleButton->setChecked(true);
-  m_FFT16sizeAct->setChecked(true);
+  setActionsDefaults();
+
 //  startAnimationThread();
 }
 
@@ -82,6 +73,21 @@ MainWindow::~MainWindow()
   delete ui;
 
   std::cout << "MainWindow::~MainWindow()" << std::endl;
+}
+
+
+void
+MainWindow::createTimers()
+{
+  m_timer = new QTimer(this);
+  m_timer->setInterval(200);
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
+  m_timer->start();
+
+  m_timerEmulator = new QTimer(this);
+  m_timerEmulator->setInterval(30);
+  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
+  m_timerEmulator->start();
 }
 
 
@@ -353,7 +359,7 @@ MainWindow::slotToggleSmoothTone(bool isChecked)
   if (isChecked)
   {
     m_stepToneAct->setChecked(false);
-//    m_historyToneAct->setChecked(false);
+    m_historyToneAct->setChecked(false);
 
     m_toneStudio->setAnimationType(ToneStudio::SmoothSum);
   }
@@ -527,7 +533,6 @@ MainWindow::createActions()
   m_smoothToneAct->setStatusTip(tr("Set smooth tone mode."));
   m_smoothToneAct->setCheckable(true);
   connect(m_smoothToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSmoothTone(bool)));
-  m_smoothToneAct->setChecked(true);
   m_smoothToneAct->setVisible(false);
 
   m_historyToneAct = new QAction(this);
@@ -552,6 +557,15 @@ MainWindow::createActions()
   connect(m_rainbowAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleRainbowAnimation(bool)));
   m_rainbowAnimationAct->setChecked(false);
   m_rainbowAnimationAct->setVisible(false);
+}
+
+
+void
+MainWindow::setActionsDefaults()
+{
+  m_audioToggleButton->setChecked(true);
+  m_FFT16sizeAct->setChecked(true);
+  m_historyToneAct->setChecked(true);
 }
 
 

@@ -86,8 +86,10 @@ private slots:
 private:
   void createMenus();
   void createActions();
+  void setActionsDefaults();
   void createToolbars();
   void connectAllSlots() const;
+  void createTimers();
 
   void startAudioInputThread();
   void startAnimationThread() const;
