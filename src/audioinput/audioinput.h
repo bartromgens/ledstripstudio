@@ -45,6 +45,8 @@ public:
   void unregisterObserver(std::shared_ptr<AudioInputObserver> observer);
   void notifyObservers(const std::deque<float>& audioData);
 
+  void setNSamples(unsigned int nSamples);
+
 private:
 
   void initializeUserData();

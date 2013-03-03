@@ -45,8 +45,8 @@ public:
   void computeSpectrumThread(const std::deque<float> &realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType);
   std::map<double, double> computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType) ;
 
+  void setNSamples(unsigned int nSamples);
   unsigned int getNSamples() const;
-
 
 private:
   std::map<double, double> binSpectrum(const std::vector<double>& data, int nBins, int sampleRate, double upperFrequency) const;

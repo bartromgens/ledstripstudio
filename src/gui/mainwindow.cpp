@@ -68,8 +68,17 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
 
-  slotToggleAudioInput(true);
+//  slotToggleAudioInput(true);
+  m_audioToggleButton->setChecked(true);
 //  startAnimationThread();
+}
+
+
+void
+MainWindow::setNSamples(unsigned int nSamples)
+{
+  m_audioInput->setNSamples(nSamples);
+  m_spectrumAnalyser->setNSamples(nSamples);
 }
 
 
@@ -436,6 +445,12 @@ MainWindow::createActions()
   m_animationToggleAct->setCheckable(true);
   connect(m_animationToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleAnimation(bool)));
 
+  m_FFTsizeAct = new QAction(this);
+  m_FFTsizeAct->setIcon(QIcon("./icons/animation-mode.png"));
+  m_FFTsizeAct->setStatusTip(tr("Change FFT sample size."));
+  m_FFTsizeAct->setCheckable(true);
+  connect(m_FFTsizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFTsizeAct(bool)));
+
   m_colorToggleAct = new QAction(this);
   m_colorToggleAct->setIcon(QIcon("./icons/color_wheel2.png"));
   m_colorToggleAct->setStatusTip(tr("Start single color mode."));
@@ -495,6 +510,22 @@ MainWindow::createActions()
 
 
 void
+MainWindow::slotFFTsizeAct(bool isChecked)
+{
+  if (isChecked)
+  {
+    int samples = static_cast<int>(std::pow(2.0, 14));
+    setNSamples(samples);
+  }
+  else
+  {
+    int samples = static_cast<int>(std::pow(2.0, 16));
+    setNSamples(samples);
+  }
+}
+
+
+void
 MainWindow::createToolbars()
 {
   m_mainToolBar = new QToolBar(tr("Main toolbar"), this);
@@ -507,6 +538,7 @@ MainWindow::createToolbars()
   m_mainToolBar->addAction(m_toneToggleButton);
   m_mainToolBar->addAction(m_animationToggleAct);
   m_mainToolBar->addAction(m_colorToggleAct);
+  m_mainToolBar->addAction(m_FFTsizeAct);
   m_mainToolBar->addSeparator();
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);

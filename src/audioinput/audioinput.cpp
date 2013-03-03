@@ -44,6 +44,15 @@ AudioInput::initializeUserData()
 
 
 void
+AudioInput::setNSamples(unsigned int nSamples)
+{
+  boost::lock_guard<boost::mutex> lock(m_data.data_mutex);
+  m_data.nSamples = nSamples;
+  m_nSamples = nSamples;
+}
+
+
+void
 AudioInput::openStream()
 {
   PaError err = paNoError;
@@ -96,7 +105,7 @@ AudioInput::closeStream()
   terminatePortAudio(err);
   if( err != paNoError )
   {
-    std::cout << "AudioInput::closeStream() - ERROR: terminatePortAudio" << std::endl;
+    std::cout << "AudioInput::closeStream() - terminatePortAudio ERROR: " << static_cast<int>(err) << std::endl;
     return false;
   }
 

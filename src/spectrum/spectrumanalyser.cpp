@@ -117,27 +117,30 @@ SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampl
   }
 
 //  timer.restart();
-
-  for(unsigned int i = 0; (i < m_nSamples) && (i < realIn.size()); i++)
+  std::map<double, double> bins;
   {
-    m_f[i] = realInWindowed[i];
+    boost::lock_guard<boost::mutex> lock(m_mutex);
+    for(unsigned int i = 0; (i < m_nSamples) && (i < realIn.size()); i++)
+    {
+      m_f[i] = realInWindowed[i];
+    }
+
+    //  std::cout << "SpectrumAnalyser::computeSpectrum() - hannWindowFunction time: " << timer.elapsed() << std::endl;
+    //  timer.restart();
+
+    // forward FFT real to complex
+    m_forward->fft(m_f, m_g);
+
+    std::vector<double> magnitude(m_np);
+    for (unsigned int i = 0; i < m_np; i++)
+    {
+      magnitude[i] = sqrt( m_g[i].real()*m_g[i].real() + m_g[i].imag()*m_g[i].imag() );
+    }
+
+    double upperFrequency = 2000.0;
+    // put into bins/buckets (histogram)
+    bins = binSpectrum(magnitude, nBins, sampleRate, upperFrequency);
   }
-
-//  std::cout << "SpectrumAnalyser::computeSpectrum() - hannWindowFunction time: " << timer.elapsed() << std::endl;
-//  timer.restart();
-
-  // forward FFT real to complex
-  m_forward->fft(m_f, m_g);
-
-  std::vector<double> magnitude(m_np);
-  for (unsigned int i = 0; i < m_np; i++)
-  {
-    magnitude[i] = sqrt( m_g[i].real()*m_g[i].real() + m_g[i].imag()*m_g[i].imag() );
-  }
-
-  double upperFrequency = 2000.0;
-  // put into bins/buckets (histogram)
-  std::map<double, double> bins = binSpectrum(magnitude, nBins, sampleRate, upperFrequency);
 
 //  std::cout << "SpectrumAnalyser::computeSpectrum() - end. timer: " << timer.elapsed() << std::endl;
 
@@ -210,10 +213,27 @@ SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sa
 }
 
 
+void
+SpectrumAnalyser::setNSamples(unsigned int nSamples)
+{
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
+  m_nSamples = nSamples;
+  m_np = nSamples/2 + 1;
+
+  delete m_f;
+  m_f = FFTWdouble(nSamples);
+
+  delete m_g;
+  m_g = FFTWComplex(m_np);
+
+  delete m_forward;
+  m_forward = new fftwpp::rcfft1d(nSamples, m_f, m_g);
+}
+
+
 unsigned int
 SpectrumAnalyser::getNSamples() const
 {
   return m_nSamples;
 }
-
-

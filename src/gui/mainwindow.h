@@ -48,6 +48,8 @@ public:
 
   void updateLEDs(const std::map<double, double> &spectrum);
 
+  void setNSamples(unsigned int nSamples);
+
 public slots:
   void slotPlayerPlayed();
 
@@ -63,6 +65,8 @@ private slots:
   void slotToggleToneAnalysis(bool isChecked);
   void slotToggleAnimation(bool isChecked);
   void slotToggleSingleColor(bool isChecked);
+
+  void slotFFTsizeAct(bool isChecked);
 
   void slotShowSpetrumSettings();
 
@@ -124,6 +128,7 @@ private:
   QAction* m_spectrumToggleButton;
   QAction* m_toneToggleButton;
   QAction* m_animationToggleAct;
+  QAction* m_FFTsizeAct;
   QAction* m_colorToggleAct;
 
   QAction* m_openSpectrumSettingsAct;
