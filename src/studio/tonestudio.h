@@ -21,11 +21,11 @@ public:
 
   Animation createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones);
 
-  void writeToneToConsole(const std::map<std::string, double>& tones);
+  static void writeToneToConsole(const std::map<std::string, double>& tones);
 
 private:
-  Animation createToneAnimationLoudest(unsigned int nLEDs, std::map<std::string, double> tones);
-  Animation createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::string, double> tones);
+  static Animation createToneAnimationLoudest(unsigned int nLEDs, std::map<std::string, double> tones);
+  static Animation createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::string, double> tones);
   Animation createToneAnimationHistory(unsigned int nLEDs, std::map<std::string, double> tones);
 
 private:
