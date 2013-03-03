@@ -87,14 +87,6 @@ SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 }
 
 
-void
-SpectrumAnalyser::computeSpectrumThread(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType)
-{
-  boost::thread t1(&SpectrumAnalyser::computeSpectrum, this, realIn, nBins, sampleRate, windowType);
-  t1.detach();
-}
-
-
 std::map<double, double>
 SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType)
 {
@@ -119,7 +111,7 @@ SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampl
 //  timer.restart();
   std::map<double, double> bins;
   {
-//    boost::lock_guard<boost::mutex> lock(m_mutex);
+    boost::lock_guard<boost::mutex> lock(m_mutex);
     for(unsigned int i = 0; (i < m_nSamples) && (i < realIn.size()); i++)
     {
       m_f[i] = realInWindowed[i];

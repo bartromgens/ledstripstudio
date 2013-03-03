@@ -42,7 +42,6 @@ public:
   void unregisterObserver(SpectrumObserver* observer);
   void notifyObservers(const std::map<double, double>& spectrum);
 
-  void computeSpectrumThread(const std::deque<float> &realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType);
   std::map<double, double> computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType) ;
 
   void setNSamples(unsigned int nSamples);
