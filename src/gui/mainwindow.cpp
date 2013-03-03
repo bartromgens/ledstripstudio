@@ -74,14 +74,6 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 
-void
-MainWindow::setNSamples(unsigned int nSamples)
-{
-  m_audioInput->setNSamples(nSamples);
-  m_spectrumAnalyser->setNSamples(nSamples);
-}
-
-
 MainWindow::~MainWindow()
 {
   stopToneAnalyser();
@@ -514,7 +506,7 @@ MainWindow::slotFFTsizeAct(bool isChecked)
 {
   if (isChecked)
   {
-    int samples = static_cast<int>(std::pow(2.0, 14));
+    int samples = static_cast<int>(std::pow(2.0, 15));
     setNSamples(samples);
   }
   else
@@ -538,6 +530,7 @@ MainWindow::createToolbars()
   m_mainToolBar->addAction(m_toneToggleButton);
   m_mainToolBar->addAction(m_animationToggleAct);
   m_mainToolBar->addAction(m_colorToggleAct);
+  m_mainToolBar->addSeparator();
   m_mainToolBar->addAction(m_FFTsizeAct);
   m_mainToolBar->addSeparator();
 
@@ -686,6 +679,14 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
 //  }
 
   m_player->playFrame();
+}
+
+
+void
+MainWindow::setNSamples(unsigned int nSamples)
+{
+  m_audioInput->setNSamples(nSamples);
+  m_spectrumAnalyser->setNSamples(nSamples);
 }
 
 
