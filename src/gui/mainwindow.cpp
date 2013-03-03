@@ -205,8 +205,6 @@ MainWindow::slotToggleAudioInput(bool isChecked)
 void
 MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 {
-  m_openSpectrumSettingsAct->setVisible(isChecked);
-
   if (isChecked)
   {
     m_toneToggleButton->setChecked(false);
@@ -222,16 +220,17 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
       stopSpectrumAnalyser();
     }
   }
+
+  m_openSpectrumSettingsAct->setVisible(isChecked);
+  m_FFT14sizeAct->setVisible(isChecked);
+  m_FFT15sizeAct->setVisible(isChecked);
+  m_FFT16sizeAct->setVisible(isChecked);
 }
 
 
 void
 MainWindow::slotToggleToneAnalysis(bool isChecked)
 {
-  m_stepToneAct->setVisible(isChecked);
-  m_smoothToneAct->setVisible(isChecked);
-  m_historyToneAct->setVisible(isChecked);
-
   if (isChecked)
   {
     m_spectrumToggleButton->setChecked(false);
@@ -245,6 +244,13 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
     stopSpectrumAnalyser();
     stopToneAnalyser();
   }
+
+  m_stepToneAct->setVisible(isChecked);
+  m_smoothToneAct->setVisible(isChecked);
+  m_historyToneAct->setVisible(isChecked);
+  m_FFT14sizeAct->setVisible(isChecked);
+  m_FFT15sizeAct->setVisible(isChecked);
+  m_FFT16sizeAct->setVisible(isChecked);
 }
 
 
@@ -563,10 +569,6 @@ MainWindow::createToolbars()
   m_mainToolBar->addSeparator();
   m_mainToolBar->addAction(m_audioToggleButton);
   m_mainToolBar->addSeparator();
-  m_mainToolBar->addAction(m_FFT14sizeAct);
-  m_mainToolBar->addAction(m_FFT15sizeAct);
-  m_mainToolBar->addAction(m_FFT16sizeAct);
-  m_mainToolBar->addSeparator();
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
   addToolBar(Qt::LeftToolBarArea, m_detailsToolBar);
@@ -577,12 +579,16 @@ MainWindow::createToolbars()
 
   m_detailsToolBar->addSeparator();
   m_detailsToolBar->addAction(m_openSpectrumSettingsAct);
-  m_detailsToolBar->addAction(m_stepToneAct);
-  m_detailsToolBar->addAction(m_smoothToneAct);
   m_detailsToolBar->addAction(m_historyToneAct);
+  m_detailsToolBar->addAction(m_smoothToneAct);
+  m_detailsToolBar->addAction(m_stepToneAct);
   m_detailsToolBar->addAction(m_dotsAnimationAct);
   m_detailsToolBar->addAction(m_rainbowAnimationAct);
   m_detailsToolBar->addAction(m_openColorPickerAct);
+  m_detailsToolBar->addSeparator();
+  m_detailsToolBar->addAction(m_FFT14sizeAct);
+  m_detailsToolBar->addAction(m_FFT15sizeAct);
+  m_detailsToolBar->addAction(m_FFT16sizeAct);
 }
 
 
