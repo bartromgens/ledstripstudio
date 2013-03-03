@@ -49,6 +49,7 @@ AudioInput::setNSamples(unsigned int nSamples)
   boost::lock_guard<boost::mutex> lock(m_data.data_mutex);
   m_data.nSamples = nSamples;
   m_nSamples = nSamples;
+  m_data.recordedSamplesVec.resize(nSamples);
 }
 
 
@@ -124,14 +125,14 @@ AudioInput::startStream()
     terminatePortAudio(err);
   }
 
-//  QTime timer;
-//  timer.start();
+  QTime timer;
+  timer.start();
 
   bool run = true;
   while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
          && run)
   {
-    Pa_Sleep(25);
+    Pa_Sleep(20); // put the caller to sleep
 
     run = m_controlSettings->isActive();
 
@@ -143,9 +144,9 @@ AudioInput::startStream()
         std::deque<float> samples = m_data.recordedSamplesVec;
         m_data.data_mutex.unlock();
 
-//        timer.restart();
         notifyObservers(samples);
 //        std::cout << "AudioInput::startStream() - notifyObservers time: " << timer.elapsed() << std::endl;
+        timer.restart();
       }
     }
   }

@@ -113,6 +113,7 @@ LEDController::send(const Frame &frame)
   {
     m_fpsHistory.pop_front();
   }
+//  std::cout << "LEDController::send() - time: " << (m_timer.nsecsElapsed()/1000000) << std::endl;
   m_timer.restart();
 
   clearAll();

@@ -277,6 +277,42 @@ MainWindow::slotToggleSingleColor(bool isChecked)
   }
 }
 
+void
+MainWindow::slotFFT14sizeAct(bool isChecked)
+{
+  if (isChecked)
+  {
+    m_FFT15sizeAct->setChecked(false);
+    m_FFT16sizeAct->setChecked(false);
+    int samples = static_cast<int>(std::pow(2.0, 14));
+    setNSamples(samples);
+  }
+}
+
+void
+MainWindow::slotFFT15sizeAct(bool isChecked)
+{
+  if (isChecked)
+  {
+    m_FFT14sizeAct->setChecked(false);
+    m_FFT16sizeAct->setChecked(false);
+    int samples = static_cast<int>(std::pow(2.0, 15));
+    setNSamples(samples);
+  }
+}
+
+void
+MainWindow::slotFFT16sizeAct(bool isChecked)
+{
+  if (isChecked)
+  {
+    m_FFT14sizeAct->setChecked(false);
+    m_FFT15sizeAct->setChecked(false);
+    int samples = static_cast<int>(std::pow(2.0, 16));
+    setNSamples(samples);
+  }
+}
+
 
 void
 MainWindow::slotShowSpetrumSettings()
@@ -437,11 +473,23 @@ MainWindow::createActions()
   m_animationToggleAct->setCheckable(true);
   connect(m_animationToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleAnimation(bool)));
 
-  m_FFTsizeAct = new QAction(this);
-  m_FFTsizeAct->setIcon(QIcon("./icons/animation-mode.png"));
-  m_FFTsizeAct->setStatusTip(tr("Change FFT sample size."));
-  m_FFTsizeAct->setCheckable(true);
-  connect(m_FFTsizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFTsizeAct(bool)));
+  m_FFT14sizeAct = new QAction(this);
+  m_FFT14sizeAct->setIcon(QIcon("./icons/animation-mode.png"));
+  m_FFT14sizeAct->setStatusTip(tr("Change FFT sample size."));
+  m_FFT14sizeAct->setCheckable(true);
+  connect(m_FFT14sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT14sizeAct(bool)));
+
+  m_FFT15sizeAct = new QAction(this);
+  m_FFT15sizeAct->setIcon(QIcon("./icons/animation-mode.png"));
+  m_FFT15sizeAct->setStatusTip(tr("Change FFT sample size."));
+  m_FFT15sizeAct->setCheckable(true);
+  connect(m_FFT15sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT15sizeAct(bool)));
+
+  m_FFT16sizeAct = new QAction(this);
+  m_FFT16sizeAct->setIcon(QIcon("./icons/animation-mode.png"));
+  m_FFT16sizeAct->setStatusTip(tr("Change FFT sample size."));
+  m_FFT16sizeAct->setCheckable(true);
+  connect(m_FFT16sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT16sizeAct(bool)));
 
   m_colorToggleAct = new QAction(this);
   m_colorToggleAct->setIcon(QIcon("./icons/color_wheel2.png"));
@@ -502,22 +550,6 @@ MainWindow::createActions()
 
 
 void
-MainWindow::slotFFTsizeAct(bool isChecked)
-{
-  if (isChecked)
-  {
-    int samples = static_cast<int>(std::pow(2.0, 15));
-    setNSamples(samples);
-  }
-  else
-  {
-    int samples = static_cast<int>(std::pow(2.0, 16));
-    setNSamples(samples);
-  }
-}
-
-
-void
 MainWindow::createToolbars()
 {
   m_mainToolBar = new QToolBar(tr("Main toolbar"), this);
@@ -531,7 +563,9 @@ MainWindow::createToolbars()
   m_mainToolBar->addAction(m_animationToggleAct);
   m_mainToolBar->addAction(m_colorToggleAct);
   m_mainToolBar->addSeparator();
-  m_mainToolBar->addAction(m_FFTsizeAct);
+  m_mainToolBar->addAction(m_FFT14sizeAct);
+  m_mainToolBar->addAction(m_FFT15sizeAct);
+  m_mainToolBar->addAction(m_FFT16sizeAct);
   m_mainToolBar->addSeparator();
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);

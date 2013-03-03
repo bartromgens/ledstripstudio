@@ -66,7 +66,9 @@ private slots:
   void slotToggleAnimation(bool isChecked);
   void slotToggleSingleColor(bool isChecked);
 
-  void slotFFTsizeAct(bool isChecked);
+  void slotFFT14sizeAct(bool isChecked);
+  void slotFFT15sizeAct(bool isChecked);
+  void slotFFT16sizeAct(bool isChecked);
 
   void slotShowSpetrumSettings();
 
@@ -128,8 +130,11 @@ private:
   QAction* m_spectrumToggleButton;
   QAction* m_toneToggleButton;
   QAction* m_animationToggleAct;
-  QAction* m_FFTsizeAct;
   QAction* m_colorToggleAct;
+
+  QAction* m_FFT14sizeAct;
+  QAction* m_FFT15sizeAct;
+  QAction* m_FFT16sizeAct;
 
   QAction* m_openSpectrumSettingsAct;
   QAction* m_stepToneAct;
