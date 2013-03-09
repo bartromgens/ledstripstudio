@@ -284,6 +284,7 @@ Animation
 ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, std::map<std::string, double> tones)
 {
   const double minThreshold = 30;
+  const double amplificationExponent = 2.0;
 
   if (m_toneColorMap.empty())
   {
@@ -305,7 +306,7 @@ ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, std::map<std::stri
   }
 
   // if low amplitude, make strip black, prevent division by zero and flicker
-  if (maxAmplitude < 10.0)
+  if (maxAmplitude < 20.0)
   {
     Studio studio(nLEDs);
     return studio.createSingleColorSingleFrameAnimation(Color());
@@ -317,7 +318,7 @@ ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, std::map<std::stri
   for (auto it = tones.cbegin(); it != tones.cend(); ++it )
   {
     double amplification = it->second/maxAmplitude;
-    toneAmplification[it->first] = std::pow(amplification, 2.0);
+    toneAmplification[it->first] = std::pow(amplification, amplificationExponent);
 
     if (127 * toneAmplification[it->first] < minThreshold)
     {
