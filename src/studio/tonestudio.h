@@ -12,8 +12,10 @@ public:
     Loudest,
     SmoothSum,
     History,
+    Individual,
     Corner
   };
+
 public:
   ToneStudio();
   ~ToneStudio();
@@ -31,6 +33,7 @@ private:
   static Animation createToneAnimationLoudest(unsigned int nLEDs, std::map<std::string, double> tones);
   static Animation createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::string, double> tones);
   Animation createToneAnimationHistory(unsigned int nLEDs, std::map<std::string, double> tones, unsigned int speed);
+  Animation createToneAnimationIndividual(unsigned int nLEDs, std::map<std::string, double> tones);
   Animation createToneAnimationCorners(unsigned int nLEDs, std::map<std::string, double> tones);
 
 private:

@@ -1,5 +1,7 @@
 #include "tonestudio.h"
 
+#include "studio.h"
+
 #include <cmath>
 #include <string>
 
@@ -55,6 +57,10 @@ ToneStudio::createToneAnimation(unsigned int nLEDs, std::map<std::string, double
     case History:
     {
       return createToneAnimationHistory(nLEDs, tones, speed);
+    }
+    case Individual:
+    {
+      return createToneAnimationIndividual(nLEDs, tones);
     }
     case Corner:
     {
@@ -275,6 +281,102 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, std::map<std::string,
 
 
 Animation
+ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, std::map<std::string, double> tones)
+{
+  if (m_toneColorMap.empty())
+  {
+    createToneColorMap(tones);
+  }
+
+  Animation animation;
+  Frame frame(nLEDs);
+
+  double maxAmplitude = 0.0;
+
+  // calculate max amplitude
+  for (auto it = tones.cbegin(); it != tones.cend(); ++it )
+  {
+    if (it->second > maxAmplitude)
+    {
+      maxAmplitude = it->second;
+    }
+  }
+
+  // if low amplitude, make strip black, prevent division by zero and flicker
+  if (maxAmplitude < 1.0)
+  {
+    Studio studio(nLEDs);
+    return studio.createSingleColorSingleFrameAnimation(Color());
+  }
+
+  // calculate tone amplifications, based on max amplitude and tone amplitude
+  double totalAmpSquare = 0.0;
+  std::map<std::string, double> toneAmpSquare;
+  for (auto it = tones.cbegin(); it != tones.cend(); ++it )
+  {
+    double amplification = it->second/maxAmplitude;
+    double ampSquare = amplification*amplification;
+    toneAmpSquare[it->first] = ampSquare;
+
+    if (127 * ampSquare < 40)
+    {
+      continue;
+    }
+
+    totalAmpSquare += ampSquare;
+  }
+
+  // calculate number of leds per tone
+  std::map<std::string, unsigned int> nLEDsPerToneMap;
+  for (auto it = tones.cbegin(); it != tones.cend(); ++it )
+  {
+    std::string tone = it->first;
+    double ampSquare = toneAmpSquare[tone];
+
+    int nLEDsPerTone = std::ceil(nLEDs / totalAmpSquare * ampSquare);
+
+    if (127 * ampSquare < 40)
+    {
+      nLEDsPerTone = 0;
+    }
+
+    nLEDsPerToneMap[it->first] = nLEDsPerTone;
+  }
+
+  // create the animation
+  int ledCounter = 0;
+  for (auto it = tones.cbegin(); it != tones.cend(); ++it)
+  {
+    std::string tone = it->first;
+    double ampSquare = toneAmpSquare[tone];
+
+    Color color2;
+    if (127 * ampSquare < 40)
+    {
+      continue;
+    }
+    else
+    {
+      Color color = m_toneColorMap[tone];
+      color2 = Color(color.r * ampSquare, color.g * ampSquare, color.b * ampSquare);
+    }
+
+    int startLed = ledCounter;
+    for (unsigned int i = startLed; i < startLed + nLEDsPerToneMap[tone]; ++i)
+    {
+      LED led(i, color2);
+      frame.addLED(led);
+      ledCounter++;
+    }
+  }
+
+  animation.addFrame(frame);
+
+  return animation;
+}
+
+
+Animation
 ToneStudio::createToneAnimationCorners(unsigned int nLEDs, std::map<std::string, double> tones)
 {
   if (m_toneColorMap.empty())
@@ -353,6 +455,7 @@ ToneStudio::createToneColorMap(const std::map<std::string, double>& tones)
     Color color;
     int brightness = 127;
     std::string tone = iter->first;
+
     if (tone == "C")
     {
       color = Color(0, brightness, brightness);

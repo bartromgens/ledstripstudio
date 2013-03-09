@@ -352,7 +352,7 @@ MainWindow::slotToggleStepTone(bool isChecked)
     m_smoothToneAct->setChecked(false);
     m_historyToneAct->setChecked(false);
 
-    m_toneStudio->setAnimationType(ToneStudio::Corner);
+    m_toneStudio->setAnimationType(ToneStudio::Individual);
   }
   else
   {
