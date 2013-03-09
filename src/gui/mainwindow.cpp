@@ -8,7 +8,6 @@
 #include "spectrum/toneanalyser.h"
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
-#include "studio/tonestudio.h"
 
 #include <QPushButton>
 
@@ -262,6 +261,9 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
   m_stepToneAct->setVisible(isChecked);
   m_smoothToneAct->setVisible(isChecked);
   m_historyToneAct->setVisible(isChecked);
+  m_individualToneAct->setVisible(isChecked);
+  m_cornerToneAct->setVisible(isChecked);
+
   m_FFT14sizeAct->setVisible(isChecked);
   m_FFT15sizeAct->setVisible(isChecked);
   m_FFT16sizeAct->setVisible(isChecked);
@@ -345,14 +347,38 @@ MainWindow::slotShowSpetrumSettings()
 
 
 void
+MainWindow::updateToneSettingsVisibility(ToneStudio::ToneAnimationType type)
+{
+  if (type != ToneStudio::Loudest)
+  {
+    m_stepToneAct->setChecked(false);
+  }
+  if (type != ToneStudio::SmoothSum)
+  {
+    m_smoothToneAct->setChecked(false);
+  }
+  if (type != ToneStudio::History)
+  {
+    m_historyToneAct->setChecked(false);
+  }
+  if (type != ToneStudio::Individual)
+  {
+    m_individualToneAct->setChecked(false);
+  }
+  if (type != ToneStudio::Corner)
+  {
+    m_cornerToneAct->setChecked(false);
+  }
+}
+
+
+void
 MainWindow::slotToggleStepTone(bool isChecked)
 {
   if (isChecked)
   {
-    m_smoothToneAct->setChecked(false);
-    m_historyToneAct->setChecked(false);
-
-    m_toneStudio->setAnimationType(ToneStudio::Individual);
+    updateToneSettingsVisibility(ToneStudio::Loudest);
+    m_toneStudio->setAnimationType(ToneStudio::Loudest);
   }
   else
   {
@@ -366,9 +392,7 @@ MainWindow::slotToggleSmoothTone(bool isChecked)
 {
   if (isChecked)
   {
-    m_stepToneAct->setChecked(false);
-    m_historyToneAct->setChecked(false);
-
+    updateToneSettingsVisibility(ToneStudio::SmoothSum);
     m_toneStudio->setAnimationType(ToneStudio::SmoothSum);
   }
   else
@@ -383,10 +407,38 @@ MainWindow::slotToggleToneHistory(bool isChecked)
 {
   if (isChecked)
   {
-    m_stepToneAct->setChecked(false);
-    m_smoothToneAct->setChecked(false);
-
+    updateToneSettingsVisibility(ToneStudio::History);
     m_toneStudio->setAnimationType(ToneStudio::History);
+  }
+  else
+  {
+    m_toneStudio->setAnimationType(ToneStudio::None);
+  }
+}
+
+
+void
+MainWindow::slotToggleIndividualTone(bool isChecked)
+{
+  if (isChecked)
+  {
+    updateToneSettingsVisibility(ToneStudio::Individual);
+    m_toneStudio->setAnimationType(ToneStudio::Individual);
+  }
+  else
+  {
+    m_toneStudio->setAnimationType(ToneStudio::None);
+  }
+}
+
+
+void
+MainWindow::slotToggleCornerTone(bool isChecked)
+{
+  if (isChecked)
+  {
+    updateToneSettingsVisibility(ToneStudio::Corner);
+    m_toneStudio->setAnimationType(ToneStudio::Corner);
   }
   else
   {
@@ -544,11 +596,25 @@ MainWindow::createActions()
   m_smoothToneAct->setVisible(false);
 
   m_historyToneAct = new QAction(this);
-  m_historyToneAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
+  m_historyToneAct->setIcon(QIcon("./icons/tone-animation-history.png"));
   m_historyToneAct->setStatusTip(tr("Set history tone mode."));
   m_historyToneAct->setCheckable(true);
   connect(m_historyToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneHistory(bool)));
   m_historyToneAct->setVisible(false);
+
+  m_individualToneAct = new QAction(this);
+  m_individualToneAct->setIcon(QIcon("./icons/tone-animation-individual.png"));
+  m_individualToneAct->setStatusTip(tr("Set individual tone mode."));
+  m_individualToneAct->setCheckable(true);
+  connect(m_individualToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleIndividualTone(bool)));
+  m_individualToneAct->setVisible(false);
+
+  m_cornerToneAct = new QAction(this);
+  m_cornerToneAct->setIcon(QIcon("./icons/tone-animation-corner.png"));
+  m_cornerToneAct->setStatusTip(tr("Set corner tone mode."));
+  m_cornerToneAct->setCheckable(true);
+  connect(m_cornerToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleCornerTone(bool)));
+  m_cornerToneAct->setVisible(false);
 
   m_dotsAnimationAct = new QAction(this);
   m_dotsAnimationAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
@@ -602,11 +668,15 @@ MainWindow::createToolbars()
   m_detailsToolBar->addSeparator();
   m_detailsToolBar->addAction(m_openSpectrumSettingsAct);
   m_detailsToolBar->addAction(m_historyToneAct);
+  m_detailsToolBar->addAction(m_cornerToneAct);
+  m_detailsToolBar->addAction(m_individualToneAct);
   m_detailsToolBar->addAction(m_smoothToneAct);
   m_detailsToolBar->addAction(m_stepToneAct);
+
   m_detailsToolBar->addAction(m_dotsAnimationAct);
   m_detailsToolBar->addAction(m_rainbowAnimationAct);
   m_detailsToolBar->addAction(m_openColorPickerAct);
+
   m_detailsToolBar->addSeparator();
   m_detailsToolBar->addAction(m_FFT14sizeAct);
   m_detailsToolBar->addAction(m_FFT15sizeAct);

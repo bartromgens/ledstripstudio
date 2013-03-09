@@ -21,6 +21,7 @@ public:
   ~ToneStudio();
 
   void setAnimationType(ToneAnimationType type);
+  ToneAnimationType getAnimationType() const;
 
   Animation createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones);
 

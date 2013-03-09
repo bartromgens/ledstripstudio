@@ -25,6 +25,13 @@ ToneStudio::setAnimationType(ToneStudio::ToneAnimationType type)
 }
 
 
+ToneStudio::ToneAnimationType
+ToneStudio::getAnimationType() const
+{
+  return m_animationType;
+}
+
+
 void
 ToneStudio::writeToneToConsole(const std::map<std::string, double>& tones)
 {

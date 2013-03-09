@@ -4,6 +4,7 @@
 #include "basic/animation.h"
 #include "spectrum/spectrumobserver.h"
 #include "spectrum/toneobserver.h"
+#include "studio/tonestudio.h"
 
 #include <QMainWindow>
 #include <QToolBar>
@@ -75,6 +76,8 @@ private slots:
   void slotToggleStepTone(bool isChecked);
   void slotToggleSmoothTone(bool isChecked);
   void slotToggleToneHistory(bool isChecked);
+  void slotToggleIndividualTone(bool isChecked);
+  void slotToggleCornerTone(bool isChecked);
 
   void slotOpenColorPicker();
   void slotColorSelected(QColor color);
@@ -102,6 +105,8 @@ private:
   void stopSpectrumAnalyser() const;
   void startToneAnalyser() const;
   void stopToneAnalyser() const;
+
+  void updateToneSettingsVisibility(ToneStudio::ToneAnimationType type);
 
 private:
   Ui::MainWindow* ui;
@@ -142,6 +147,8 @@ private:
   QAction* m_stepToneAct;
   QAction* m_smoothToneAct;
   QAction* m_historyToneAct;
+  QAction* m_individualToneAct;
+  QAction* m_cornerToneAct;
   QAction* m_dotsAnimationAct;
   QAction* m_rainbowAnimationAct;
   QAction* m_openColorPickerAct;
