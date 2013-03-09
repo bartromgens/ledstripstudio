@@ -2,7 +2,8 @@
 
 
 ControlSettings::ControlSettings()
-  : volumeTotal(0),
+  : QSettings(),
+    volumeTotal(0),
     volumeRed(0),
     volumeGreen(0),
     volumeBlue(0),
