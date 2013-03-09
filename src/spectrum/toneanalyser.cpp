@@ -11,10 +11,10 @@ ToneAnalyser::ToneAnalyser()
   m_baseTones["C"] = 16.35;
   m_baseTones["D"] = 18.35;
   m_baseTones["E"] = 20.6;
-  m_baseTones["F"] = 21.83;
+  m_baseTones["F"] = 22.83; // 21.83 (original value, increased for better distinction)
   m_baseTones["G"] = 24.50;
   m_baseTones["A"] = 27.50;
-  m_baseTones["B"] = 30.87;
+  m_baseTones["B"] = 31.87; // 30.87 (original value, increased for better distinction)
 }
 
 
