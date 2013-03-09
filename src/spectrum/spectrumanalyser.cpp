@@ -16,7 +16,8 @@ SpectrumAnalyser::SpectrumAnalyser(int nSamples)
     m_np(nSamples/2+1),
     m_observers(),
     m_mutex(),
-    m_time()
+    m_time(),
+    m_windowingType(linear)
 {
   fftw::maxthreads = 1; // single thread is faster for the size the input data
 
@@ -48,7 +49,14 @@ SpectrumAnalyser::notifyAudioData(const std::deque<float>& audioData, int sample
 //  computeSpectrumThread(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
 //  computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::hann);
 //  m_time.restart();
-  computeSpectrum(audioData, 4000, sampleRate, SpectrumAnalyser::linear);
+
+  WindowingType windowType;
+  {
+    boost::lock_guard<boost::mutex> lock(m_mutex);
+    windowType = m_windowingType;
+  }
+
+  computeSpectrum(audioData, 4000, sampleRate, windowType);
 //  std::cout << "SpectrumAnalyser::notifyAudioData() - computeSpectrum time: " << m_time.elapsed() << std::endl;
 }
 
@@ -229,5 +237,15 @@ SpectrumAnalyser::setNSamples(unsigned int nSamples)
 unsigned int
 SpectrumAnalyser::getNSamples() const
 {
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+
   return m_nSamples;
+}
+
+
+void
+SpectrumAnalyser::setWindowingType(WindowingType type)
+{
+  boost::lock_guard<boost::mutex> lock(m_mutex);
+  m_windowingType = type;
 }

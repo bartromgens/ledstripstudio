@@ -337,6 +337,28 @@ MainWindow::slotFFT16sizeAct(bool isChecked)
 
 
 void
+MainWindow::slotHannWindowingAct(bool isChecked)
+{
+  if (isChecked)
+  {
+    m_linearWindowingAct->setChecked(false);
+    m_spectrumAnalyser->setWindowingType(SpectrumAnalyser::hann);
+  }
+}
+
+
+void
+MainWindow::slotLinearWindowingAct(bool isChecked)
+{
+  if (isChecked)
+  {
+    m_hannWindowingAct->setChecked(false);
+    m_spectrumAnalyser->setWindowingType(SpectrumAnalyser::linear);
+  }
+}
+
+
+void
 MainWindow::slotShowSpetrumSettings()
 {
   m_spectrumSettingsDialog->setFloating(true);
@@ -563,6 +585,18 @@ MainWindow::createActions()
   m_FFT16sizeAct->setCheckable(true);
   connect(m_FFT16sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT16sizeAct(bool)));
 
+  m_hannWindowingAct = new QAction(this);
+  m_hannWindowingAct->setIcon(QIcon("./icons/hann-windowing.png"));
+  m_hannWindowingAct->setStatusTip(tr("Set Hann windowing function."));
+  m_hannWindowingAct->setCheckable(true);
+  connect(m_hannWindowingAct, SIGNAL(toggled(bool)), this, SLOT(slotHannWindowingAct(bool)));
+
+  m_linearWindowingAct = new QAction(this);
+  m_linearWindowingAct->setIcon(QIcon("./icons/linear-windowing.png"));
+  m_linearWindowingAct->setStatusTip(tr("Set linear windowing function."));
+  m_linearWindowingAct->setCheckable(true);
+  connect(m_linearWindowingAct, SIGNAL(toggled(bool)), this, SLOT(slotLinearWindowingAct(bool)));
+
   m_colorToggleAct = new QAction(this);
   m_colorToggleAct->setIcon(QIcon("./icons/color_wheel2.png"));
   m_colorToggleAct->setStatusTip(tr("Start single color mode."));
@@ -681,6 +715,9 @@ MainWindow::createToolbars()
   m_detailsToolBar->addAction(m_FFT14sizeAct);
   m_detailsToolBar->addAction(m_FFT15sizeAct);
   m_detailsToolBar->addAction(m_FFT16sizeAct);
+  m_detailsToolBar->addSeparator();
+  m_detailsToolBar->addAction(m_hannWindowingAct);
+  m_detailsToolBar->addAction(m_linearWindowingAct);
 }
 
 

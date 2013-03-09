@@ -47,6 +47,7 @@ public:
   void setNSamples(unsigned int nSamples);
   unsigned int getNSamples() const;
 
+  void setWindowingType(WindowingType type);
 private:
   std::map<double, double> binSpectrum(const std::vector<double>& data, int nBins, int sampleRate, double upperFrequency) const;
   std::deque<float> hannWindowFunction(const std::deque<float>& in) const;
@@ -68,6 +69,8 @@ private:
   mutable boost::mutex m_mutex;
 
   QTime m_time;
+
+  WindowingType m_windowingType;
 };
 
 #endif // SPECTRUMANALYSER_H
