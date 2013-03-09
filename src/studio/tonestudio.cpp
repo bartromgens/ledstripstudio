@@ -303,13 +303,21 @@ ToneStudio::createToneAnimationCorners(unsigned int nLEDs, std::map<std::string,
     std::string tone = iter->first;
     double amplitude = iter->second;
 
+    double amplification = amplitude/maxAmplitude;
+    double ampSquare = amplification*amplification;
+    Color color2;
+    if (127 * ampSquare < 40)
+    {
+      color2 = Color();
+    }
+    else
+    {
+      Color color = m_toneColorMap[tone];
+      color2 = Color(color.r * ampSquare, color.g * ampSquare, color.b * ampSquare);
+    }
+
     for (unsigned int i = nLEDs/tones.size() * (toneCounter); i < nLEDs/tones.size() * (toneCounter+1); ++i)
     {
-      double amplification = amplitude/maxAmplitude;
-      double ampSquare = amplification*amplification;
-      Color color = m_toneColorMap[tone];
-      Color color2(color.r * ampSquare, color.g * ampSquare, color.b * ampSquare);
-
       LED led(i, color2);
       frame.addLED(led);
     }
