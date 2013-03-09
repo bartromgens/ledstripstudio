@@ -25,7 +25,7 @@ class SpectrumObserver;
 class SpectrumAnalyser : public AudioInputObserver
 {
 public:
-  enum windowingType
+  enum WindowingType
   {
     none,
     linear,
@@ -42,7 +42,7 @@ public:
   void unregisterObserver(SpectrumObserver* observer);
   void notifyObservers(const std::map<double, double>& spectrum);
 
-  std::map<double, double> computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType) ;
+  std::map<double, double> computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::WindowingType windowType) ;
 
   void setNSamples(unsigned int nSamples);
   unsigned int getNSamples() const;

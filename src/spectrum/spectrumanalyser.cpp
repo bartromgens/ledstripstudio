@@ -88,7 +88,7 @@ SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 
 
 std::map<double, double>
-SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::windowingType windowType)
+SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::WindowingType windowType)
 {
 //  QTime timer;
 //  timer.start();
@@ -149,11 +149,13 @@ SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in) const
 
   std::deque<float> out(sizeIn, 0.0);
 
-  QTime timer;
-  timer.start();
+//  QTime timer;
+//  timer.start();
   for (std::size_t i = 0; i < sizeIn; i++)
   {
+//    out[i] = 0.5 * ( 1.0 + cos((2.0*M_PI*i)/sizeIn) ) * in[i];
     out[i] = 0.5 * ( 1.0 - cos((2.0*M_PI*i)/sizeIn) ) * in[i];
+//    std::cout << 0.5 * ( 1.0 - cos((2.0*M_PI*i)/sizeIn) ) << std::endl;
   }
 
   return out;
