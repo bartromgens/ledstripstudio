@@ -13,4 +13,5 @@ public:
   void print() const;
   static Color randomColor();
 };
+
 #endif // COLOR_H
