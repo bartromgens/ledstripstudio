@@ -365,7 +365,7 @@ ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, std::map<std::stri
   double brightnessRelative = 0.0;
   if (m_toneMaxAverage > 20.00)
   {
-    brightnessRelative = std::pow(m_maxToneAmplitude, 3) / std::pow(m_toneMaxAverage, 3);
+    brightnessRelative = std::pow(m_maxToneAmplitude, 2) / std::pow(m_toneMaxAverage, 2);
   }
 
   if (brightnessRelative > 1.0)
