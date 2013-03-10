@@ -49,7 +49,8 @@ ImageStudio::createImageFromAnimation(const Animation& animation, const std::str
 {
   const std::deque<Frame>& frames = animation.getFrames();
 
-  QImage image(m_nLEDs, frames.size(), QImage::Format_RGB32);
+  // landscape image, height is number of LEDs
+  QImage image(frames.size(), m_nLEDs, QImage::Format_RGB32);
 
   for (std::size_t i = 0; i < frames.size(); ++i)
   {
@@ -58,7 +59,7 @@ ImageStudio::createImageFromAnimation(const Animation& animation, const std::str
     for (std::size_t j = 0; j < leds.size(); ++j)
     {
       QColor qcolor = leds[j].getQColor();
-      image.setPixel(int(j), int(i), qcolor.rgb());
+      image.setPixel(int(i), int(j), qcolor.rgb()); // x = i, y = j (not matrix index notation)
     }
   }
 
