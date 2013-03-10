@@ -2,6 +2,7 @@
 #define IMAGESTUDIO_H
 
 #include "basic/color.h"
+#include "basic/animation.h"
 
 #include <vector>
 #include <string>
@@ -9,12 +10,16 @@
 class ImageStudio
 {
 public:
-  ImageStudio();
+  ImageStudio(unsigned int nLEDs);
   ~ImageStudio();
 
-  std::vector<std::vector<Color> > loadImageFromFile(std::string filename);
+  Animation createImageAnimation(const std::string& filename);
 
 private:
+  std::vector<std::vector<Color> > loadImageFromFile(const std::string& filename);
+
+private:
+  int m_nLEDs;
   int m_width;
   int m_height;
 };

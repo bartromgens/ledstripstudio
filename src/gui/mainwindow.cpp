@@ -6,6 +6,7 @@
 #include "gui/spectrumsettingswidget.h"
 #include "spectrum/spectrumanalyser.h"
 #include "spectrum/toneanalyser.h"
+#include "studio/imagestudio.h"
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
 
@@ -28,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneAnalyser(new ToneAnalyser()),
   m_spectrumStudio(new SpectrumStudio()),
   m_toneStudio(new ToneStudio()),
+  m_imageStudio(new ImageStudio(m_nLedsTotal)),
   m_spectrumSettingsDialog(new QDockWidget(this)),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, m_spectrumSettingsDialog)),
   m_timer(0),
@@ -55,12 +57,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
   createTimers();
 
+  std::string filename = "test.bmp";
+  Animation animation = m_imageStudio->createImageAnimation(filename);
+  m_player->addAnimation(animation);
+
+  startAnimationThread();
+
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
 
   setActionsDefaults();
-
-//  startAnimationThread();
 }
 
 
@@ -672,7 +678,11 @@ void
 MainWindow::setActionsDefaults()
 {
   m_audioToggleButton->setChecked(true);
+
+  // FFT settings
   m_FFT16sizeAct->setChecked(true);
+  m_linearWindowingAct->setChecked(true);
+
   m_historyToneAct->setChecked(true);
 }
 

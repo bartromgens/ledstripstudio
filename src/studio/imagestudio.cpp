@@ -4,8 +4,9 @@
 #include <QColor>
 
 
-ImageStudio::ImageStudio()
-  : m_width(0),
+ImageStudio::ImageStudio(unsigned int nLEDs)
+  : m_nLEDs(nLEDs),
+    m_width(0),
     m_height(0)
 {
 }
@@ -17,7 +18,7 @@ ImageStudio::~ImageStudio()
 
 
 std::vector<std::vector<Color> >
-ImageStudio::loadImageFromFile(std::string filename)
+ImageStudio::loadImageFromFile(const std::string& filename)
 {
   QImage image;
   image.load(QString::fromStdString(filename));
@@ -40,4 +41,27 @@ ImageStudio::loadImageFromFile(std::string filename)
   }
 
   return colorMatrix;
+}
+
+
+Animation
+ImageStudio::createImageAnimation(const std::string& filename)
+{
+  Animation animation;
+
+  std::vector<std::vector<Color> > colorMatrix = loadImageFromFile(filename);
+
+  for (std::size_t i = 0; i < colorMatrix.size(); ++i)
+  {
+    Frame frame(m_nLEDs);
+    for (std::size_t j = 0; j < colorMatrix[i].size(); ++j)
+    {
+      Color color = colorMatrix[i][j];
+      LED led(j, color);
+      frame.addLED(led);
+    }
+    animation.addFrame(frame);
+  }
+
+  return animation;
 }

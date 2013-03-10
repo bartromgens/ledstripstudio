@@ -18,15 +18,18 @@
 #include <memory>
 
 class AudioInput;
-class ControlSettings;
-class LedStripEmulator;
 class Player;
 class ToneAnalyser;
-class ToneStudio;
 class SpectrumAnalyser;
-class SpectrumStudio;
-class SpectrumSettingsWidget;
+class LedStripEmulator;
+
 class Studio;
+class ImageStudio;
+class ToneStudio;
+class SpectrumStudio;
+
+class ControlSettings;
+class SpectrumSettingsWidget;
 
 namespace Ui {
 class MainWindow;
@@ -123,6 +126,7 @@ private:
   std::shared_ptr<ToneAnalyser> m_toneAnalyser;
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
   std::unique_ptr<ToneStudio> m_toneStudio;
+  std::unique_ptr<ImageStudio> m_imageStudio;
 
   QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
