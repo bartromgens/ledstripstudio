@@ -486,7 +486,7 @@ void
 MainWindow::slotColorSelected(QColor color)
 {
   m_lastSingleColor = color;
-  Color colorNew(color.red()/255.0*127.0, color.green()/255.0*127.0, color.blue()/255.0*127.0);
+  Color colorNew(color);
 
   Animation animation = m_studio->createSingleColorSingleFrameAnimation(colorNew);
 

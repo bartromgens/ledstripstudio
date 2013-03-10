@@ -11,6 +11,15 @@ Color::Color(int r, int g, int b)
 }
 
 
+Color::Color(const QColor& qcolor)
+{
+  double factor = 127.0 / 255.0;
+  r = qcolor.red() * factor;
+  g = qcolor.green() * factor;
+  b = qcolor.blue() * factor;
+}
+
+
 void
 Color::print() const
 {

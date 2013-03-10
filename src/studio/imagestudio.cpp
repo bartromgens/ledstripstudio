@@ -33,8 +33,8 @@ ImageStudio::loadImageFromFile(const std::string& filename)
     std::vector<Color> colorRow;
     for (int j = 0; j < m_width; ++j)
     {
-      QColor c = QColor::fromRgb(image.pixel(j,i) );
-      Color color(c.red() * 127.0 / 256.0, c.green() * 127.0 / 256.0, c.blue() * 127.0 / 256.0);
+      QColor qcolor = QColor::fromRgb(image.pixel(j,i) );
+      Color color(qcolor);
       colorRow.push_back(color);
     }
     colorMatrix.push_back(colorRow);
