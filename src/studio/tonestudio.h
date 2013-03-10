@@ -27,8 +27,10 @@ public:
 
   static void writeToneToConsole(const std::map<std::string, double>& tones);
 
-  void calcMaxTone(const std::map<std::string, double>& tones);
+  void calcMaxAndMinTone(const std::map<std::string, double>& tones);
   void calcToneMaxAverage();
+  void calcToneMinAverage();
+
 private:
   void createRandomToneColorMap(const std::map<std::string, double>& tones);
   void createToneColorMap(const std::map<std::string, double> &tones);
@@ -46,10 +48,13 @@ private:
   std::map<std::string, Color> m_toneColorMap;
 
   std::deque<double> m_maxToneHistory;
+  std::deque<double> m_minToneHistory;
   double m_toneMaxAverage;
+  double m_toneMinAverage;
 
   std::string m_maxTone;
   double m_maxToneAmplitude;
+  double m_minToneAmplitude;
 };
 
 #endif // TONESTUDIO_H

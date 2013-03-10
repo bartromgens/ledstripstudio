@@ -52,14 +52,22 @@ ToneStudio::writeToneToConsole(const std::map<std::string, double>& tones)
 
 
 void
-ToneStudio::calcMaxTone(const std::map<std::string, double>& tones)
+ToneStudio::calcMaxAndMinTone(const std::map<std::string, double>& tones)
 {
+  m_maxToneAmplitude = 0.0;
+  m_minToneAmplitude = 1.0e99;
+
   for (auto it = tones.cbegin(); it != tones.cend(); ++it )
   {
     if (it->second > m_maxToneAmplitude)
     {
       m_maxTone = it->first;
       m_maxToneAmplitude = it->second;
+    }
+
+    if (it->second < m_minToneAmplitude)
+    {
+      m_minToneAmplitude = it->second;
     }
   }
 }
@@ -79,14 +87,29 @@ ToneStudio::calcToneMaxAverage()
 }
 
 
+void
+ToneStudio::calcToneMinAverage()
+{
+  m_minToneHistory.push_back(m_minToneAmplitude);
+  m_toneMinAverage += m_minToneHistory.back()/300;
+
+  if (m_minToneHistory.size() > 300)
+  {
+    m_toneMinAverage -= m_minToneHistory.front()/300;
+    m_minToneHistory.pop_front();
+  }
+}
+
+
 Animation
 ToneStudio::createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones)
 {
   m_maxToneAmplitude = 0.0;
 
-  calcMaxTone(tones);
+  calcMaxAndMinTone(tones);
 
   calcToneMaxAverage();
+  calcToneMinAverage();
 
   unsigned int speed = 1;
   switch (m_animationType)
@@ -362,10 +385,11 @@ ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, std::map<std::stri
     nLEDsPerToneMap[it->first] = nLEDsPerTone/2;
   }
 
-  double brightnessRelative = 0.0;
+  double brightnessRelative = 1.0;
   if (m_toneMaxAverage > 20.00)
   {
-    brightnessRelative = std::pow(m_maxToneAmplitude, 2) / std::pow(m_toneMaxAverage, 2);
+    brightnessRelative = std::pow(m_maxToneAmplitude - m_toneMinAverage, 3) / std::pow(m_toneMaxAverage - m_toneMinAverage, 3) / 2.0 ;
+//    std::cout << brightnessRelative << std::endl;
   }
 
   if (brightnessRelative > 1.0)
