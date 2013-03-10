@@ -558,6 +558,25 @@ MainWindow::slotToggleImageAnimation(bool isChecked)
 
 
 void
+MainWindow::slotToggleRecording(bool isChecked)
+{
+  if (isChecked)
+  {
+    m_player->startRecording();
+  }
+  else
+  {
+    m_player->stopRecording();
+    Animation animation = m_player->getRecordedAnimation();
+    m_player->clearRecordedAnimation();
+
+    std::string filename = "recordedAnimation";
+    m_imageStudio->createImageFromAnimation(animation, filename);
+  }
+}
+
+
+void
 MainWindow::createActions()
 {
   m_audioToggleButton = new QAction(this);
@@ -691,6 +710,14 @@ MainWindow::createActions()
   connect(m_imageAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleImageAnimation(bool)));
   m_imageAnimationAct->setChecked(false);
   m_imageAnimationAct->setVisible(false);
+
+  m_recordAnimationAct = new QAction(this);
+  m_recordAnimationAct->setIcon(QIcon("./icons/image-animation.png"));
+  m_recordAnimationAct->setStatusTip(tr("Toggles images animation."));
+  m_recordAnimationAct->setCheckable(true);
+  connect(m_recordAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleRecording(bool)));
+  m_recordAnimationAct->setChecked(false);
+  m_recordAnimationAct->setVisible(true);
 }
 
 
@@ -720,6 +747,8 @@ MainWindow::createToolbars()
   m_mainToolBar->addAction(m_colorToggleAct);
   m_mainToolBar->addSeparator();
   m_mainToolBar->addAction(m_audioToggleButton);
+  m_mainToolBar->addSeparator();
+  m_mainToolBar->addAction(m_recordAnimationAct);
   m_mainToolBar->addSeparator();
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);

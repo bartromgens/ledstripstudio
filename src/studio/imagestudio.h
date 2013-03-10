@@ -15,10 +15,11 @@ public:
 
   Animation createImageAnimation(const std::string& filename) const;
 
-  void createImageFromAnimation(const Animation& animation) const;
+  void createImageFromAnimation(const Animation& animation, const std::string& filename) const;
 
 private:
   std::vector<std::vector<Color> > loadImageFromFile(const std::string& filename) const;
+  static std::string getUniqueFilename(const std::string &filename, const std::string &extension);
 
 private:
   int m_nLEDs;

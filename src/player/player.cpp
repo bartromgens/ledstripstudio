@@ -5,6 +5,8 @@ Player::Player()
   : m_ledController(),
     m_lastFrame(0),
     m_mainAnimation(),
+    m_recordedAnimation(),
+    m_isRecording(false),
 //    m_animationThread(0),
     m_mutex()
 {
@@ -106,8 +108,41 @@ Player::playFrame()
       m_mainAnimation.pop_frontFrame();
       frame = m_lastFrame;
     }
+
+    if (m_isRecording)
+    {
+      m_recordedAnimation.addFrame(frame);
+    }
   }
   m_ledController->send(frame);
+}
+
+
+void
+Player::startRecording()
+{
+  m_isRecording = true;
+}
+
+
+void
+Player::stopRecording()
+{
+  m_isRecording = false;
+}
+
+
+Animation
+Player::getRecordedAnimation() const
+{
+  return m_recordedAnimation;
+}
+
+
+void
+Player::clearRecordedAnimation()
+{
+  m_recordedAnimation.clearFrames();
 }
 
 

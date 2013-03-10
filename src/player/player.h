@@ -25,9 +25,15 @@ public:
   int getFPS() const;
   Frame getLastFrame() const;
 
+  void startRecording();
+  void stopRecording();
+
+  Animation getRecordedAnimation() const;
+
+  void clearRecordedAnimation();
+
 private:
   std::unique_ptr<LEDController> createLedController(QString serialPortName);
-
 
   Frame smoothenFrames(const Frame &firstFrame, const Frame &secondFrame, int nFrames = 1);
 
@@ -36,6 +42,8 @@ private:
   Frame m_lastFrame;
   Animation m_mainAnimation;
 
+  Animation m_recordedAnimation;
+  bool m_isRecording;
 //  boost::thread* m_animationThread;
 
   mutable boost::mutex m_mutex;

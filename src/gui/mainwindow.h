@@ -91,6 +91,7 @@ private slots:
   void slotToggleRainbowAnimation(bool isChecked);
   void slotToggleImageAnimation(bool isChecked);
 
+  void slotToggleRecording(bool isChecked);
 
 private:
   void createMenus();
@@ -161,6 +162,7 @@ private:
   QAction* m_dotsAnimationAct;
   QAction* m_rainbowAnimationAct;
   QAction* m_imageAnimationAct;
+  QAction* m_recordAnimationAct;
   QAction* m_openColorPickerAct;
 
   QTimer* m_timer;

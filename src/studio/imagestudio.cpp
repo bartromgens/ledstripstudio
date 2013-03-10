@@ -1,6 +1,10 @@
 #include "imagestudio.h"
 
+#include <iostream>
+
 #include <QImage>
+#include <QFile>
+#include <QFileInfo>
 #include <QColor>
 
 
@@ -34,14 +38,14 @@ ImageStudio::createImageAnimation(const std::string& filename) const
     animation.addFrame(frame);
   }
 
-  createImageFromAnimation(animation);
+  createImageFromAnimation(animation, "test");
 
   return animation;
 }
 
 
 void
-ImageStudio::createImageFromAnimation(const Animation& animation) const
+ImageStudio::createImageFromAnimation(const Animation& animation, const std::string& filename) const
 {
   const std::deque<Frame>& frames = animation.getFrames();
 
@@ -58,7 +62,31 @@ ImageStudio::createImageFromAnimation(const Animation& animation) const
     }
   }
 
-  image.save("out.png");
+  std::string extension = ".png";
+  std::string uniqueFilename = getUniqueFilename(filename, extension);
+
+  image.save(QString::fromStdString(uniqueFilename + extension));
+}
+
+
+std::string
+ImageStudio::getUniqueFilename(const std::string& filename, const std::string& extension)
+{
+  unsigned int counter = 1;
+
+  std::string uniqueFilename = filename  + std::to_string(counter);
+  QFile file(QString::fromStdString(uniqueFilename + extension));
+  QFileInfo fileInfo(file);
+
+  while (fileInfo.exists())
+  {
+    counter++;
+    uniqueFilename = filename + std::to_string(counter);
+    QFile file(QString::fromStdString(uniqueFilename + extension));
+    fileInfo.setFile(file);
+  }
+
+  return uniqueFilename;
 }
 
 
