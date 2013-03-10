@@ -7,6 +7,7 @@ DEPENDPATH = $$INCLUDEPATH
 
 SOURCES += \
     audioinput/audioinput.cpp \
+    audioinput/audioinputobserver.cpp \
     audioinput/userdata.cpp \
     basic/animation.cpp \
     basic/color.cpp \
@@ -14,24 +15,24 @@ SOURCES += \
     basic/led.cpp \
     gui/mainwindow.cpp \
     gui/ledstripemulator.cpp \
+    gui/spectrumsettingswidget.cpp \
     player/ledcontroller.cpp \
     player/player.cpp \
     settings/controlsettings.cpp \
     spectrum/fftw++.cpp \
     spectrum/spectrumanalyser.cpp \
-    studio/studio.cpp \
-    main.cpp \
-    spectrum/toneanalyser.cpp \
-    studio/spectrumstudio.cpp \
-    audioinput/audioinputobserver.cpp \
     spectrum/spectrumobserver.cpp \
     spectrum/toneobserver.cpp \
+    spectrum/toneanalyser.cpp \
+    studio/imagestudio.cpp \
+    studio/spectrumstudio.cpp \
+    studio/studio.cpp \
     studio/tonestudio.cpp \
-    gui/spectrumsettingswidget.cpp \
-    studio/imagestudio.cpp
+    main.cpp \
 
 HEADERS += \
     audioinput/audioinput.h \
+    audioinput/audioinputobserver.h \
     audioinput/userdata.h \
     basic/animation.h \
     basic/color.h \
@@ -40,23 +41,22 @@ HEADERS += \
     basic/universalsleep.h \
     gui/mainwindow.h \
     gui/ledstripemulator.h \
+    gui/spectrumsettingswidget.h \
     player/ledcontroller.h \
     player/player.h \
     settings/controlsettings.h \
     spectrum/spectrumanalyser.h \
-    studio/studio.h \
-    spectrum/toneanalyser.h \
-    studio/spectrumstudio.h \
-    audioinput/audioinputobserver.h \
     spectrum/spectrumobserver.h \
+    spectrum/toneanalyser.h \
     spectrum/toneobserver.h \
+    studio/studio.h \
+    studio/spectrumstudio.h \
     studio/tonestudio.h \
-    gui/spectrumsettingswidget.h \
     studio/imagestudio.h
 
 FORMS += \
     gui/mainwindow.ui \
-    src/gui/spectrumsettingswidget.ui
+    gui/spectrumsettingswidget.ui
 
 OTHER_FILES += \
     icons/audio-volume-high.png \
