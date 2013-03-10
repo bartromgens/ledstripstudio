@@ -10,6 +10,7 @@
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
 
+#include <QFileDialog>
 #include <QPushButton>
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
@@ -56,12 +57,6 @@ MainWindow::MainWindow(QWidget *parent) :
   m_audioInput->setControlSettings(m_settings);
 
   createTimers();
-
-  std::string filename = "test.bmp";
-  Animation animation = m_imageStudio->createImageAnimation(filename);
-  m_player->addAnimation(animation);
-
-  startAnimationThread();
 
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
@@ -281,6 +276,7 @@ MainWindow::slotToggleAnimation(bool isChecked)
 {
   m_dotsAnimationAct->setVisible(isChecked);
   m_rainbowAnimationAct->setVisible(isChecked);
+  m_imageAnimationAct->setVisible(isChecked);
 
   if (isChecked)
   {
@@ -544,6 +540,22 @@ MainWindow::slotToggleRainbowAnimation(bool isChecked)
 }
 
 
+void
+MainWindow::slotToggleImageAnimation(bool isChecked)
+{
+  if (isChecked)
+  {
+    QString filename = QFileDialog::getOpenFileName(this, "Open Image");
+    Animation animation = m_imageStudio->createImageAnimation(filename.toStdString());
+    m_player->addAnimation(animation);
+    startAnimationThread();
+  }
+  else
+  {
+    stopAnimation();
+  }
+}
+
 
 void
 MainWindow::createActions()
@@ -671,6 +683,14 @@ MainWindow::createActions()
   connect(m_rainbowAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleRainbowAnimation(bool)));
   m_rainbowAnimationAct->setChecked(false);
   m_rainbowAnimationAct->setVisible(false);
+
+  m_imageAnimationAct = new QAction(this);
+  m_imageAnimationAct->setIcon(QIcon("./icons/image-animation.png"));
+  m_imageAnimationAct->setStatusTip(tr("Toggles images animation."));
+  m_imageAnimationAct->setCheckable(true);
+  connect(m_imageAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleImageAnimation(bool)));
+  m_imageAnimationAct->setChecked(false);
+  m_imageAnimationAct->setVisible(false);
 }
 
 
@@ -719,6 +739,8 @@ MainWindow::createToolbars()
 
   m_detailsToolBar->addAction(m_dotsAnimationAct);
   m_detailsToolBar->addAction(m_rainbowAnimationAct);
+  m_detailsToolBar->addAction(m_imageAnimationAct);
+
   m_detailsToolBar->addAction(m_openColorPickerAct);
 
   m_detailsToolBar->addSeparator();

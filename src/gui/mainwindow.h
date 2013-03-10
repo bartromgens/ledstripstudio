@@ -89,6 +89,7 @@ private slots:
 
   void slotToggleDotAnimation(bool isChecked);
   void slotToggleRainbowAnimation(bool isChecked);
+  void slotToggleImageAnimation(bool isChecked);
 
 
 private:
@@ -159,6 +160,7 @@ private:
   QAction* m_cornerToneAct;
   QAction* m_dotsAnimationAct;
   QAction* m_rainbowAnimationAct;
+  QAction* m_imageAnimationAct;
   QAction* m_openColorPickerAct;
 
   QTimer* m_timer;
