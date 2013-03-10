@@ -8,7 +8,6 @@ class LED
 public:
   LED(int ledNr, const Color& color);
 
-  const Color& getColor() const;
   int getLEDnr() const;
 
   void setColor(const Color &color);
@@ -16,6 +15,8 @@ public:
 
   void print() const;
 
+  const Color& getColor() const;
+  QColor getQColor() const;
 private:
   int m_ledNr;
   Color m_color;
