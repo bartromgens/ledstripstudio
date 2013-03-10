@@ -21,13 +21,14 @@ SOURCES += \
     spectrum/spectrumanalyser.cpp \
     studio/studio.cpp \
     main.cpp \
-    src/spectrum/toneanalyser.cpp \
-    src/studio/spectrumstudio.cpp \
-    src/audioinput/audioinputobserver.cpp \
-    src/spectrum/spectrumobserver.cpp \
-    src/spectrum/toneobserver.cpp \
-    src/studio/tonestudio.cpp \
-    src/gui/spectrumsettingswidget.cpp
+    spectrum/toneanalyser.cpp \
+    studio/spectrumstudio.cpp \
+    audioinput/audioinputobserver.cpp \
+    spectrum/spectrumobserver.cpp \
+    spectrum/toneobserver.cpp \
+    studio/tonestudio.cpp \
+    gui/spectrumsettingswidget.cpp \
+    studio/imagestudio.cpp
 
 HEADERS += \
     audioinput/audioinput.h \
@@ -44,13 +45,14 @@ HEADERS += \
     settings/controlsettings.h \
     spectrum/spectrumanalyser.h \
     studio/studio.h \
-    src/spectrum/toneanalyser.h \
-    src/studio/spectrumstudio.h \
-    src/audioinput/audioinputobserver.h \
-    src/spectrum/spectrumobserver.h \
-    src/spectrum/toneobserver.h \
-    src/studio/tonestudio.h \
-    src/gui/spectrumsettingswidget.h
+    spectrum/toneanalyser.h \
+    studio/spectrumstudio.h \
+    audioinput/audioinputobserver.h \
+    spectrum/spectrumobserver.h \
+    spectrum/toneobserver.h \
+    studio/tonestudio.h \
+    gui/spectrumsettingswidget.h \
+    studio/imagestudio.h
 
 FORMS += \
     gui/mainwindow.ui \
