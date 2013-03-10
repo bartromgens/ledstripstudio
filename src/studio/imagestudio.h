@@ -13,15 +13,15 @@ public:
   ImageStudio(unsigned int nLEDs);
   ~ImageStudio();
 
-  Animation createImageAnimation(const std::string& filename);
+  Animation createImageAnimation(const std::string& filename) const;
+
+  void createImageFromAnimation(const Animation& animation) const;
 
 private:
-  std::vector<std::vector<Color> > loadImageFromFile(const std::string& filename);
+  std::vector<std::vector<Color> > loadImageFromFile(const std::string& filename) const;
 
 private:
   int m_nLEDs;
-  int m_width;
-  int m_height;
 };
 
 #endif // IMAGESTUDIO_H

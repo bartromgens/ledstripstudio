@@ -5,9 +5,7 @@
 
 
 ImageStudio::ImageStudio(unsigned int nLEDs)
-  : m_nLEDs(nLEDs),
-    m_width(0),
-    m_height(0)
+  : m_nLEDs(nLEDs)
 {
 }
 
@@ -18,7 +16,7 @@ ImageStudio::~ImageStudio()
 
 
 Animation
-ImageStudio::createImageAnimation(const std::string& filename)
+ImageStudio::createImageAnimation(const std::string& filename) const
 {
   Animation animation;
 
@@ -36,25 +34,50 @@ ImageStudio::createImageAnimation(const std::string& filename)
     animation.addFrame(frame);
   }
 
+  createImageFromAnimation(animation);
+
   return animation;
 }
 
 
+void
+ImageStudio::createImageFromAnimation(const Animation& animation) const
+{
+  const std::deque<Frame>& frames = animation.getFrames();
+
+  QImage image(m_nLEDs, frames.size(), QImage::Format_RGB32);
+
+  for (std::size_t i = 0; i < frames.size(); ++i)
+  {
+    Frame frame = frames[i];
+    const std::vector<LED>& leds = frame.getLEDs();
+    for (std::size_t j = 0; j < leds.size(); ++j)
+    {
+      QColor qcolor = leds[j].getQColor();
+      image.setPixel(int(j), int(i), qcolor.rgb());
+    }
+  }
+
+  image.save("out.png");
+}
+
+
 std::vector<std::vector<Color> >
-ImageStudio::loadImageFromFile(const std::string& filename)
+ImageStudio::loadImageFromFile(const std::string& filename) const
 {
   QImage image;
   image.load(QString::fromStdString(filename));
+  image = image.scaledToWidth(m_nLEDs);
 
-  m_width = image.width();
-  m_height = image.height();
+  unsigned int width = image.width();
+   unsigned int height = image.height();
 
   std::vector<std::vector<Color> > colorMatrix;
 
-  for (int i = 0; i < m_height; ++i)
+  for (std::size_t i = 0; i < height; ++i)
   {
     std::vector<Color> colorRow;
-    for (int j = 0; j < m_width; ++j)
+    for (std::size_t j = 0; j < width; ++j)
     {
       QColor qcolor = QColor::fromRgb(image.pixel(j,i) );
       Color color(qcolor);
@@ -65,3 +88,4 @@ ImageStudio::loadImageFromFile(const std::string& filename)
 
   return colorMatrix;
 }
+
