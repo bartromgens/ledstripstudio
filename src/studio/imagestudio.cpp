@@ -70,27 +70,6 @@ ImageStudio::createImageFromAnimation(const Animation& animation, const std::str
 }
 
 
-std::string
-ImageStudio::getUniqueFilename(const std::string& filename, const std::string& extension)
-{
-  unsigned int counter = 1;
-
-  std::string uniqueFilename = filename  + std::to_string(counter);
-  QFile file(QString::fromStdString(uniqueFilename + extension));
-  QFileInfo fileInfo(file);
-
-  while (fileInfo.exists())
-  {
-    counter++;
-    uniqueFilename = filename + std::to_string(counter);
-    QFile file(QString::fromStdString(uniqueFilename + extension));
-    fileInfo.setFile(file);
-  }
-
-  return uniqueFilename;
-}
-
-
 std::vector<std::vector<Color> >
 ImageStudio::loadImageFromFile(const std::string& filename) const
 {
@@ -118,3 +97,23 @@ ImageStudio::loadImageFromFile(const std::string& filename) const
   return colorMatrix;
 }
 
+
+std::string
+ImageStudio::getUniqueFilename(const std::string& filename, const std::string& extension)
+{
+  unsigned int counter = 1;
+
+  std::string uniqueFilename = filename  + std::to_string(counter);
+  QFile file(QString::fromStdString(uniqueFilename + extension));
+  QFileInfo fileInfo(file);
+
+  while (fileInfo.exists())
+  {
+    counter++;
+    uniqueFilename = filename + std::to_string(counter);
+    QFile file(QString::fromStdString(uniqueFilename + extension));
+    fileInfo.setFile(file);
+  }
+
+  return uniqueFilename;
+}
