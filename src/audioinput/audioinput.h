@@ -39,8 +39,6 @@ public:
 
   void setControlSettings(std::shared_ptr<ControlSettings> settings);
 
-  Animation createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones);
-
   void registerObserver(std::shared_ptr<AudioInputObserver> observer);
   void unregisterObserver(std::shared_ptr<AudioInputObserver> observer);
   void notifyObservers(const std::deque<float>& audioData);
