@@ -29,6 +29,7 @@ SOURCES += \
     studio/studio.cpp \
     studio/tonestudio.cpp \
     main.cpp \
+    src/gui/tonetoolbar.cpp
 
 HEADERS += \
     audioinput/audioinput.h \
@@ -52,7 +53,8 @@ HEADERS += \
     studio/studio.h \
     studio/spectrumstudio.h \
     studio/tonestudio.h \
-    studio/imagestudio.h
+    studio/imagestudio.h \
+    src/gui/tonetoolbar.h
 
 FORMS += \
     gui/mainwindow.ui \

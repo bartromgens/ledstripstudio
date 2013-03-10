@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "basic/animation.h"
+#include "gui/tonetoolbar.h"
 #include "spectrum/spectrumobserver.h"
 #include "spectrum/toneobserver.h"
 #include "studio/tonestudio.h"
@@ -78,12 +79,6 @@ private slots:
 
   void slotShowSpetrumSettings();
 
-  void slotToggleStepTone(bool isChecked);
-  void slotToggleSmoothTone(bool isChecked);
-  void slotToggleToneHistory(bool isChecked);
-  void slotToggleIndividualTone(bool isChecked);
-  void slotToggleCornerTone(bool isChecked);
-
   void slotOpenColorPicker();
   void slotColorSelected(QColor color);
 
@@ -98,7 +93,7 @@ private:
   void createActions();
   void setActionsDefaults();
   void createToolbars();
-  void connectAllSlots() const;
+  void connectAllSlots();
   void createTimers();
 
   void startAudioInputThread();
@@ -113,8 +108,6 @@ private:
   void startToneAnalyser() const;
   void stopToneAnalyser() const;
 
-  void updateToneSettingsVisibility(ToneStudio::ToneAnimationType type);
-
 private:
   Ui::MainWindow* ui;
   QColorDialog* m_colorDialog;
@@ -127,11 +120,13 @@ private:
   std::shared_ptr<SpectrumAnalyser> m_spectrumAnalyser;
   std::shared_ptr<ToneAnalyser> m_toneAnalyser;
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
-  std::unique_ptr<ToneStudio> m_toneStudio;
+  std::shared_ptr<ToneStudio> m_toneStudio;
   std::unique_ptr<ImageStudio> m_imageStudio;
 
   QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
+
+  ToneToolbar m_toneToolbar;
 
   boost::thread* m_audioInputThread;
 
@@ -154,11 +149,7 @@ private:
   QAction* m_linearWindowingAct;
 
   QAction* m_openSpectrumSettingsAct;
-  QAction* m_stepToneAct;
-  QAction* m_smoothToneAct;
-  QAction* m_historyToneAct;
-  QAction* m_individualToneAct;
-  QAction* m_cornerToneAct;
+
   QAction* m_dotsAnimationAct;
   QAction* m_rainbowAnimationAct;
   QAction* m_imageAnimationAct;
