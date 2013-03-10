@@ -73,25 +73,53 @@ ImageStudio::createImageFromAnimation(const Animation& animation, const std::str
 std::vector<std::vector<Color> >
 ImageStudio::loadImageFromFile(const std::string& filename) const
 {
+  std::vector<std::vector<Color> > colorMatrix; // output
+
   QImage image;
   image.load(QString::fromStdString(filename));
-  image = image.scaledToWidth(m_nLEDs);
 
   unsigned int width = image.width();
-   unsigned int height = image.height();
+  unsigned int height = image.height();
 
-  std::vector<std::vector<Color> > colorMatrix;
-
-  for (std::size_t i = 0; i < height; ++i)
+  bool isLandscape = false;
+  if (width > height)
   {
-    std::vector<Color> colorRow;
-    for (std::size_t j = 0; j < width; ++j)
+    isLandscape = true;
+    image = image.scaledToHeight(m_nLEDs);
+  }
+  else
+  {
+    image = image.scaledToWidth(m_nLEDs);
+  }
+
+
+  if (isLandscape)
+  {
+    for (std::size_t i = 0; i < width; ++i)
     {
-      QColor qcolor = QColor::fromRgb(image.pixel(j,i) );
-      Color color(qcolor);
-      colorRow.push_back(color);
+      std::vector<Color> colorRow;
+      for (std::size_t j = 0; j < height; ++j)
+      {
+        QColor qcolor = QColor::fromRgb(image.pixel(i, j) );
+        Color color(qcolor);
+        colorRow.push_back(color);
+      }
+      colorMatrix.push_back(colorRow);
     }
-    colorMatrix.push_back(colorRow);
+  }
+  else
+  {
+    for (std::size_t i = 0; i < height; ++i)
+    {
+      std::vector<Color> colorRow;
+      for (std::size_t j = 0; j < width; ++j)
+      {
+        QColor qcolor = QColor::fromRgb(image.pixel(j, i) );
+        Color color(qcolor);
+        colorRow.push_back(color);
+      }
+      colorMatrix.push_back(colorRow);
+    }
   }
 
   return colorMatrix;
