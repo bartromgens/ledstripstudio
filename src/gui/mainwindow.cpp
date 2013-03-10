@@ -712,8 +712,8 @@ MainWindow::createActions()
   m_imageAnimationAct->setVisible(false);
 
   m_recordAnimationAct = new QAction(this);
-  m_recordAnimationAct->setIcon(QIcon("./icons/image-animation.png"));
-  m_recordAnimationAct->setStatusTip(tr("Toggles images animation."));
+  m_recordAnimationAct->setIcon(QIcon("./icons/record-animation.png"));
+  m_recordAnimationAct->setStatusTip(tr("Toggles recording the animation."));
   m_recordAnimationAct->setCheckable(true);
   connect(m_recordAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleRecording(bool)));
   m_recordAnimationAct->setChecked(false);
