@@ -13,9 +13,11 @@ SOURCES += \
     basic/color.cpp \
     basic/frame.cpp \
     basic/led.cpp \
+    gui/ffttoolbar.cpp \
     gui/mainwindow.cpp \
     gui/ledstripemulator.cpp \
     gui/spectrumsettingswidget.cpp \
+    gui/tonetoolbar.cpp \
     player/ledcontroller.cpp \
     player/player.cpp \
     settings/controlsettings.cpp \
@@ -29,7 +31,6 @@ SOURCES += \
     studio/studio.cpp \
     studio/tonestudio.cpp \
     main.cpp \
-    src/gui/tonetoolbar.cpp
 
 HEADERS += \
     audioinput/audioinput.h \
@@ -40,9 +41,11 @@ HEADERS += \
     basic/frame.h \
     basic/led.h \
     basic/universalsleep.h \
+    gui/ffttoolbar.h \
     gui/mainwindow.h \
     gui/ledstripemulator.h \
     gui/spectrumsettingswidget.h \
+    gui/tonetoolbar.h \
     player/ledcontroller.h \
     player/player.h \
     settings/controlsettings.h \
@@ -54,7 +57,6 @@ HEADERS += \
     studio/spectrumstudio.h \
     studio/tonestudio.h \
     studio/imagestudio.h \
-    src/gui/tonetoolbar.h
 
 FORMS += \
     gui/mainwindow.ui \

@@ -3,6 +3,7 @@
 
 #include "basic/animation.h"
 #include "gui/tonetoolbar.h"
+#include "gui/ffttoolbar.h"
 #include "spectrum/spectrumobserver.h"
 #include "spectrum/toneobserver.h"
 #include "studio/tonestudio.h"
@@ -53,8 +54,6 @@ public:
 
   void updateLEDs(const std::map<double, double> &spectrum);
 
-  void setNSamples(unsigned int nSamples);
-
 public slots:
   void slotPlayerPlayed();
 
@@ -70,12 +69,6 @@ private slots:
   void slotToggleToneAnalysis(bool isChecked);
   void slotToggleAnimation(bool isChecked);
   void slotToggleSingleColor(bool isChecked);
-
-  void slotFFT14sizeAct(bool isChecked);
-  void slotFFT15sizeAct(bool isChecked);
-  void slotFFT16sizeAct(bool isChecked);
-  void slotHannWindowingAct(bool isChecked);
-  void slotLinearWindowingAct(bool isChecked);
 
   void slotShowSpetrumSettings();
 
@@ -115,7 +108,7 @@ private:
 
   std::shared_ptr<Player> m_player;
   std::unique_ptr<Studio> m_studio;
-  std::unique_ptr<AudioInput> m_audioInput;
+  std::shared_ptr<AudioInput> m_audioInput;
   std::shared_ptr<ControlSettings> m_settings;
   std::shared_ptr<SpectrumAnalyser> m_spectrumAnalyser;
   std::shared_ptr<ToneAnalyser> m_toneAnalyser;
@@ -126,27 +119,23 @@ private:
   QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
 
-  ToneToolbar m_toneToolbar;
-
   boost::thread* m_audioInputThread;
 
   QToolBar* m_mainToolBar;
   QToolBar* m_detailsToolBar;
 
+  ToneToolbar m_toneToolbar;
+  FFTToolbar m_fftToolbar;
+
   QMenu* fileMenu;
   QMenu* editMenu;
   QMenu* helpMenu;
+
   QAction* m_audioToggleButton;
   QAction* m_spectrumToggleButton;
   QAction* m_toneToggleButton;
   QAction* m_animationToggleAct;
   QAction* m_colorToggleAct;
-
-  QAction* m_FFT14sizeAct;
-  QAction* m_FFT15sizeAct;
-  QAction* m_FFT16sizeAct;
-  QAction* m_hannWindowingAct;
-  QAction* m_linearWindowingAct;
 
   QAction* m_openSpectrumSettingsAct;
 

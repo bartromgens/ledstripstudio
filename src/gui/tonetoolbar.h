@@ -32,8 +32,6 @@ private slots:
   void slotToggleCornerTone(bool isChecked);
 
 private:
-  QToolBar* m_parentToolbar;
-
   std::shared_ptr<ToneStudio> m_toneStudio;
 
   QAction* m_stepToneAct;

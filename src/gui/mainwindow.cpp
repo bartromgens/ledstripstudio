@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumSettingsDialog(new QDockWidget(this)),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, m_spectrumSettingsDialog)),
   m_toneToolbar(m_toneStudio),
+  m_fftToolbar(m_audioInput, m_spectrumAnalyser),
   m_timer(0),
   m_lastSingleColor(0, 0, 0)
 {
@@ -237,9 +238,7 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
   }
 
   m_openSpectrumSettingsAct->setVisible(isChecked);
-  m_FFT14sizeAct->setVisible(isChecked);
-  m_FFT15sizeAct->setVisible(isChecked);
-  m_FFT16sizeAct->setVisible(isChecked);
+  m_fftToolbar.toggleFFTSettings(isChecked);
 }
 
 
@@ -261,9 +260,7 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
   }
 
   m_toneToolbar.toggleToneAnalysis(isChecked);
-  m_FFT14sizeAct->setVisible(isChecked);
-  m_FFT15sizeAct->setVisible(isChecked);
-  m_FFT16sizeAct->setVisible(isChecked);
+  m_fftToolbar.toggleFFTSettings(isChecked);
 }
 
 
@@ -294,64 +291,6 @@ MainWindow::slotToggleSingleColor(bool isChecked)
     m_toneToggleButton->setChecked(false);
     m_animationToggleAct->setChecked(false);
     slotColorSelected(m_lastSingleColor);
-  }
-}
-
-void
-MainWindow::slotFFT14sizeAct(bool isChecked)
-{
-  if (isChecked)
-  {
-    m_FFT15sizeAct->setChecked(false);
-    m_FFT16sizeAct->setChecked(false);
-    int samples = static_cast<int>(std::pow(2.0, 14));
-    setNSamples(samples);
-  }
-}
-
-void
-MainWindow::slotFFT15sizeAct(bool isChecked)
-{
-  if (isChecked)
-  {
-    m_FFT14sizeAct->setChecked(false);
-    m_FFT16sizeAct->setChecked(false);
-    int samples = static_cast<int>(std::pow(2.0, 15));
-    setNSamples(samples);
-  }
-}
-
-void
-MainWindow::slotFFT16sizeAct(bool isChecked)
-{
-  if (isChecked)
-  {
-    m_FFT14sizeAct->setChecked(false);
-    m_FFT15sizeAct->setChecked(false);
-    int samples = static_cast<int>(std::pow(2.0, 16));
-    setNSamples(samples);
-  }
-}
-
-
-void
-MainWindow::slotHannWindowingAct(bool isChecked)
-{
-  if (isChecked)
-  {
-    m_linearWindowingAct->setChecked(false);
-    m_spectrumAnalyser->setWindowingType(SpectrumAnalyser::hann);
-  }
-}
-
-
-void
-MainWindow::slotLinearWindowingAct(bool isChecked)
-{
-  if (isChecked)
-  {
-    m_hannWindowingAct->setChecked(false);
-    m_spectrumAnalyser->setWindowingType(SpectrumAnalyser::linear);
   }
 }
 
@@ -499,36 +438,6 @@ MainWindow::createActions()
   m_animationToggleAct->setCheckable(true);
   connect(m_animationToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleAnimation(bool)));
 
-  m_FFT14sizeAct = new QAction(this);
-  m_FFT14sizeAct->setIcon(QIcon("./icons/fft14.png"));
-  m_FFT14sizeAct->setStatusTip(tr("Set FFT sample size to 16k."));
-  m_FFT14sizeAct->setCheckable(true);
-  connect(m_FFT14sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT14sizeAct(bool)));
-
-  m_FFT15sizeAct = new QAction(this);
-  m_FFT15sizeAct->setIcon(QIcon("./icons/fft15.png"));
-  m_FFT15sizeAct->setStatusTip(tr("Set FFT sample size to 32k."));
-  m_FFT15sizeAct->setCheckable(true);
-  connect(m_FFT15sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT15sizeAct(bool)));
-
-  m_FFT16sizeAct = new QAction(this);
-  m_FFT16sizeAct->setIcon(QIcon("./icons/fft16.png"));
-  m_FFT16sizeAct->setStatusTip(tr("Set FFT sample size to 64k."));
-  m_FFT16sizeAct->setCheckable(true);
-  connect(m_FFT16sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFT16sizeAct(bool)));
-
-  m_hannWindowingAct = new QAction(this);
-  m_hannWindowingAct->setIcon(QIcon("./icons/hann-windowing.png"));
-  m_hannWindowingAct->setStatusTip(tr("Set Hann windowing function."));
-  m_hannWindowingAct->setCheckable(true);
-  connect(m_hannWindowingAct, SIGNAL(toggled(bool)), this, SLOT(slotHannWindowingAct(bool)));
-
-  m_linearWindowingAct = new QAction(this);
-  m_linearWindowingAct->setIcon(QIcon("./icons/linear-windowing.png"));
-  m_linearWindowingAct->setStatusTip(tr("Set linear windowing function."));
-  m_linearWindowingAct->setCheckable(true);
-  connect(m_linearWindowingAct, SIGNAL(toggled(bool)), this, SLOT(slotLinearWindowingAct(bool)));
-
   m_colorToggleAct = new QAction(this);
   m_colorToggleAct->setIcon(QIcon("./icons/color_wheel2.png"));
   m_colorToggleAct->setStatusTip(tr("Start single color mode."));
@@ -587,8 +496,8 @@ MainWindow::setActionsDefaults()
   m_audioToggleButton->setChecked(true);
 
   // FFT settings
-  m_FFT16sizeAct->setChecked(true);
-  m_linearWindowingAct->setChecked(true);
+//  m_FFT16sizeAct->setChecked(true);
+//  m_linearWindowingAct->setChecked(true);
 }
 
 
@@ -628,12 +537,8 @@ MainWindow::createToolbars()
   m_detailsToolBar->addAction(m_openColorPickerAct);
 
   m_detailsToolBar->addSeparator();
-  m_detailsToolBar->addAction(m_FFT14sizeAct);
-  m_detailsToolBar->addAction(m_FFT15sizeAct);
-  m_detailsToolBar->addAction(m_FFT16sizeAct);
-  m_detailsToolBar->addSeparator();
-  m_detailsToolBar->addAction(m_hannWindowingAct);
-  m_detailsToolBar->addAction(m_linearWindowingAct);
+
+  m_fftToolbar.initialise(m_detailsToolBar);
 }
 
 
@@ -764,14 +669,6 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
 //  }
 
   m_player->playFrame();
-}
-
-
-void
-MainWindow::setNSamples(unsigned int nSamples)
-{
-  m_audioInput->setNSamples(nSamples);
-  m_spectrumAnalyser->setNSamples(nSamples);
 }
 
 
