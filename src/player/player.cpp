@@ -111,9 +111,6 @@ Player::stopAnimations()
 void
 Player::playFrame()
 {
-//  QElapsedTimer timer;
-//  timer.start();
-
   Frame frame(0);
   {
     boost::lock_guard<boost::mutex> lock(m_mutex);
@@ -132,9 +129,7 @@ Player::playFrame()
     }
   }
 
-  m_ledController->send(frame);
-//  std::cout << "playFrame() - elapsed: " << timer.elapsed() << std::endl;
-//  timer.restart();
+  m_ledController->send(frame); // this takes about 4-10 ms
 }
 
 
