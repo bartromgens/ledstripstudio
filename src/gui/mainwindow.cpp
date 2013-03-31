@@ -49,9 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connectAllSlots();
 
-//  QGridLayout* gridLayout = new QGridLayout(m_spectrumSettingsWidget);
-//  gridLayout->addWidget(m_spectrumSettingsWidget);
-
   m_spectrumSettingsDialog->setVisible(false);
 
   m_settings->loadSettings();
@@ -494,10 +491,6 @@ void
 MainWindow::setActionsDefaults()
 {
   m_audioToggleButton->setChecked(true);
-
-  // FFT settings
-//  m_FFT16sizeAct->setChecked(true);
-//  m_linearWindowingAct->setChecked(true);
 }
 
 
@@ -641,7 +634,7 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
 
     if (frequency > freqRmin && frequency < freqRmax)
     {
-        brightnessRed += amplitude*amplifyFactor*amplifyFactorRed;
+      brightnessRed += amplitude*amplifyFactor*amplifyFactorRed;
     }
 
     if (frequency > freqGmin && frequency < freqGmax)
@@ -657,16 +650,6 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
 
   Animation animation = m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, brightnessRed, brightnessGreen, brightnessBlue);
   m_player->addAnimation(animation);
-
-  //  Studio studio(nLEDs);
-//  if (m_nUpdates++ % (nLEDs/30) == 1)
-//  {
-//    double speed = 1.0;
-//    m_ledPlayer->addAnimation( studio.createMovingLine(nLEDs/speed,
-//                                                       Color(std::abs(cos(m_nUpdates/5.0+1)*127), std::abs(sin(m_nUpdates/8.0)*127), std::abs(sin(m_nUpdates/23.0+5)*127)),
-//                                                       speed)
-//                             );
-//  }
 
   m_player->playFrame();
 }
