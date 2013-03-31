@@ -55,8 +55,12 @@ FFTToolbar::initialise(QToolBar* parentToolbar)
   parentToolbar->addAction(m_FFT14sizeAct);
   parentToolbar->addAction(m_FFT15sizeAct);
   parentToolbar->addAction(m_FFT16sizeAct);
+  parentToolbar->addSeparator();
   parentToolbar->addAction(m_linearWindowingAct);
   parentToolbar->addAction(m_hannWindowingAct);
+
+  m_FFT16sizeAct->setChecked(true);
+  m_linearWindowingAct->setChecked(true);
 }
 
 
