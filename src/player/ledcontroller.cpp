@@ -54,7 +54,7 @@ LEDController::connect()
 void
 LEDController::disconnect()
 {
-
+  m_serialPort->close();
 }
 
 
@@ -111,6 +111,7 @@ LEDController::send(const Frame &frame)
   m_timer.restart();
   clearAll();
 }
+
 
 void LEDController::addLedByte(QByteArray& bytes, const std::vector<LED>& leds, int pos)
 {
