@@ -101,6 +101,9 @@ private:
   void startToneAnalyser() const;
   void stopToneAnalyser() const;
 
+  void playDotAnimation();
+  void startDotAnimationThread();
+
 private:
   Ui::MainWindow* ui;
   QColorDialog* m_colorDialog;

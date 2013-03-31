@@ -22,6 +22,8 @@ public:
   void playAllAnimations();
   void stopAnimations();
 
+  int getNAnimations() const;
+
   int getFPS() const;
   Frame getLastFrame() const;
 

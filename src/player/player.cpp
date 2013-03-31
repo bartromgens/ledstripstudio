@@ -10,7 +10,7 @@ Player::Player()
     m_mainAnimation(),
     m_recordedAnimation(),
     m_isRecording(false),
-    m_animationFPS(15),
+    m_animationFPS(40),
 //    m_animationThread(0),
     m_mutex()
 {
@@ -98,6 +98,13 @@ Player::stopAnimations()
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
   m_mainAnimation.clearFrames();
+}
+
+
+int
+Player::getNAnimations() const
+{
+  return m_mainAnimation.getFrames().size();
 }
 
 

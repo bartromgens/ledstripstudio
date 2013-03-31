@@ -114,7 +114,7 @@ Studio::createSingleColorSingleFrameAnimation(const Color& color) const
 
 
 Animation
-Studio::createMovingLine(int nFrames, const Color& color, double speed)
+Studio::createMovingLine(int startPos, int nFrames, const Color& color, double speed)
 {
   Animation animation;
 
@@ -124,36 +124,58 @@ Studio::createMovingLine(int nFrames, const Color& color, double speed)
 
   for (int i = 0; i < nFrames; ++i)
   {
-    double pos = int(i*speed+1) % m_nLEDs;
-    if (pos < 0)
-    {
-      pos = m_nLEDs + pos;
-    }
-    double dx = std::fabs(int(pos)-pos);
-    double dx1 = std::fabs(int(pos+1)-pos);
-    double dx2 = std::fabs(int(pos-1)-pos);
-    double dx3 = std::fabs(int(pos+2)-pos);
-    double dx4 = std::fabs(int(pos-2)-pos);
+    double pos = i*speed/2.0+startPos;
+
+    int posInt = std::floor(pos + 0.5);
+
+    double maxDistance = 3.0 + 0.5;
+    double dx = 1.0 - std::fabs(posInt-pos)/maxDistance;
+    double dx1 = 1.0 - std::fabs(posInt-pos+1)/maxDistance;
+    double dx2 = 1.0 - std::fabs(posInt-pos-1)/maxDistance;
+    double dx3 = 1.0 - std::fabs(posInt-pos+2)/maxDistance;
+    double dx4 = 1.0 - std::fabs(posInt-pos-2)/maxDistance;
+    double dx5 = 1.0 - std::fabs(posInt-pos+3)/maxDistance;
+    double dx6 = 1.0 - std::fabs(posInt-pos-3)/maxDistance;
+//    double dx5 = std::fabs(int(pos+3)-pos)+1;
+
+    int exponent = 3;
+
+    double dx_3 = std::pow(dx, exponent);
+    double dx1_3 = std::pow(dx1, exponent);
+    double dx2_3 = std::pow(dx2, exponent);
+    double dx3_3 = std::pow(dx3, exponent);
+    double dx4_3 = std::pow(dx4, exponent);
+    double dx5_3 = std::pow(dx5, exponent);
+    double dx6_3 = std::pow(dx6, exponent);
 
 //    std::cout << dx1 << ", " << dx2 << ", " << dx3 << ", " << dx4 << std::endl;
+//    std::cout << int(posInt) << ": " << dx << ", " << dx1 << ", " << dx2 << ", " << dx2 << ", " << dx6_3 << std::endl;
+//    std::cout << posInt << " - " << pos << " = " << dx << std::endl;
 
+
+    posInt = int(posInt) % m_nLEDs;
     Frame frame(m_nLEDs);
-    int posInt = int(pos);
-    if (posInt< (m_nLEDs-2))
+    if (posInt < 0)
     {
-      LED led( posInt, Color(int(r-50*dx), int(g-50*dx), int(b-50*dx)) );
+      posInt = m_nLEDs + posInt;
+    }
+
+    if (posInt < (m_nLEDs-2))
+    {
+      LED led( posInt, Color(int(r*dx_3), int(g*dx_3), int(b*dx_3)) );
       frame.addLED(led);
-      led = LED( posInt+1, Color(int(r-40*dx1), int(g-50*dx1), int(b-50*dx1)) );
+      led = LED( posInt+1, Color(int(r*dx1_3), int(g*dx1_3), int(b*dx1_3)) );
       frame.addLED(led);
-      led = LED( posInt + 2, Color(int(r-40*dx3), int(g-50*dx3), int(b-50*dx3)) );
+      led = LED( posInt+2, Color(int(r*dx3_3), int(g*dx3_3), int(b*dx3_3)) );
       frame.addLED(led);
-      if (pos > 3.0)
-      {
-        led = LED( posInt-1, Color(int(r-40*dx2), int(g-40*dx2), int(b-40*dx2)) );
-        frame.addLED(led);
-        led = LED( posInt-2, Color(int(r-40*dx4), int(g-40*dx4), int(b-40*dx4)) );
-        frame.addLED(led);
-      }
+      led = LED( posInt+3, Color(int(r*dx5_3), int(g*dx5_3), int(b*dx5_3)) );
+      frame.addLED(led);
+      led = LED( posInt-1, Color(int(r*dx2_3), int(g*dx2_3), int(b*dx2_3)) );
+      frame.addLED(led);
+      led = LED( posInt-2, Color(int(r*dx4_3), int(g*dx4_3), int(b*dx4_3)) );
+      frame.addLED(led);
+      led = LED( posInt-3, Color(int(r*dx6_3), int(g*dx6_3), int(b*dx6_3)) );
+      frame.addLED(led);
     }
     animation.addFrame(frame);
   }

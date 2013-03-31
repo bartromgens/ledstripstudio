@@ -328,30 +328,51 @@ MainWindow::slotToggleDotAnimation(bool isChecked)
 {
   if (isChecked)
   {
-    for (std::size_t i = 0; i < 2; ++i)
-    {
-      std::vector<Color> colors;
-      colors.push_back(Color(127, 0, 0));
-      colors.push_back(Color(0, 127, 0));
-      colors.push_back(Color(0, 0, 127));
-      colors.push_back(Color(127, 0, 127));
-      colors.push_back(Color(127, 127, 0));
-      colors.push_back(Color(0, 127, 127));
-
-      int nFrames = 1000;
-
-      for (std::size_t i = 0; i < colors.size(); ++i)
-      {
-        Animation animationA = m_studio->createMovingDot((rand() % m_nLedsTotal), nFrames, colors[i], ((rand() % 400 - 200) / 100.0) ) ;
-        m_player->addAnimation(animationA);
-      }
-    }
-
-    startAnimationThread();
+    startDotAnimationThread();
   }
   else
   {
     stopAnimation();
+  }
+}
+
+
+void
+MainWindow::startDotAnimationThread()
+{
+  boost::thread t1(&MainWindow::playDotAnimation, this);
+  t1.detach();
+}
+
+
+void
+MainWindow::playDotAnimation()
+{
+  m_player->addAnimation( m_studio->createSingleColorSingleFrameAnimation( Color() ) );
+
+  std::vector<Color> colors;
+  colors.push_back(Color(127, 0, 0));
+  colors.push_back(Color(0, 127, 0));
+  colors.push_back(Color(0, 0, 127));
+  colors.push_back(Color(127, 0, 127));
+  colors.push_back(Color(127, 127, 0));
+  colors.push_back(Color(0, 127, 127));
+
+  while (m_player->getNAnimations() > 0)
+  {
+    for (std::size_t i = 0; i < 5; ++i)
+    {
+      int nFrames = 1000;
+
+      for (std::size_t i = 0; i < colors.size(); ++i)
+      {
+//        Animation animationA = m_studio->createMovingDot((rand() % m_nLedsTotal), nFrames, colors[i], ((rand() % 400 - 200) / 100.0) ) ;
+        Animation animationA = m_studio->createMovingLine((rand() % m_nLedsTotal), nFrames, colors[i], ((rand() % 200 - 100) / 100.0) ) ;
+        m_player->addAnimation(animationA);
+      }
+    }
+
+    m_player->playAllAnimations();
   }
 }
 
