@@ -132,7 +132,7 @@ AudioInput::startStream()
   while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
          && run)
   {
-    Pa_Sleep(20); // put the caller to sleep
+    Pa_Sleep(15); // put the caller to sleep while the observers do their thing. related to FPS of ledstrip.
 
     run = m_controlSettings->isActive();
 
