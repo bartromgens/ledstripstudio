@@ -50,6 +50,7 @@ LEDController::connect()
   m_serialPort->set_option(stopBits);
 }
 
+
 void
 LEDController::disconnect()
 {
@@ -87,24 +88,16 @@ LEDController::send(const Frame &frame)
   m_timer2.restart();
 
   // send the frame
-  for (std::size_t i = 0; i < leds.size(); ++i)
+  int nLedsPerWrite = 5; // TODO: needs to be global setting, needs to be aligned with arduino code.
+  for (std::size_t i = 0; i < leds.size()/nLedsPerWrite; ++i)
   {
-    int red = leds.at(i).getColor().r;
-    int green = leds.at(i).getColor().g;
-    int blue = leds.at(i).getColor().b;
-
-    bytes.append( leds.at(i).getLEDnr() );
-    bytes.append( std::max(red, 0) );
-    bytes.append( std::max(green, 0) );
-    bytes.append( std::max(blue, 0) );
-
-    boost::system::error_code error;
-    boost::asio::write(*m_serialPort, boost::asio::buffer(bytes.constData(), bytes.size()), boost::asio::transfer_all(), error);
-    if (error)
+    for (int j = 0; j < nLedsPerWrite; ++j)
     {
-      std::cout << "LEDController::send() - error: " << error.message() << std::endl;
+      int pos = i*nLedsPerWrite + j;
+      addLedByte(bytes, leds, pos);
     }
 
+    writeBytes(bytes);
     bytes.clear();
   }
 
@@ -113,10 +106,33 @@ LEDController::send(const Frame &frame)
   {
     m_fpsHistory.pop_front();
   }
-//  std::cout << "LEDController::send() - time: " << (m_timer.nsecsElapsed()/1000000) << std::endl;
-  m_timer.restart();
 
+//  std::cout << "LEDController::send() - time: " << (m_timer2.nsecsElapsed()/1000000) << std::endl;
+  m_timer.restart();
   clearAll();
+}
+
+void LEDController::addLedByte(QByteArray& bytes, const std::vector<LED>& leds, int pos)
+{
+  int red = leds.at(pos).getColor().r;
+  int green = leds.at(pos).getColor().g;
+  int blue = leds.at(pos).getColor().b;
+
+  bytes.append( leds.at(pos).getLEDnr() );
+  bytes.append( std::max(red, 0) );
+  bytes.append( std::max(green, 0) );
+  bytes.append( std::max(blue, 0) );
+}
+
+
+void LEDController::writeBytes(const QByteArray& bytes)
+{
+  boost::system::error_code error;
+  boost::asio::write(*m_serialPort, boost::asio::buffer(bytes.constData(), bytes.size()), boost::asio::transfer_all(), error);
+  if (error)
+  {
+    std::cout << "LEDController::send() - error: " << error.message() << std::endl;
+  }
 }
 
 

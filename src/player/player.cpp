@@ -1,12 +1,16 @@
 #include "player.h"
 #include "basic/universalsleep.h"
 
+#include <QTime>
+
+
 Player::Player()
   : m_ledController(),
     m_lastFrame(0),
     m_mainAnimation(),
     m_recordedAnimation(),
     m_isRecording(false),
+    m_animationFPS(15),
 //    m_animationThread(0),
     m_mutex()
 {
@@ -71,8 +75,18 @@ Player::addAnimation(const Animation& animation)
 void
 Player::playAllAnimations()
 {
+  QElapsedTimer timer;
+  timer.start();
+  int msPerFrame = 1000.0/m_animationFPS;
+
   while (!m_mainAnimation.getFrames().empty())
   {
+    int elapsed_ms = timer.nsecsElapsed()/1000000.0;
+    unsigned int toSleep = std::max( 0, msPerFrame - elapsed_ms );
+//    std::cout << "elapsed: " << elapsed_ms << std::endl;
+//    std::cout << "to sleep: " << toSleep << std::endl;
+    universalsleep::sleep_ms(toSleep);
+    timer.restart();
     playFrame();
   }
 }
@@ -87,16 +101,19 @@ Player::stopAnimations()
 }
 
 
-void
-Player::playFrameThread()
-{
-  boost::thread t1(&Player::playFrame, this);
-}
+//void
+//Player::playFrameThread()
+//{
+//  boost::thread t1(&Player::playFrame, this);
+//}
 
 
 void
 Player::playFrame()
 {
+//  QElapsedTimer timer;
+//  timer.start();
+
   Frame frame(0);
   {
     boost::lock_guard<boost::mutex> lock(m_mutex);
@@ -114,7 +131,10 @@ Player::playFrame()
       m_recordedAnimation.addFrame(frame);
     }
   }
+
   m_ledController->send(frame);
+//  std::cout << "playFrame() - elapsed: " << timer.elapsed() << std::endl;
+//  timer.restart();
 }
 
 
@@ -129,6 +149,12 @@ void
 Player::stopRecording()
 {
   m_isRecording = false;
+}
+
+void
+Player::setAnimationFPS(unsigned int fps)
+{
+  m_animationFPS = fps;
 }
 
 

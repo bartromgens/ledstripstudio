@@ -14,7 +14,6 @@ ControlSettings::ControlSettings()
     freqBlueMin(440),
     freqBlueMax(2000),
     m_mutex(),
-    m_statusFPS(0),
     m_isActive(false)
 {
 }
@@ -88,20 +87,6 @@ ControlSettings::try_lock()
 void ControlSettings::unlock()
 {
   m_mutex.unlock();
-}
-
-
-void
-ControlSettings::setStatusFPS(int fps)
-{
-  m_statusFPS = fps;
-}
-
-
-int
-ControlSettings::getStatusFPS() const
-{
-  return m_statusFPS;
 }
 
 

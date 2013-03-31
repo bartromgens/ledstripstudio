@@ -14,6 +14,7 @@
 #include <QPushButton>
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
+const int NLEDS = 160;
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -21,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ToneObserver(),
   ui(new Ui::MainWindow),
   m_colorDialog(new QColorDialog(this)),
-  m_nLedsTotal(160),
+  m_nLedsTotal(NLEDS),
   m_player(new Player()),
   m_studio(new Studio(m_nLedsTotal)),
   m_audioInput(new AudioInput(SPECTRUM_SAMPLES, m_nLedsTotal)),
@@ -360,7 +361,7 @@ MainWindow::slotToggleRainbowAnimation(bool isChecked)
 {
   if (isChecked)
   {
-    double speed = 10;
+    double speed = 2;
     m_player->addAnimation(m_studio->createMovingRainbow(speed));
     startAnimationThread();
   }
@@ -554,7 +555,7 @@ MainWindow::connectAllSlots()
 void
 MainWindow::update()
 {
-  int fps = m_settings->getStatusFPS();
+  int fps = m_player->getFPS();
   ui->fpsLcd->setText(QString::number(fps));
 }
 
@@ -623,8 +624,6 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
   int freqBmax = m_settings->freqBlueMax;
 
   m_settings->unlock();
-
-  m_settings->setStatusFPS(m_player->getFPS());
 
   for (std::map<double, double>::const_iterator iter = spectrum.begin();
        iter != spectrum.end(); ++iter)

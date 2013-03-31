@@ -17,7 +17,7 @@ public:
   void addAnimation(const Animation &animation);
 
   void playFrame();
-  void playFrameThread();
+//  void playFrameThread();
 
   void playAllAnimations();
   void stopAnimations();
@@ -27,6 +27,8 @@ public:
 
   void startRecording();
   void stopRecording();
+
+  void setAnimationFPS(unsigned int fps);
 
   Animation getRecordedAnimation() const;
 
@@ -44,6 +46,7 @@ private:
 
   Animation m_recordedAnimation;
   bool m_isRecording;
+  unsigned int m_animationFPS;
 //  boost::thread* m_animationThread;
 
   mutable boost::mutex m_mutex;

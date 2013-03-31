@@ -43,7 +43,6 @@ public:
 
 private:
   mutable boost::mutex m_mutex;
-  int m_statusFPS;
   bool m_isActive;
 };
 

@@ -40,8 +40,12 @@ public:
   int getFPS();
 
 private:
-  void read();
   void disconnect();
+
+  void writeBytes(const QByteArray& bytes);
+  void addLedByte(QByteArray &bytes, const std::vector<LED> &leds, int pos);
+
+  void read();
 
 private:
   std::vector<int> m_ledNr;

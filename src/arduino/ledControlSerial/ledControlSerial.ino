@@ -16,6 +16,9 @@ int clockPin = 3;
 LPD8806 strip = LPD8806(nLEDs, dataPin, clockPin);
 
 void setup() {
+  
+  LPD8806 strip = LPD8806(nLEDs, dataPin, clockPin);
+  
   Serial.begin(2000000); // same value as in your c++ script
     
   // Start up the LED strip
@@ -33,20 +36,24 @@ void setup() {
 
 void loop() 
 {
-  if (Serial.available() > 3)
+  int nLEDsPerWrite = 5;
+  
+  if (Serial.available() > nLEDsPerWrite*4-1)
   {    
-    int values[4];
+    int values[nLEDsPerWrite*4];
     
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < nLEDsPerWrite*4; ++i)
     {
       values[i] = Serial.read(); // used to read incoming data
     }
     
-//    if (values[0] == 0)      
-    { 
-      strip.setPixelColor(values[0], strip.Color(values[1], values[2], values[3]));
-      nLEDsSet++;
-    }
+    for (int i = 0; i < nLEDsPerWrite; ++i)
+    {
+      int offset = 4*i;  
+      strip.setPixelColor(values[offset], strip.Color(values[offset+1], values[offset+2], values[offset+3]));
+      nLEDsSet++;  
+    } 
+    
     if (nLEDsSet >= nLEDs)
     {
       strip.show();
@@ -63,15 +70,4 @@ void clearStrip()
   {
     strip.setPixelColor(i, strip.Color(0, 0, 0));
   }
-}
-
-
-void rainbow(uint8_t wait) 
-{
-  for (int i = 0; i < strip.numPixels(); i++) 
-  {
-    strip.setPixelColor(i, strip.Color(i, 0, 0));
-  }  
-  strip.show();   // write all the pixels out
-  delay(wait);
 }
