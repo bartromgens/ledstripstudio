@@ -349,6 +349,7 @@ void
 MainWindow::playDotAnimation()
 {
   m_player->addAnimation( m_studio->createSingleColorSingleFrameAnimation( Color() ) );
+  m_player->playAllAnimations();
 
   std::vector<Color> colors;
   colors.push_back(Color(127, 0, 0));
@@ -358,16 +359,16 @@ MainWindow::playDotAnimation()
   colors.push_back(Color(127, 127, 0));
   colors.push_back(Color(0, 127, 127));
 
-  while (m_player->getNAnimations() > 0)
+  while (m_player->isPlaying())
   {
-    for (std::size_t i = 0; i < 5; ++i)
+    for (std::size_t i = 0; i < 1; ++i)
     {
       int nFrames = 1000;
 
       for (std::size_t i = 0; i < colors.size(); ++i)
       {
 //        Animation animationA = m_studio->createMovingDot((rand() % m_nLedsTotal), nFrames, colors[i], ((rand() % 400 - 200) / 100.0) ) ;
-        Animation animationA = m_studio->createMovingLine((rand() % m_nLedsTotal), nFrames, colors[i], ((rand() % 200 - 100) / 100.0) ) ;
+        Animation animationA = m_studio->createMovingLine((rand() % m_nLedsTotal), nFrames, colors[i], ((rand() % 400 - 200) / 100.0) ) ;
         m_player->addAnimation(animationA);
       }
     }

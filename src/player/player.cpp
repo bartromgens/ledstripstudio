@@ -11,6 +11,7 @@ Player::Player()
     m_recordedAnimation(),
     m_isRecording(false),
     m_animationFPS(40),
+    m_isPlaying(false),
 //    m_animationThread(0),
     m_mutex()
 {
@@ -75,6 +76,8 @@ Player::addAnimation(const Animation& animation)
 void
 Player::playAllAnimations()
 {
+  m_isPlaying = true;
+
   QElapsedTimer timer;
   timer.start();
   int msPerFrame = 1000.0/m_animationFPS;
@@ -97,7 +100,15 @@ Player::stopAnimations()
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
+  m_isPlaying = false;
   m_mainAnimation.clearFrames();
+}
+
+
+bool
+Player::isPlaying() const
+{
+  return m_isPlaying;
 }
 
 

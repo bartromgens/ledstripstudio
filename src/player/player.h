@@ -30,6 +30,8 @@ public:
   void startRecording();
   void stopRecording();
 
+  bool isPlaying() const;
+
   void setAnimationFPS(unsigned int fps);
 
   Animation getRecordedAnimation() const;
@@ -50,6 +52,8 @@ private:
   bool m_isRecording;
   unsigned int m_animationFPS;
 //  boost::thread* m_animationThread;
+
+  bool m_isPlaying;
 
   mutable boost::mutex m_mutex;
 };
