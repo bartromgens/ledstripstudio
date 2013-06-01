@@ -10,11 +10,13 @@
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
 
+#include "bitcoinclient/bitcoinexchangeclient.h"
+
 #include <QFileDialog>
 #include <QPushButton>
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
-const int NLEDS = 160;
+const int NLEDS = 200;
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -32,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumStudio(new SpectrumStudio()),
   m_toneStudio(new ToneStudio()),
   m_imageStudio(new ImageStudio(m_nLedsTotal)),
+  m_mtgoxState(new BitcoinExchangeClient()),
   m_spectrumSettingsDialog(new QDockWidget(this)),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, m_spectrumSettingsDialog)),
   m_toneToolbar(m_toneStudio),
@@ -57,6 +60,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_audioInput->setControlSettings(m_settings);
 
   createTimers();
+//  m_mtgoxState->getUnconfirmedTransactions();
+//    m_mtgoxState->getLatestBlock();
 
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
@@ -80,7 +85,7 @@ void
 MainWindow::createTimers()
 {
   m_timer = new QTimer(this);
-  m_timer->setInterval(200);
+  m_timer->setInterval(10000);
   connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
   m_timer->start();
 
@@ -361,7 +366,7 @@ MainWindow::playDotAnimation()
 
   while (m_player->isPlaying())
   {
-    for (std::size_t i = 0; i < 1; ++i)
+    for (std::size_t i = 0; i < 2; ++i)
     {
       int nFrames = 1000;
 
@@ -577,6 +582,8 @@ MainWindow::connectAllSlots()
 void
 MainWindow::update()
 {
+//  getMtGox();
+
   int fps = m_player->getFPS();
   ui->fpsLcd->setText(QString::number(fps));
 }
@@ -695,3 +702,42 @@ MainWindow::stopToneAnalyser() const
 {
   m_spectrumAnalyser->unregisterObserver(m_toneAnalyser.get());
 }
+
+void MainWindow::getMtGox()
+{
+  m_mtgoxState->getMtGoxData();
+
+  std::cout << m_mtgoxState->m_last << std::endl;
+
+  int ledNr = (m_mtgoxState->m_last -m_mtgoxState->m_low) / (m_mtgoxState->m_high - m_mtgoxState->m_low) * m_nLedsTotal;
+
+  std::cout << ledNr << std::endl;
+
+  Color color;
+  if ( std::fabs(m_mtgoxState->m_lastOld - m_mtgoxState->m_last) < 0.01 )
+  {
+    color = Color(0, 0, 127);
+  }
+  else if ( m_mtgoxState->m_lastOld > m_mtgoxState->m_last )
+  {
+    color = Color(127, 0, 0);
+  }
+  else
+  {
+    color = Color(0, 127, 0);
+  }
+
+  Animation animation;
+  Frame frame(m_nLedsTotal);
+  for (int i = 0; i < ledNr; ++i)
+  {
+    LED led(i, color);
+    frame.addLED(led);
+  }
+  animation.addFrame(frame);
+
+  m_player->addAnimation(animation);
+  m_player->addAnimation(animation);
+  m_player->playFrame();
+}
+

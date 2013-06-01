@@ -73,7 +73,8 @@ LEDController::send(const Frame &frame)
   const std::vector<LED>& leds = frame.getLEDs();
 
   // make sure n ms has elapsed since the last send, for the Arduino to process the data.
-  int minSleep = 21;
+//  int minSleep = 20; //160 leds
+  int minSleep = 18/160.0*200;
   int elapsed_ms = m_timer.nsecsElapsed()/1000000;
   int toSleep = minSleep - elapsed_ms;
 
@@ -93,12 +94,13 @@ LEDController::send(const Frame &frame)
   m_timer2.restart();
 
   // send the frame
-  int nLedsPerWrite = 5; // TODO: needs to be global setting, needs to be aligned with arduino code.
+  int nLedsPerWrite = 4; // TODO: needs to be global setting, needs to be aligned with arduino code.
   for (std::size_t i = 0; i < leds.size()/nLedsPerWrite; ++i)
   {
     for (int j = 0; j < nLedsPerWrite; ++j)
     {
       int pos = i*nLedsPerWrite + j;
+//      std::cout << pos << std::endl;
       addLedByte(bytes, leds, pos);
     }
 

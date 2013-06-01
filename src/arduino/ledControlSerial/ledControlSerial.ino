@@ -3,7 +3,7 @@
 #include "stdlib.h"
 
 // Number of RGB LEDs in strand:
-int nLEDs = 160;
+int nLEDs = 200;
 int nLEDsSet = 0;
 
 // Chose 2 pins for output; can be any valid output pins:
@@ -16,8 +16,6 @@ int clockPin = 3;
 LPD8806 strip = LPD8806(nLEDs, dataPin, clockPin);
 
 void setup() {
-  
-  LPD8806 strip = LPD8806(nLEDs, dataPin, clockPin);
   
   Serial.begin(2000000); // same value as in your c++ script
     
@@ -36,7 +34,7 @@ void setup() {
 
 void loop() 
 {
-  int nLEDsPerWrite = 5;
+  int nLEDsPerWrite = 4;
   
   if (Serial.available() > nLEDsPerWrite*4-1)
   {    
