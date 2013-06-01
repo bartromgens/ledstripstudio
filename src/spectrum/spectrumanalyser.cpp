@@ -223,13 +223,10 @@ SpectrumAnalyser::setNSamples(unsigned int nSamples)
   m_nSamples = nSamples;
   m_np = nSamples/2 + 1;
 
-  delete m_f;
   m_f = FFTWdouble(nSamples);
 
-  delete m_g;
   m_g = FFTWComplex(m_np);
 
-  delete m_forward;
   m_forward = new fftwpp::rcfft1d(nSamples, m_f, m_g);
 }
 
