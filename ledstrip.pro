@@ -6,61 +6,63 @@ INCLUDEPATH += ./src/
 DEPENDPATH = $$INCLUDEPATH
 
 SOURCES += \
-    audioinput/audioinput.cpp \
-    audioinput/audioinputobserver.cpp \
-    audioinput/userdata.cpp \
-    basic/animation.cpp \
-    basic/color.cpp \
-    basic/frame.cpp \
-    basic/led.cpp \
-    gui/ffttoolbar.cpp \
-    gui/mainwindow.cpp \
-    gui/ledstripemulator.cpp \
-    gui/spectrumsettingswidget.cpp \
-    gui/tonetoolbar.cpp \
-    player/ledcontroller.cpp \
-    player/player.cpp \
-    settings/controlsettings.cpp \
-    spectrum/fftw++.cpp \
-    spectrum/spectrumanalyser.cpp \
-    spectrum/spectrumobserver.cpp \
-    spectrum/toneobserver.cpp \
-    spectrum/toneanalyser.cpp \
-    studio/imagestudio.cpp \
-    studio/spectrumstudio.cpp \
-    studio/studio.cpp \
-    studio/tonestudio.cpp \
-    main.cpp \
+    src/audioinput/audioinput.cpp \
+    src/audioinput/audioinputobserver.cpp \
+    src/audioinput/userdata.cpp \
+    src/basic/animation.cpp \
+    src/basic/color.cpp \
+    src/basic/frame.cpp \
+    src/basic/led.cpp \
+    src/bitcoinclient/bitcoinexchangeclient.cpp \
+    src/gui/ffttoolbar.cpp \
+    src/gui/mainwindow.cpp \
+    src/gui/ledstripemulator.cpp \
+    src/gui/spectrumsettingswidget.cpp \
+    src/gui/tonetoolbar.cpp \
+    src/player/ledcontroller.cpp \
+    src/player/player.cpp \
+    src/settings/controlsettings.cpp \
+    src/spectrum/fftw++.cpp \
+    src/spectrum/spectrumanalyser.cpp \
+    src/spectrum/spectrumobserver.cpp \
+    src/spectrum/toneobserver.cpp \
+    src/spectrum/toneanalyser.cpp \
+    src/studio/imagestudio.cpp \
+    src/studio/spectrumstudio.cpp \
+    src/studio/studio.cpp \
+    src/studio/tonestudio.cpp \
+    src/main.cpp \
 
 HEADERS += \
-    audioinput/audioinput.h \
-    audioinput/audioinputobserver.h \
-    audioinput/userdata.h \
-    basic/animation.h \
-    basic/color.h \
-    basic/frame.h \
-    basic/led.h \
-    basic/universalsleep.h \
-    gui/ffttoolbar.h \
-    gui/mainwindow.h \
-    gui/ledstripemulator.h \
-    gui/spectrumsettingswidget.h \
-    gui/tonetoolbar.h \
-    player/ledcontroller.h \
-    player/player.h \
-    settings/controlsettings.h \
-    spectrum/spectrumanalyser.h \
-    spectrum/spectrumobserver.h \
-    spectrum/toneanalyser.h \
-    spectrum/toneobserver.h \
-    studio/studio.h \
-    studio/spectrumstudio.h \
-    studio/tonestudio.h \
-    studio/imagestudio.h \
+    src/audioinput/audioinput.h \
+    src/audioinput/audioinputobserver.h \
+    src/audioinput/userdata.h \
+    src/basic/animation.h \
+    src/basic/color.h \
+    src/basic/frame.h \
+    src/basic/led.h \
+    src/basic/universalsleep.h \
+    src/bitcoinclient/bitcoinexchangeclient.h \
+    src/gui/ffttoolbar.h \
+    src/gui/mainwindow.h \
+    src/gui/ledstripemulator.h \
+    src/gui/spectrumsettingswidget.h \
+    src/gui/tonetoolbar.h \
+    src/player/ledcontroller.h \
+    src/player/player.h \
+    src/settings/controlsettings.h \
+    src/spectrum/spectrumanalyser.h \
+    src/spectrum/spectrumobserver.h \
+    src/spectrum/toneanalyser.h \
+    src/spectrum/toneobserver.h \
+    src/studio/studio.h \
+    src/studio/spectrumstudio.h \
+    src/studio/tonestudio.h \
+    src/studio/imagestudio.h \
 
 FORMS += \
-    gui/mainwindow.ui \
-    gui/spectrumsettingswidget.ui
+    src/gui/mainwindow.ui \
+    src/gui/spectrumsettingswidget.ui
 
 OTHER_FILES += \
     icons/audio-volume-high.png \
@@ -84,7 +86,8 @@ OTHER_FILES += \
 # library header file directories
 unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/
 unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/fftwpp/
-unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/boost/
+#unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/boost/
+unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/
 
 win32:INCLUDEPATH += C:/prog/ledstrip/include/
 win32:INCLUDEPATH += C:/prog/ledstrip/include/fftwpp/
@@ -92,7 +95,7 @@ win32:INCLUDEPATH += C:/prog/tools/boost_1_50_0_build/include/
 
 # library locations
 unix:LIBS += -L/home/bart/prog/ledstrip/lib/ # location of FFTW and AudioPort libraries
-unix:LIBS += -L/home/bart/prog/1_tools/boost_1_52_0/stage/ # location of boost ./lib/ directory
+unix:LIBS += -L/home/bart/prog/1_tools/boost_1_52_0/stage/lib/ # location of boost ./lib/ directory
 
 win32:LIBS += -LC:/prog/ledstrip/lib/vs2010x86/ # location of FFTW and AudioPort libraries for windows
 win32:LIBS += -LC:/prog/tools/boost_1_50_0_build/lib/
@@ -106,6 +109,7 @@ win32:LIBS += -lportaudio -llibfftw3-3
 # compiler flags
 unix:QMAKE_CXXFLAGS += -std=c++0x
 unix:QMAKE_CXXFLAGS += -Wall
+unix:QMAKE_LFLAGS += -Bstatic
 
 # linker flags
 QMAKE_LFLAGS += -time # show link time

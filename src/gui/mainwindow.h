@@ -33,6 +33,8 @@ class SpectrumStudio;
 class ControlSettings;
 class SpectrumSettingsWidget;
 
+class BitcoinExchangeClient;
+
 namespace Ui {
 class MainWindow;
 }
@@ -54,6 +56,7 @@ public:
 
   void updateLEDs(const std::map<double, double> &spectrum);
 
+  void getMtGox();
 public slots:
   void slotPlayerPlayed();
 
@@ -118,6 +121,8 @@ private:
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
   std::shared_ptr<ToneStudio> m_toneStudio;
   std::unique_ptr<ImageStudio> m_imageStudio;
+
+  std::unique_ptr<BitcoinExchangeClient> m_mtgoxState;
 
   QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
