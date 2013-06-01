@@ -306,22 +306,27 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
   }
 
   std::vector<LED> leds = m_toneHistoryFrame.getLEDs();
+
   for (std::size_t i = 0 ; i < leds.size()/2; ++i)
   {
     if (i < leds.size()/2-1)
     {
+      int mirrorI = leds.size()-i-1;
       leds[i].setLEDnr(leds[i].getLEDnr() + speed);
-      leds[leds.size()-i].setLEDnr(leds[leds.size()-i].getLEDnr() - speed);
+      leds[mirrorI].setLEDnr(leds[mirrorI].getLEDnr() - speed);
+
       frame.addLED(leds[i]);
-      frame.addLED(leds[leds.size()-i]);
+      frame.addLED(leds[mirrorI]);
     }
   }
 
   for (unsigned int i = 1; i <= speed; ++i)
   {
+    int mirrorI = leds.size()-i-1;
+
     LED led(i, color);
     frame.addLED(led);
-    LED led2(leds.size()-i, color);
+    LED led2(mirrorI, color);
     frame.addLED(led2);
   }
 
