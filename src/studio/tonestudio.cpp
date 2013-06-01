@@ -111,7 +111,8 @@ ToneStudio::createToneAnimation(unsigned int nLEDs, std::map<std::string, double
   calcToneMaxAverage();
   calcToneMinAverage();
 
-  unsigned int speed = 1;
+  const unsigned int speed = 1;
+
   switch (m_animationType)
   {
     case Loudest:
