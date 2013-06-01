@@ -125,18 +125,17 @@ Studio::createMovingLine(int startPos, int nFrames, const Color& color, double s
   for (int i = 0; i < nFrames; ++i)
   {
     double pos = i*speed/2.0+startPos;
-
     int posInt = std::floor(pos + 0.5);
 
     double maxDistance = 3.0 + 0.5;
-    double dx = 1.0 - std::fabs(posInt-pos)/maxDistance;
-    double dx1 = 1.0 - std::fabs(posInt-pos+1)/maxDistance;
-    double dx2 = 1.0 - std::fabs(posInt-pos-1)/maxDistance;
-    double dx3 = 1.0 - std::fabs(posInt-pos+2)/maxDistance;
-    double dx4 = 1.0 - std::fabs(posInt-pos-2)/maxDistance;
-    double dx5 = 1.0 - std::fabs(posInt-pos+3)/maxDistance;
-    double dx6 = 1.0 - std::fabs(posInt-pos-3)/maxDistance;
-//    double dx5 = std::fabs(int(pos+3)-pos)+1;
+
+    double dx = 1.0 - std::fabs(posInt-pos) / maxDistance;
+    double dx1 = 1.0 - std::fabs(posInt-pos+1) / maxDistance;
+    double dx2 = 1.0 - std::fabs(posInt-pos-1) / maxDistance;
+    double dx3 = 1.0 - std::fabs(posInt-pos+2) / maxDistance;
+    double dx4 = 1.0 - std::fabs(posInt-pos-2) / maxDistance;
+    double dx5 = 1.0 - std::fabs(posInt-pos+3) / maxDistance;
+    double dx6 = 1.0 - std::fabs(posInt-pos-3) / maxDistance;
 
     int exponent = 3;
 
@@ -147,11 +146,6 @@ Studio::createMovingLine(int startPos, int nFrames, const Color& color, double s
     double dx4_3 = std::pow(dx4, exponent);
     double dx5_3 = std::pow(dx5, exponent);
     double dx6_3 = std::pow(dx6, exponent);
-
-//    std::cout << dx1 << ", " << dx2 << ", " << dx3 << ", " << dx4 << std::endl;
-//    std::cout << int(posInt) << ": " << dx << ", " << dx1 << ", " << dx2 << ", " << dx2 << ", " << dx6_3 << std::endl;
-//    std::cout << posInt << " - " << pos << " = " << dx << std::endl;
-
 
     posInt = int(posInt) % m_nLEDs;
     Frame frame(m_nLEDs);
