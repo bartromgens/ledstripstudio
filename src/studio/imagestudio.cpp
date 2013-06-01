@@ -131,14 +131,14 @@ ImageStudio::getUniqueFilename(const std::string& filename, const std::string& e
 {
   unsigned int counter = 1;
 
-  std::string uniqueFilename = filename  + std::to_string(counter);
+  std::string uniqueFilename = filename  + std::to_string(static_cast<long long>(counter));  // cast is needed for VS2010
   QFile file(QString::fromStdString(uniqueFilename + extension));
   QFileInfo fileInfo(file);
 
   while (fileInfo.exists())
   {
     counter++;
-    uniqueFilename = filename + std::to_string(counter);
+    uniqueFilename = filename + std::to_string(static_cast<long long>(counter)); static_cast<long long>(counter);
     QFile file(QString::fromStdString(uniqueFilename + extension));
     fileInfo.setFile(file);
   }
