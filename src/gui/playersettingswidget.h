@@ -16,8 +16,10 @@ class PlayerSettingsWidget : public QWidget
   Q_OBJECT
   
 public:
-  explicit PlayerSettingsWidget(std::shared_ptr<ControlSettings> controlSettings, QWidget *parent = 0);
+  explicit PlayerSettingsWidget(QWidget *parent = 0);
   ~PlayerSettingsWidget();
+
+  void setSettings(ControlSettings* settings);
   
 private:
   void connectAllSlots() const;
@@ -28,7 +30,7 @@ private slots:
 private:
   Ui::PlayerSettingsWidget* ui;
 
-  std::shared_ptr<ControlSettings> m_settings;
+  ControlSettings* m_settings;
 };
 
 #endif // PLAYERSETTINGSWIDGET_H

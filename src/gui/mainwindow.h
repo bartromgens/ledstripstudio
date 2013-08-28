@@ -15,6 +15,7 @@
 #include <QTimer>
 
 #include <boost/thread.hpp>
+#include <thread>
 
 #include <iostream>
 #include <memory>
@@ -129,10 +130,10 @@ private:
   QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
 
-  QDockWidget* m_playerSettingsDialog;
-  PlayerSettingsWidget* m_playerSettingsWidget;
+//  QDockWidget* m_playerSettingsDialog;
+//  PlayerSettingsWidget* m_playerSettingsWidget;
 
-  boost::thread* m_audioInputThread;
+  std::unique_ptr<std::thread> m_audioInputThread;
 
   QToolBar* m_mainToolBar;
   QToolBar* m_detailsToolBar;

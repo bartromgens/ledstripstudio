@@ -37,15 +37,19 @@ MainWindow::MainWindow(QWidget *parent) :
   m_imageStudio(new ImageStudio(m_nLedsTotal)),
   m_mtgoxState(new BitcoinExchangeClient()),
   m_spectrumSettingsDialog(new QDockWidget(this)),
-  m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, m_spectrumSettingsDialog)),
-  m_playerSettingsDialog(new QDockWidget(this)),
-  m_playerSettingsWidget(new PlayerSettingsWidget(m_settings, m_playerSettingsDialog)),
+  m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings)),
+//  m_playerSettingsDialog(new QDockWidget(this)),
+//  m_playerSettingsWidget(new PlayerSettingsWidget()),
   m_toneToolbar(m_toneStudio),
   m_fftToolbar(m_audioInput, m_spectrumAnalyser),
   m_timer(),
   m_lastSingleColor(0, 0, 0)
 {
   ui->setupUi(this);
+
+//  m_playerSettingsWidget->setSettings(m_settings.get());
+  ui->mainWidget->setSettings(m_settings.get());
+//  m_playerSettingsDialog->setWidget(m_playerSettingsWidget);
 
   setWindowTitle("Light Emitting Strip Studio");
   setWindowIcon(QIcon("./icons/color_wheel2.png"));
@@ -58,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_spectrumSettingsDialog->setVisible(false);
 
-  m_playerSettingsDialog->setFloating(true);
+//  m_playerSettingsDialog->setFloating(true);
 
   m_settings->loadSettings();
   m_spectrumSettingsWidget->updateAudioControlGUI();
@@ -119,10 +123,10 @@ MainWindow::closeEvent(QCloseEvent* /*event*/)
 
   if (m_audioInputThread)
   {
-    if(!m_audioInputThread->timed_join(boost::posix_time::seconds(2)))
-    {
-      m_audioInputThread->interrupt();
-    }
+//    if(!m_audioInputThread->joinable())
+//    {
+      m_audioInputThread->join();
+//    }
   }
 
 }
@@ -132,7 +136,7 @@ void
 MainWindow::startAudioInputThread()
 {
   std::cout << "MainWindow::startAudioInputThread()" << std::endl;
-  m_audioInputThread = new boost::thread(&MainWindow::startAudioInput, this);
+  m_audioInputThread.reset(new std::thread(&MainWindow::startAudioInput, this));
 }
 
 
