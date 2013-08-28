@@ -43,7 +43,7 @@ private:
   void disconnect();
 
   void writeBytes(const QByteArray& bytes);
-  void addLedByte(QByteArray &bytes, const std::vector<LED> &leds, int pos);
+  void addLedByte(QByteArray &bytes, const std::vector<LED> &leds, int pos, int offset);
 
   void read();
 

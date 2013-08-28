@@ -22,12 +22,16 @@ public:
 
   void print();
 
+  int getOffset() const;
+  void setOffset(int offset);
+
 private:
   void fill();
 
 private:
   int m_nLEDs;
   std::vector<LED> m_leds;
+  int m_offset;
 };
 
 #endif // FRAME_H

@@ -3,9 +3,8 @@
 
 #include <QSettings>
 
-//#include <atomic>
-//#include <mutex>
-#include <boost/thread.hpp>
+#include <atomic>
+#include <mutex>
 #include <vector>
 
 class ControlSettings : public QSettings
@@ -28,6 +27,8 @@ public:
   void unlock();
 
 public:
+  std::atomic<int> positionOffest;
+
   int volumeTotal;
   int volumeRed;
   int volumeGreen;
@@ -40,9 +41,8 @@ public:
   int freqBlueMin;
   int freqBlueMax;
 
-
 private:
-  mutable boost::mutex m_mutex;
+  mutable std::mutex m_mutex;
   bool m_isActive;
 };
 

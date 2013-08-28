@@ -12,10 +12,12 @@ SpectrumSettingsWidget::SpectrumSettingsWidget(std::shared_ptr<ControlSettings> 
   connectAllSlots();
 }
 
+
 SpectrumSettingsWidget::~SpectrumSettingsWidget()
 {
   delete ui;
 }
+
 
 void
 SpectrumSettingsWidget::connectAllSlots() const

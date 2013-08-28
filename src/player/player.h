@@ -4,6 +4,7 @@
 #include "ledcontroller.h"
 
 #include "basic/animation.h"
+#include "settings/controlsettings.h"
 
 #include <memory>
 //#include <mutex>
@@ -11,7 +12,7 @@
 class Player
 {
 public:
-  Player();
+  Player(std::shared_ptr<ControlSettings> controlSettings);
   ~Player();
 
   void addAnimation(const Animation &animation);
@@ -45,6 +46,7 @@ private:
 
 private:
   std::unique_ptr<LEDController> m_ledController;
+  std::shared_ptr<ControlSettings> m_settings;
   Frame m_lastFrame;
   Animation m_mainAnimation;
 

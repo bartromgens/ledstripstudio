@@ -64,7 +64,7 @@ LEDController::disconnect()
 
 
 void
-LEDController::send(const Frame &frame)
+LEDController::send(const Frame& frame)
 {
   boost::lock_guard<boost::mutex> lock(m_mutex);
 
@@ -74,7 +74,7 @@ LEDController::send(const Frame &frame)
 
   // make sure n ms has elapsed since the last send, for the Arduino to process the data.
 //  int minSleep = 20; //160 leds
-  int minSleep = 18/160.0*200;
+  int minSleep = 21/160.0 * leds.size();
   int elapsed_ms = m_timer.nsecsElapsed()/1000000;
   int toSleep = minSleep - elapsed_ms;
 
@@ -94,14 +94,15 @@ LEDController::send(const Frame &frame)
   m_timer2.restart();
 
   // send the frame
-  int nLedsPerWrite = 4; // TODO: needs to be global setting, needs to be aligned with arduino code.
+//  std::cout << "=================" << std::endl;
+  int nLedsPerWrite = 8; // TODO: needs to be global setting, needs to be aligned with arduino code.
   for (std::size_t i = 0; i < leds.size()/nLedsPerWrite; ++i)
   {
     for (int j = 0; j < nLedsPerWrite; ++j)
     {
-      int pos = i*nLedsPerWrite + j;
+      int pos = i*nLedsPerWrite + j ;
 //      std::cout << pos << std::endl;
-      addLedByte(bytes, leds, pos);
+      addLedByte(bytes, leds, pos, frame.getOffset());
     }
 
     writeBytes(bytes);
@@ -120,13 +121,14 @@ LEDController::send(const Frame &frame)
 }
 
 
-void LEDController::addLedByte(QByteArray& bytes, const std::vector<LED>& leds, int pos)
+void LEDController::addLedByte(QByteArray& bytes, const std::vector<LED>& leds, int pos, int offset)
 {
   int red = leds.at(pos).getColor().r;
   int green = leds.at(pos).getColor().g;
   int blue = leds.at(pos).getColor().b;
 
-  bytes.append( leds.at(pos).getLEDnr() );
+  int ledPos = (leds.at(pos).getLEDnr() + offset) % leds.size();
+  bytes.append( ledPos );
   bytes.append( std::max(red, 0) );
   bytes.append( std::max(green, 0) );
   bytes.append( std::max(blue, 0) );

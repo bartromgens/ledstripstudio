@@ -3,6 +3,7 @@
 
 ControlSettings::ControlSettings()
   : QSettings(),
+    positionOffest(-15),
     volumeTotal(0),
     volumeRed(0),
     volumeGreen(0),
@@ -84,7 +85,8 @@ ControlSettings::try_lock()
 }
 
 
-void ControlSettings::unlock()
+void
+ControlSettings::unlock()
 {
   m_mutex.unlock();
 }
@@ -93,14 +95,14 @@ void ControlSettings::unlock()
 bool
 ControlSettings::isActive() const
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
   return m_isActive;
 }
 
 
 void ControlSettings::setActive(bool isActive)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_isActive = isActive;
 }
 

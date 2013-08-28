@@ -4,15 +4,15 @@
 #include <QTime>
 
 
-Player::Player()
+Player::Player(std::shared_ptr<ControlSettings> controlSettings)
   : m_ledController(),
+    m_settings(controlSettings),
     m_lastFrame(0),
     m_mainAnimation(),
     m_recordedAnimation(),
     m_isRecording(false),
     m_animationFPS(40),
     m_isPlaying(false),
-//    m_animationThread(0),
     m_mutex()
 {
   const QString serialPortName = "/dev/ttyACM0";
@@ -139,6 +139,7 @@ Player::playFrame()
       m_lastFrame = frames.front();
       m_mainAnimation.pop_frontFrame();
       frame = m_lastFrame;
+      frame.setOffset(m_settings->positionOffest);
     }
 
     if (m_isRecording)

@@ -32,6 +32,7 @@ class SpectrumStudio;
 
 class ControlSettings;
 class SpectrumSettingsWidget;
+class PlayerSettingsWidget;
 
 class BitcoinExchangeClient;
 
@@ -57,6 +58,7 @@ public:
   void updateLEDs(const std::map<double, double> &spectrum);
 
   void getMtGox();
+
 public slots:
   void slotPlayerPlayed();
 
@@ -112,10 +114,10 @@ private:
   QColorDialog* m_colorDialog;
   std::size_t m_nLedsTotal;
 
+  std::shared_ptr<ControlSettings> m_settings;
   std::shared_ptr<Player> m_player;
   std::unique_ptr<Studio> m_studio;
   std::shared_ptr<AudioInput> m_audioInput;
-  std::shared_ptr<ControlSettings> m_settings;
   std::shared_ptr<SpectrumAnalyser> m_spectrumAnalyser;
   std::shared_ptr<ToneAnalyser> m_toneAnalyser;
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
@@ -126,6 +128,9 @@ private:
 
   QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
+
+  QDockWidget* m_playerSettingsDialog;
+  PlayerSettingsWidget* m_playerSettingsWidget;
 
   boost::thread* m_audioInputThread;
 

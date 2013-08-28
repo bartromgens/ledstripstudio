@@ -4,6 +4,7 @@
 
 #include "audioinput/audioinput.h"
 #include "gui/spectrumsettingswidget.h"
+#include "gui/playersettingswidget.h"
 #include "spectrum/spectrumanalyser.h"
 #include "spectrum/toneanalyser.h"
 #include "studio/imagestudio.h"
@@ -16,7 +17,7 @@
 #include <QPushButton>
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
-const int NLEDS = 200;
+const int NLEDS = 160;
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -25,10 +26,10 @@ MainWindow::MainWindow(QWidget *parent) :
   ui(new Ui::MainWindow),
   m_colorDialog(new QColorDialog(this)),
   m_nLedsTotal(NLEDS),
-  m_player(new Player()),
+  m_settings(new ControlSettings()),
+  m_player(new Player(m_settings)),
   m_studio(new Studio(m_nLedsTotal)),
   m_audioInput(new AudioInput(SPECTRUM_SAMPLES, m_nLedsTotal)),
-  m_settings(new ControlSettings()),
   m_spectrumAnalyser(new SpectrumAnalyser(SPECTRUM_SAMPLES)),
   m_toneAnalyser(new ToneAnalyser()),
   m_spectrumStudio(new SpectrumStudio()),
@@ -37,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_mtgoxState(new BitcoinExchangeClient()),
   m_spectrumSettingsDialog(new QDockWidget(this)),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, m_spectrumSettingsDialog)),
+  m_playerSettingsDialog(new QDockWidget(this)),
+  m_playerSettingsWidget(new PlayerSettingsWidget(m_settings, m_playerSettingsDialog)),
   m_toneToolbar(m_toneStudio),
   m_fftToolbar(m_audioInput, m_spectrumAnalyser),
   m_timer(0),
@@ -54,6 +57,8 @@ MainWindow::MainWindow(QWidget *parent) :
   connectAllSlots();
 
   m_spectrumSettingsDialog->setVisible(false);
+
+  m_playerSettingsDialog->setFloating(true);
 
   m_settings->loadSettings();
   m_spectrumSettingsWidget->updateAudioControlGUI();

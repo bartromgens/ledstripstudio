@@ -2,7 +2,8 @@
 
 Frame::Frame(int nLEDs)
   : m_nLEDs(nLEDs),
-    m_leds()
+    m_leds(),
+    m_offset(0)
 {
   fill();
 }
@@ -64,4 +65,15 @@ Frame::amplifyRGB(double facR, double facG, double facB)
     const Color& colorOld = m_leds[i].getColor();
     m_leds[i].setColor( Color(int(colorOld.r * facR), int(colorOld.g * facG), int(colorOld.b * facB)) );
   }
+}
+
+int
+Frame::getOffset() const
+{
+  return m_offset;
+}
+
+void Frame::setOffset(int offset)
+{
+  m_offset = offset;
 }
