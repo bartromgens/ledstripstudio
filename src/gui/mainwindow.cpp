@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_playerSettingsWidget(new PlayerSettingsWidget(m_settings, m_playerSettingsDialog)),
   m_toneToolbar(m_toneStudio),
   m_fftToolbar(m_audioInput, m_spectrumAnalyser),
-  m_timer(0),
+  m_timer(),
   m_lastSingleColor(0, 0, 0)
 {
   ui->setupUi(this);
@@ -89,14 +89,14 @@ MainWindow::~MainWindow()
 void
 MainWindow::createTimers()
 {
-  m_timer = new QTimer(this);
+  m_timer.reset(new QTimer(this));
   m_timer->setInterval(10000);
-  connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
+  connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(update()));
   m_timer->start();
 
-  m_timerEmulator = new QTimer(this);
+  m_timerEmulator.reset(new QTimer(this));
   m_timerEmulator->setInterval(30);
-  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
+  connect(m_timerEmulator.get(), SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
 
 //  m_timerEmulator = new QTimer(this);

@@ -158,8 +158,8 @@ private:
   QAction* m_recordAnimationAct;
   QAction* m_openColorPickerAct;
 
-  QTimer* m_timer;
-  QTimer* m_timerEmulator;
+  std::unique_ptr<QTimer> m_timer;
+  std::unique_ptr<QTimer> m_timerEmulator;
 
   QColor m_lastSingleColor;
 };
