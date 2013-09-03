@@ -123,12 +123,11 @@ MainWindow::closeEvent(QCloseEvent* /*event*/)
 
   if (m_audioInputThread)
   {
-//    if(!m_audioInputThread->joinable())
-//    {
-      m_audioInputThread->join();
-//    }
+    if(!m_audioInputThread->timed_join(boost::posix_time::seconds(2)))
+    {
+      m_audioInputThread->interrupt();
+    }
   }
-
 }
 
 
@@ -136,7 +135,7 @@ void
 MainWindow::startAudioInputThread()
 {
   std::cout << "MainWindow::startAudioInputThread()" << std::endl;
-  m_audioInputThread.reset(new std::thread(&MainWindow::startAudioInput, this));
+  m_audioInputThread.reset(new boost::thread(&MainWindow::startAudioInput, this));
 }
 
 

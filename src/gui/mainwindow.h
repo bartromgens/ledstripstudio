@@ -133,7 +133,7 @@ private:
 //  QDockWidget* m_playerSettingsDialog;
 //  PlayerSettingsWidget* m_playerSettingsWidget;
 
-  std::unique_ptr<std::thread> m_audioInputThread;
+  std::unique_ptr<boost::thread> m_audioInputThread;
 
   QToolBar* m_mainToolBar;
   QToolBar* m_detailsToolBar;
