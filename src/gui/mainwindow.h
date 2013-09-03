@@ -76,7 +76,7 @@ private slots:
   void slotToggleAnimation(bool isChecked);
   void slotToggleSingleColor(bool isChecked);
 
-  void slotShowSpetrumSettings();
+  void slotToggleSpectrumSettings(bool isChecked);
 
   void slotOpenColorPicker();
   void slotColorSelected(QColor color);
@@ -151,7 +151,7 @@ private:
   QAction* m_animationToggleAct;
   QAction* m_colorToggleAct;
 
-  QAction* m_openSpectrumSettingsAct;
+  QAction* m_spectrumSettingsToggleAct;
 
   QAction* m_dotsAnimationAct;
   QAction* m_rainbowAnimationAct;

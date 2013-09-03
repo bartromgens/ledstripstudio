@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneStudio(new ToneStudio()),
   m_imageStudio(new ImageStudio(m_nLedsTotal)),
   m_mtgoxState(new BitcoinExchangeClient()),
-  m_spectrumSettingsDialog(new QDockWidget(this)),
+//  m_spectrumSettingsDialog(new QDockWidget(this)),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings)),
 //  m_playerSettingsDialog(new QDockWidget(this)),
 //  m_playerSettingsWidget(new PlayerSettingsWidget()),
@@ -47,9 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
-//  m_playerSettingsWidget->setSettings(m_settings.get());
   ui->mainWidget->setSettings(m_settings.get());
-//  m_playerSettingsDialog->setWidget(m_playerSettingsWidget);
 
   setWindowTitle("Light Emitting Strip Studio");
   setWindowIcon(QIcon("./icons/color_wheel2.png"));
@@ -60,20 +58,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connectAllSlots();
 
-  m_spectrumSettingsDialog->setVisible(false);
-
-//  m_playerSettingsDialog->setFloating(true);
-
   m_settings->loadSettings();
   m_spectrumSettingsWidget->updateAudioControlGUI();
+
   m_audioInput->setControlSettings(m_settings);
 
   createTimers();
-//  m_mtgoxState->getUnconfirmedTransactions();
-//    m_mtgoxState->getLatestBlock();
 
   m_spectrumAnalyser->registerObserver(this);
   m_toneAnalyser->registerObserver(this);
+
+//  ui->frame_3->setVisible(false);
+  ui->gridLayout->addWidget(m_spectrumSettingsWidget);
 
   setActionsDefaults();
 }
@@ -241,14 +237,14 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
   }
   else
   {
-    m_openSpectrumSettingsAct->setVisible(false);
+    m_spectrumSettingsToggleAct->setVisible(false);
     if (!m_toneToggleButton->isChecked())
     {
       stopSpectrumAnalyser();
     }
   }
 
-  m_openSpectrumSettingsAct->setVisible(isChecked);
+  m_spectrumSettingsToggleAct->setVisible(isChecked);
   m_fftToolbar.toggleFFTSettings(isChecked);
 }
 
@@ -307,12 +303,13 @@ MainWindow::slotToggleSingleColor(bool isChecked)
 
 
 void
-MainWindow::slotShowSpetrumSettings()
+MainWindow::slotToggleSpectrumSettings(bool isChecked)
 {
-  m_spectrumSettingsDialog->setFloating(true);
-  m_spectrumSettingsDialog->setWidget(m_spectrumSettingsWidget);
-  m_spectrumSettingsWidget->show();
-  m_spectrumSettingsDialog->setVisible(true);
+  m_spectrumSettingsWidget->setVisible(isChecked);
+//  m_spectrumSettingsDialog->setFloating(true);
+//  m_spectrumSettingsDialog->setWidget(m_spectrumSettingsWidget);
+//  m_spectrumSettingsWidget->show();
+//  m_spectrumSettingsDialog->setVisible(true);
 }
 
 
@@ -477,11 +474,12 @@ MainWindow::createActions()
   m_colorToggleAct->setCheckable(true);
   connect(m_colorToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSingleColor(bool)));
 
-  m_openSpectrumSettingsAct = new QAction(this);
-  m_openSpectrumSettingsAct->setIcon(QIcon("./icons/preferences-system.png"));
-  m_openSpectrumSettingsAct->setStatusTip(tr("Open spectrum settings."));
-  m_openSpectrumSettingsAct->setVisible(false);
-  connect(m_openSpectrumSettingsAct, SIGNAL(triggered()), this, SLOT(slotShowSpetrumSettings()));
+  m_spectrumSettingsToggleAct = new QAction(this);
+  m_spectrumSettingsToggleAct->setIcon(QIcon("./icons/preferences-system.png"));
+  m_spectrumSettingsToggleAct->setStatusTip(tr("Open spectrum settings."));
+  m_spectrumSettingsToggleAct->setVisible(false);
+  m_spectrumSettingsToggleAct->setCheckable(true);
+  connect(m_spectrumSettingsToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpectrumSettings(bool)));
 
   m_openColorPickerAct = new QAction(this);
   m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel.png"));
@@ -555,7 +553,7 @@ MainWindow::createToolbars()
   m_detailsToolBar->setOrientation(Qt::Vertical);
 
   m_detailsToolBar->addSeparator();
-  m_detailsToolBar->addAction(m_openSpectrumSettingsAct);
+  m_detailsToolBar->addAction(m_spectrumSettingsToggleAct);
 
   m_toneToolbar.initialise(m_detailsToolBar);
 
