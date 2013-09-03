@@ -711,7 +711,9 @@ MainWindow::stopToneAnalyser() const
   m_spectrumAnalyser->unregisterObserver(m_toneAnalyser.get());
 }
 
-void MainWindow::getMtGox()
+
+void
+MainWindow::getMtGox()
 {
   m_mtgoxState->getMtGoxData();
 
