@@ -609,49 +609,7 @@ void
 MainWindow::updateLEDs(const std::map<double, double>& spectrum)
 {
 //  std::cout << "MainWindow::updateLEDs" << std::endl;
-  double brightnessRed = 0.0;
-  double brightnessGreen = 0.0;
-  double brightnessBlue = 0.0;
-
-  m_settings->lock();
-
-  double amplifyFactor = m_settings->volumeTotal/1000.0;
-  double amplifyFactorRed = m_settings->volumeRed/25.0;
-  double amplifyFactorGreen = m_settings->volumeGreen/50.0;
-  double amplifyFactorBlue = m_settings->volumeBlue/100.0;
-
-  int freqRmin = m_settings->freqRedMin;
-  int freqRmax = m_settings->freqRedMax;
-  int freqGmin = m_settings->freqGreenMin;
-  int freqGmax = m_settings->freqGreenMax;
-  int freqBmin = m_settings->freqBlueMin;
-  int freqBmax = m_settings->freqBlueMax;
-
-  m_settings->unlock();
-
-  for (std::map<double, double>::const_iterator iter = spectrum.begin();
-       iter != spectrum.end(); ++iter)
-  {
-    double frequency = iter->first;
-    double amplitude = iter->second;
-
-    if (frequency > freqRmin && frequency < freqRmax)
-    {
-      brightnessRed += amplitude*amplifyFactor*amplifyFactorRed;
-    }
-
-    if (frequency > freqGmin && frequency < freqGmax)
-    {
-      brightnessGreen += amplitude*amplifyFactor*amplifyFactorGreen;
-    }
-
-    if (frequency > freqBmin && frequency < freqBmax)
-    {
-      brightnessBlue += amplitude*amplifyFactor*amplifyFactorBlue;
-    }
-  }
-
-  Animation animation = m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, brightnessRed, brightnessGreen, brightnessBlue);
+  Animation animation = m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, spectrum, m_settings.get());
   m_player->addAnimation(animation);
 
   m_player->playFrame();

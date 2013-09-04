@@ -4,13 +4,14 @@
 #include <map>
 
 class Animation;
+class ControlSettings;
 
 class SpectrumStudio
 {
 public:
   SpectrumStudio();
 
-  Animation createWaveformAnimationCentral(int nLEDs, int brightnessRed, int brightnessGreen, int brightnessBlue);
+  Animation createWaveformAnimationCentral(int nLEDs, const std::map<double, double>& spectrum, ControlSettings* settings);
 
   void drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const;
 };
