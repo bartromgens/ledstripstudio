@@ -74,7 +74,7 @@
       <item row="3" column="0" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Total</string>
+         <string>Master</string>
         </property>
        </widget>
       </item>
