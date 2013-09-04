@@ -99,14 +99,6 @@ MainWindow::createTimers()
   m_timerEmulator->setInterval(30);
   connect(m_timerEmulator.get(), SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
   m_timerEmulator->start();
-
-//  m_timerEmulator = new QTimer(this);
-//  unsigned int nowMsSinceEpoch = QDateTime::toTime_t();
-//  QDateTime::currentMSecsSinceEpoch();
-
-//  m_timerEmulator->setInterval(30);
-//  connect(m_timerEmulator, SIGNAL(timeout()), this, SLOT(slotPlayerPlayed()));
-//  m_timerEmulator->start();
 }
 
 
@@ -307,10 +299,6 @@ void
 MainWindow::slotToggleSpectrumSettings(bool isChecked)
 {
   m_spectrumSettingsWidget->setVisible(isChecked);
-//  m_spectrumSettingsDialog->setFloating(true);
-//  m_spectrumSettingsDialog->setWidget(m_spectrumSettingsWidget);
-//  m_spectrumSettingsWidget->show();
-//  m_spectrumSettingsDialog->setVisible(true);
 }
 
 
