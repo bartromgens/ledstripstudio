@@ -32,7 +32,8 @@ SOURCES += \
     src/studio/studio.cpp \
     src/studio/tonestudio.cpp \
     src/main.cpp \
-    src/gui/playersettingswidget.cpp
+    src/gui/playersettingswidget.cpp \
+    src/gui/ledstripstatuswidget.cpp
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -60,12 +61,14 @@ HEADERS += \
     src/studio/spectrumstudio.h \
     src/studio/tonestudio.h \
     src/studio/imagestudio.h \
-    src/gui/playersettingswidget.h
+    src/gui/playersettingswidget.h \
+    src/gui/ledstripstatuswidget.h
 
 FORMS += \
     src/gui/mainwindow.ui \
     src/gui/spectrumsettingswidget.ui \
-    src/gui/playersettingswidget.ui
+    src/gui/playersettingswidget.ui \
+    src/gui/ledstripstatuswidget.ui
 
 OTHER_FILES += \
     icons/audio-volume-high.png \

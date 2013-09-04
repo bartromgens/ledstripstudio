@@ -32,6 +32,7 @@ class ToneStudio;
 class SpectrumStudio;
 
 class ControlSettings;
+class LedStripStatusWidget;
 class SpectrumSettingsWidget;
 class PlayerSettingsWidget;
 
@@ -129,6 +130,7 @@ private:
 
   QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
+  LedStripStatusWidget* m_ledStripStatusWidget;
 
 //  QDockWidget* m_playerSettingsDialog;
 //  PlayerSettingsWidget* m_playerSettingsWidget;

@@ -3,6 +3,7 @@
 
 
 #include "audioinput/audioinput.h"
+#include "gui/ledstripstatuswidget.h"
 #include "gui/spectrumsettingswidget.h"
 #include "gui/playersettingswidget.h"
 #include "spectrum/spectrumanalyser.h"
@@ -37,7 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_imageStudio(new ImageStudio(m_nLedsTotal)),
   m_mtgoxState(new BitcoinExchangeClient()),
 //  m_spectrumSettingsDialog(new QDockWidget(this)),
-  m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings)),
+  m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, this)),
+  m_ledStripStatusWidget(new LedStripStatusWidget(this)),
 //  m_playerSettingsDialog(new QDockWidget(this)),
 //  m_playerSettingsWidget(new PlayerSettingsWidget()),
   m_toneToolbar(m_toneStudio),
@@ -69,7 +71,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneAnalyser->registerObserver(this);
 
 //  ui->frame_3->setVisible(false);
-  ui->gridLayout->addWidget(m_spectrumSettingsWidget);
+  ui->centralwidget->layout()->addWidget(m_spectrumSettingsWidget);
+  ui->centralwidget->layout()->addWidget(m_ledStripStatusWidget);
 
   setActionsDefaults();
 }
@@ -591,7 +594,7 @@ MainWindow::update()
 //  getMtGox();
 
   int fps = m_player->getFPS();
-  ui->fpsLcd->setText(QString::number(fps));
+  m_ledStripStatusWidget->setFPS(fps);
 }
 
 
@@ -600,39 +603,7 @@ MainWindow::slotPlayerPlayed()
 {
   Frame frame = m_player->getLastFrame();
 
-  if (ui->enableEmulator->isChecked())
-  {
-    ui->ledStripEmulator->setHeight(ui->ledStripEmulator->size().height());
-    ui->ledStripEmulator->setWidth(ui->ledStripEmulator->size().width()/m_nLedsTotal);
-    ui->ledStripEmulator->setFrame(frame);
-    ui->ledStripEmulator->update();
-  }
-
-  if (ui->enableEmulatorRGB->isChecked())
-  {
-    ui->ledStripEmulatorRed->setHeight(ui->ledStripEmulatorRed->size().height());
-    ui->ledStripEmulatorRed->setWidth(ui->ledStripEmulatorRed->size().width()/m_nLedsTotal);
-    ui->ledStripEmulatorGreen->setHeight(ui->ledStripEmulatorGreen->size().height());
-    ui->ledStripEmulatorGreen->setWidth(ui->ledStripEmulatorGreen->size().width()/m_nLedsTotal);
-    ui->ledStripEmulatorBlue->setHeight(ui->ledStripEmulatorBlue->size().height());
-    ui->ledStripEmulatorBlue->setWidth(ui->ledStripEmulatorBlue->size().width()/m_nLedsTotal);
-
-    Frame frameR = frame;
-    Frame frameG = frame;
-    Frame frameB = frame;
-
-    frameR.amplifyRGB(1.0, 0.0, 0.0);
-    frameG.amplifyRGB(0.0, 1.0, 0.0);
-    frameB.amplifyRGB(0.0, 0.0, 1.0);
-
-    ui->ledStripEmulatorRed->setFrame(frameR);
-    ui->ledStripEmulatorGreen->setFrame(frameG);
-    ui->ledStripEmulatorBlue->setFrame(frameB);
-
-    ui->ledStripEmulatorRed->update();
-    ui->ledStripEmulatorGreen->update();
-    ui->ledStripEmulatorBlue->update();
-  }
+  m_ledStripStatusWidget->update(frame);
 }
 
 

@@ -32,7 +32,6 @@ void
 PlayerSettingsWidget::connectAllSlots() const
 {
   connect( ui->offsetHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotOffsetChanged() ) );
-  connect( ui->offsetSpinBox, SIGNAL( valueChanged(int) ), this, SLOT( slotOffsetChanged() ) );
 }
 
 
@@ -40,6 +39,5 @@ void
 PlayerSettingsWidget::slotOffsetChanged()
 {
   assert(m_settings);
-  m_settings->positionOffest =  ui->offsetHorizontalSlider->value();
-  ui->offsetSpinBox->setValue(ui->offsetHorizontalSlider->value());
+  m_settings->positionOffest = ui->offsetHorizontalSlider->value();
 }
