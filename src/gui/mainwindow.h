@@ -128,12 +128,9 @@ private:
 
   std::unique_ptr<BitcoinExchangeClient> m_mtgoxState;
 
-  QDockWidget* m_spectrumSettingsDialog;
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
   LedStripStatusWidget* m_ledStripStatusWidget;
-
-//  QDockWidget* m_playerSettingsDialog;
-//  PlayerSettingsWidget* m_playerSettingsWidget;
+  PlayerSettingsWidget* m_playerSettingsWidget;
 
   std::unique_ptr<boost::thread> m_audioInputThread;
 

@@ -37,11 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneStudio(new ToneStudio()),
   m_imageStudio(new ImageStudio(m_nLedsTotal)),
   m_mtgoxState(new BitcoinExchangeClient()),
-//  m_spectrumSettingsDialog(new QDockWidget(this)),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, this)),
   m_ledStripStatusWidget(new LedStripStatusWidget(this)),
-//  m_playerSettingsDialog(new QDockWidget(this)),
-//  m_playerSettingsWidget(new PlayerSettingsWidget()),
+  m_playerSettingsWidget(new PlayerSettingsWidget(this)),
   m_toneToolbar(m_toneStudio),
   m_fftToolbar(m_audioInput, m_spectrumAnalyser),
   m_timer(),
@@ -49,10 +47,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
-  ui->mainWidget->setSettings(m_settings.get());
-
   setWindowTitle("Light Emitting Strip Studio");
   setWindowIcon(QIcon("./icons/color_wheel2.png"));
+
+  m_settings->loadSettings();
 
   createActions();
   createToolbars();
@@ -60,19 +58,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connectAllSlots();
 
-  m_settings->loadSettings();
-  m_spectrumSettingsWidget->updateAudioControlGUI();
+  createTimers();
 
   m_audioInput->setControlSettings(m_settings);
 
-  createTimers();
+  m_spectrumSettingsWidget->updateAudioControlGUI();
+  m_playerSettingsWidget->setSettings(m_settings.get());
 
-  m_spectrumAnalyser->registerObserver(this);
-  m_toneAnalyser->registerObserver(this);
-
-//  ui->frame_3->setVisible(false);
+  ui->centralwidget->layout()->addWidget(m_playerSettingsWidget);
   ui->centralwidget->layout()->addWidget(m_spectrumSettingsWidget);
   ui->centralwidget->layout()->addWidget(m_ledStripStatusWidget);
+
+  m_toneAnalyser->registerObserver(this);
+  m_spectrumAnalyser->registerObserver(this);
 
   setActionsDefaults();
 }
