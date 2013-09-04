@@ -7,12 +7,30 @@ LedStripStatusWidget::LedStripStatusWidget(QWidget *parent) :
   m_fps(0)
 {
   ui->setupUi(this);
+
+  connect(ui->enableEmulator, SIGNAL(toggled(bool)), this, SLOT(slotEmulatorToggled(bool)));
+  connect(ui->enableEmulatorRGB, SIGNAL(toggled(bool)), this, SLOT(slotEmulatorRGBToggled(bool)));
+  ui->enableEmulatorRGB->setChecked(false);
 }
 
 
 LedStripStatusWidget::~LedStripStatusWidget()
 {
   delete ui;
+}
+
+
+void
+LedStripStatusWidget::slotEmulatorRGBToggled(bool isChecked)
+{
+  ui->frameRGB->setVisible(isChecked);
+}
+
+
+void
+LedStripStatusWidget::slotEmulatorToggled(bool isChecked)
+{
+  ui->frame->setVisible(isChecked);
 }
 
 
