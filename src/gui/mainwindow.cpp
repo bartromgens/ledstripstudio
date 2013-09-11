@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   createActions();
   createToolbars();
-  createMenus();
+//  createMenus();
 
   connectAllSlots();
 
