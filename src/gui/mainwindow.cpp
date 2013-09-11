@@ -280,6 +280,12 @@ MainWindow::slotToggleAnimation(bool isChecked)
     m_toneToggleButton->setChecked(false);
     m_colorToggleAct->setChecked(false);
   }
+  else
+  {
+    m_dotsAnimationAct->setChecked(false);
+    m_rainbowAnimationAct->setChecked(false);
+    m_imageAnimationAct->setChecked(false);
+  }
 }
 
 
