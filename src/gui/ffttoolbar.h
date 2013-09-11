@@ -21,7 +21,7 @@ public:
 
   void initialise(QToolBar* parentToolbar);
 
-  void toggleFFTSettings(bool isChecked);
+  void setVisible(bool isChecked);
 
 private:
   void setNSamples(unsigned int nSamples);

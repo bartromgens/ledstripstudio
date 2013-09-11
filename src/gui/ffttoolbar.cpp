@@ -65,7 +65,7 @@ FFTToolbar::initialise(QToolBar* parentToolbar)
 
 
 void
-FFTToolbar::toggleFFTSettings(bool isChecked)
+FFTToolbar::setVisible(bool isChecked)
 {
   m_FFT14sizeAct->setVisible(isChecked);
   m_FFT15sizeAct->setVisible(isChecked);

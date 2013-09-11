@@ -71,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->centralwidget->layout()->addWidget(m_ledStripStatusWidget);
   ui->centralwidget->layout()->addWidget(m_spectrumSettingsWidget);
 
+  m_spectrumSettingsWidget->setVisible(false);
+  m_fftToolbar.setVisible(false);
   m_toneAnalyser->registerObserver(this);
   m_spectrumAnalyser->registerObserver(this);
 
@@ -241,7 +243,7 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 
   slotToggleSpectrumSettings(isChecked);
   m_spectrumSettingsToggleAct->setVisible(isChecked);
-  m_fftToolbar.toggleFFTSettings(isChecked);
+  m_fftToolbar.setVisible(isChecked);
 }
 
 
@@ -263,7 +265,7 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
   }
 
   m_toneToolbar.toggleToneAnalysis(isChecked);
-  m_fftToolbar.toggleFFTSettings(isChecked);
+  m_fftToolbar.setVisible(isChecked);
 }
 
 
