@@ -68,8 +68,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_playerSettingsWidget->setSettings(m_settings.get());
 
   ui->centralwidget->layout()->addWidget(m_playerSettingsWidget);
-  ui->centralwidget->layout()->addWidget(m_spectrumSettingsWidget);
   ui->centralwidget->layout()->addWidget(m_ledStripStatusWidget);
+  ui->centralwidget->layout()->addWidget(m_spectrumSettingsWidget);
 
   m_toneAnalyser->registerObserver(this);
   m_spectrumAnalyser->registerObserver(this);
@@ -239,6 +239,7 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
     }
   }
 
+  slotToggleSpectrumSettings(isChecked);
   m_spectrumSettingsToggleAct->setVisible(isChecked);
   m_fftToolbar.toggleFFTSettings(isChecked);
 }
