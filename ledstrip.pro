@@ -121,6 +121,16 @@ unix:QMAKE_LFLAGS += -Bstatic
 QMAKE_LFLAGS += -time # show link time
 
 # location of generated files
-OBJECTS_DIR = ./tmp/
-MOC_DIR = ./tmp/
 UI_DIR = ./src/gui/
+
+CONFIG(debug, debug|release) {
+  TARGET = myappd
+  OBJECTS_DIR = ./tmp/debug
+  MOC_DIR = ./tmp/debug
+}
+
+CONFIG(release, debug|release) {
+  TARGET = myapp
+  OBJECTS_DIR = ./tmp/release
+  MOC_DIR = ./tmp/release
+}
