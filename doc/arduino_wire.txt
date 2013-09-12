@@ -1,0 +1,2 @@
+Pin 2 and 3 are used for input.
+In my first prototype, the yellow wire goes into pin 2, the green wire in pin 3.

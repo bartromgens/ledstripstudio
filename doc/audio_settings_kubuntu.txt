@@ -1,0 +1,5 @@
+Open PulseAudio Volume Control.
+
+Start LedStrip Studio.
+Under the Recording tab,
+set ALSA plug-in: ALSA Capture from [your audio monitor]
