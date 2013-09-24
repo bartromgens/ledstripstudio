@@ -90,8 +90,8 @@ OTHER_FILES += \
 # Boost for serial connection with the Arduino
 
 # library header file directories
-unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/
-unix:INCLUDEPATH += /home/bart/prog/ledstrip/include/fftwpp/
+unix:INCLUDEPATH += ./include/
+unix:INCLUDEPATH += ./include/fftwpp/
 #unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/boost/
 unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/
 
