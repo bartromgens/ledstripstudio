@@ -1,6 +1,9 @@
 TEMPLATE = app
 CONFIG += core gui
 
+# application name
+TARGET = ledstripstudio
+
 # let everything find the source directory without specifying its location
 INCLUDEPATH += ./src/
 DEPENDPATH = $$INCLUDEPATH
