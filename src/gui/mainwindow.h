@@ -36,8 +36,6 @@ class LedStripStatusWidget;
 class SpectrumSettingsWidget;
 class PlayerSettingsWidget;
 
-class BitcoinExchangeClient;
-
 namespace Ui {
 class MainWindow;
 }
@@ -125,8 +123,6 @@ private:
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
   std::shared_ptr<ToneStudio> m_toneStudio;
   std::unique_ptr<ImageStudio> m_imageStudio;
-
-  std::unique_ptr<BitcoinExchangeClient> m_mtgoxState;
 
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
   LedStripStatusWidget* m_ledStripStatusWidget;

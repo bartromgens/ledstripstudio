@@ -12,8 +12,6 @@
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
 
-#include "bitcoinclient/bitcoinexchangeclient.h"
-
 #include <QFileDialog>
 #include <QPushButton>
 
@@ -36,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumStudio(new SpectrumStudio()),
   m_toneStudio(new ToneStudio()),
   m_imageStudio(new ImageStudio(m_nLedsTotal)),
-  m_mtgoxState(new BitcoinExchangeClient()),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, this)),
   m_ledStripStatusWidget(new LedStripStatusWidget(this)),
   m_playerSettingsWidget(new PlayerSettingsWidget(this)),

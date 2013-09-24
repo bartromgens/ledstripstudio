@@ -13,7 +13,6 @@ SOURCES += \
     src/basic/color.cpp \
     src/basic/frame.cpp \
     src/basic/led.cpp \
-    src/bitcoinclient/bitcoinexchangeclient.cpp \
     src/gui/ffttoolbar.cpp \
     src/gui/mainwindow.cpp \
     src/gui/ledstripemulator.cpp \
@@ -44,7 +43,6 @@ HEADERS += \
     src/basic/frame.h \
     src/basic/led.h \
     src/basic/universalsleep.h \
-    src/bitcoinclient/bitcoinexchangeclient.h \
     src/gui/ffttoolbar.h \
     src/gui/mainwindow.h \
     src/gui/ledstripemulator.h \
