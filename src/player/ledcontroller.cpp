@@ -96,13 +96,15 @@ LEDController::send(const Frame& frame)
   // send the frame
 //  std::cout << "=================" << std::endl;
   int nLedsPerWrite = 8; // TODO: needs to be global setting, needs to be aligned with arduino code.
+  int offset = frame.getOffset();
+  int brightness = frame.getBrightness();
   for (std::size_t i = 0; i < leds.size()/nLedsPerWrite; ++i)
   {
     for (int j = 0; j < nLedsPerWrite; ++j)
     {
       int pos = i*nLedsPerWrite + j ;
 //      std::cout << pos << std::endl;
-      addLedByte(bytes, leds, pos, frame.getOffset());
+      addLedByte(bytes, leds, pos, offset, brightness);
     }
 
     writeBytes(bytes);
@@ -121,11 +123,12 @@ LEDController::send(const Frame& frame)
 }
 
 
-void LEDController::addLedByte(QByteArray& bytes, const std::vector<LED>& leds, int pos, int offset)
+void
+LEDController::addLedByte(QByteArray& bytes, const std::vector<LED>& leds, int pos, int offset, int brightness)
 {
-  int red = leds.at(pos).getColor().r;
-  int green = leds.at(pos).getColor().g;
-  int blue = leds.at(pos).getColor().b;
+  int red = leds.at(pos).getColor().r * brightness/100.0;
+  int green = leds.at(pos).getColor().g * brightness/100.0;
+  int blue = leds.at(pos).getColor().b * brightness/100.0;
 
   int ledPos = (leds.at(pos).getLEDnr() + offset) % leds.size();
   bytes.append( ledPos );
@@ -135,7 +138,8 @@ void LEDController::addLedByte(QByteArray& bytes, const std::vector<LED>& leds, 
 }
 
 
-void LEDController::writeBytes(const QByteArray& bytes)
+void
+LEDController::writeBytes(const QByteArray& bytes)
 {
   boost::system::error_code error;
   boost::asio::write(*m_serialPort, boost::asio::buffer(bytes.constData(), bytes.size()), boost::asio::transfer_all(), error);

@@ -31,13 +31,22 @@ PlayerSettingsWidget::setSettings(ControlSettings* settings)
 void
 PlayerSettingsWidget::connectAllSlots() const
 {
-  connect( ui->offsetHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotOffsetChanged() ) );
+  connect( ui->offsetHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotOffsetChanged(int) ) );
+  connect( ui->brightnessHorizontalSlider, SIGNAL( valueChanged(int) ), this, SLOT( slotBrightnessChanged(int) ) );
 }
 
 
 void
-PlayerSettingsWidget::slotOffsetChanged()
+PlayerSettingsWidget::slotOffsetChanged(int value)
 {
   assert(m_settings);
-  m_settings->positionOffest = ui->offsetHorizontalSlider->value();
+  m_settings->positionOffest = value;
+}
+
+
+void
+PlayerSettingsWidget::slotBrightnessChanged(int value)
+{
+  assert(m_settings);
+  m_settings->brightness = value;
 }

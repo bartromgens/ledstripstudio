@@ -25,7 +25,8 @@ private:
   void connectAllSlots() const;
 
 private slots:
-  void slotOffsetChanged();
+  void slotOffsetChanged(int value);
+  void slotBrightnessChanged(int value);
 
 private:
   Ui::PlayerSettingsWidget* ui;

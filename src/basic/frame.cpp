@@ -3,7 +3,8 @@
 Frame::Frame(int nLEDs)
   : m_nLEDs(nLEDs),
     m_leds(),
-    m_offset(0)
+    m_offset(0),
+    m_brightness(100)
 {
   fill();
 }
@@ -73,7 +74,20 @@ Frame::getOffset() const
   return m_offset;
 }
 
-void Frame::setOffset(int offset)
+void
+Frame::setOffset(int offset)
 {
   m_offset = offset;
+}
+
+int
+Frame::getBrightness() const
+{
+  return m_brightness;
+}
+
+void
+Frame::setBrightness(int brightness)
+{
+  m_brightness = brightness;
 }

@@ -140,6 +140,7 @@ Player::playFrame()
       m_mainAnimation.pop_frontFrame();
       frame = m_lastFrame;
       frame.setOffset(m_settings->positionOffest);
+      frame.setBrightness(m_settings->brightness);
     }
 
     if (m_isRecording)

@@ -28,6 +28,7 @@ public:
 
 public:
   std::atomic<int> positionOffest;
+  std::atomic<int> brightness;
 
   int volumeTotal;
   int volumeRed;

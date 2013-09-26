@@ -24,6 +24,8 @@ public:
 
   int getOffset() const;
   void setOffset(int offset);
+  int getBrightness() const;
+  void setBrightness(int brightness);
 
 private:
   void fill();
@@ -32,6 +34,7 @@ private:
   int m_nLEDs;
   std::vector<LED> m_leds;
   int m_offset;
+  int m_brightness;
 };
 
 #endif // FRAME_H
