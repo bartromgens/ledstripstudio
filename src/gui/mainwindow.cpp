@@ -440,6 +440,11 @@ MainWindow::slotToggleRecording(bool isChecked)
 void
 MainWindow::createActions()
 {
+  m_stripToggleButton = new QAction(this);
+  m_stripToggleButton->setIcon(QIcon("./icons/clear-strip.png"));
+  m_stripToggleButton->setStatusTip(tr("Turn all LEDs off."));
+  connect(m_stripToggleButton, SIGNAL(triggered()), this, SLOT(slotClearStrip()));
+
   m_audioToggleButton = new QAction(this);
   m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.png"));
   m_audioToggleButton->setStatusTip(tr("Start audio input control panel."));
@@ -537,9 +542,11 @@ MainWindow::createToolbars()
   m_mainToolBar->addAction(m_animationToggleAct);
   m_mainToolBar->addAction(m_colorToggleAct);
   m_mainToolBar->addSeparator();
-  m_mainToolBar->addAction(m_audioToggleButton);
   m_mainToolBar->addSeparator();
+  m_mainToolBar->addAction(m_audioToggleButton);
   m_mainToolBar->addAction(m_recordAnimationAct);
+  m_mainToolBar->addSeparator();
+  m_mainToolBar->addAction(m_stripToggleButton);
   m_mainToolBar->addSeparator();
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
@@ -589,6 +596,16 @@ MainWindow::update()
 
   int fps = m_player->getFPS();
   m_ledStripStatusWidget->setFPS(fps);
+}
+
+
+void
+MainWindow::slotClearStrip()
+{
+  Studio studio(m_nLedsTotal);
+  Animation animation = studio.createSingleColorSingleFrameAnimation(Color(0, 0, 0));
+  m_player->addAnimation(animation);
+  m_player->playFrame();
 }
 
 

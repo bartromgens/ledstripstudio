@@ -68,6 +68,8 @@ protected:
 private slots:
   void update();
 
+  void slotClearStrip();
+
   void slotToggleAudioInput(bool isChecked);
 
   void slotToggleSpectrumAnalysis(bool isChecked);
@@ -140,6 +142,7 @@ private:
   QMenu* editMenu;
   QMenu* helpMenu;
 
+  QAction* m_stripToggleButton;
   QAction* m_audioToggleButton;
   QAction* m_spectrumToggleButton;
   QAction* m_toneToggleButton;
