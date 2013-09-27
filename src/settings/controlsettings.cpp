@@ -4,6 +4,7 @@
 ControlSettings::ControlSettings()
   : QSettings(),
     positionOffest(-15),
+    brightness(100),
     volumeTotal(0),
     volumeRed(0),
     volumeGreen(0),
