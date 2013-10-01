@@ -57,8 +57,6 @@ public:
 
   void updateLEDs(const std::map<double, double> &spectrum);
 
-  void getMtGox();
-
 public slots:
   void slotPlayerPlayed();
 

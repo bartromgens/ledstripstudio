@@ -592,8 +592,6 @@ MainWindow::connectAllSlots()
 void
 MainWindow::update()
 {
-//  getMtGox();
-
   int fps = m_player->getFPS();
   m_ledStripStatusWidget->setFPS(fps);
 }
