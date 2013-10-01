@@ -196,13 +196,6 @@ MainWindow::stopAnimation()
 
 
 void
-MainWindow::startSpectrumAnalyser() const
-{
-  m_audioInput->registerObserver(m_spectrumAnalyser);
-}
-
-
-void
 MainWindow::slotToggleAudioInput(bool isChecked)
 {
   std::cout << "MainWindow::slotToggleAudioInput()" << std::endl;
@@ -624,6 +617,13 @@ MainWindow::updateLEDs(const std::map<double, double>& spectrum)
   m_player->addAnimation(animation);
 
   m_player->playFrame();
+}
+
+
+void
+MainWindow::startSpectrumAnalyser() const
+{
+  m_audioInput->registerObserver(m_spectrumAnalyser);
 }
 
 
