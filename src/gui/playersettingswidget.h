@@ -20,13 +20,13 @@ public:
   ~PlayerSettingsWidget();
 
   void setSettings(ControlSettings* settings);
-  
-private:
-  void connectAllSlots() const;
 
-private slots:
+public slots:
   void slotOffsetChanged(int value);
   void slotBrightnessChanged(int value);
+
+private:
+  void connectAllSlots() const;
 
 private:
   Ui::PlayerSettingsWidget* ui;

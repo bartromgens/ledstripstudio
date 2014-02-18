@@ -1,8 +1,10 @@
 #include "controlsettings.h"
 
+#include "settings/configurationsavevisitor.h"
 
 ControlSettings::ControlSettings()
   : QSettings(),
+    ConfigurationState(),
     positionOffest(-15),
     brightness(100),
     volumeTotal(0),
@@ -30,6 +32,10 @@ void
 ControlSettings::saveSettings()
 {
   m_mutex.lock();
+
+//  QSettings settings("test.ini", QSettings::NativeFormat);
+
+//  settings.setValue();
 
   // volume settings
   setValue("volumeTotal", volumeTotal);
@@ -90,6 +96,12 @@ void
 ControlSettings::unlock()
 {
   m_mutex.unlock();
+}
+
+void
+ControlSettings::acceptSaver(ConfigurationSaveVisitor* visitor)
+{
+  visitor->saveMe(this);
 }
 
 

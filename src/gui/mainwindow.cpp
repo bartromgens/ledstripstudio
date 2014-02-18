@@ -3,6 +3,7 @@
 
 
 #include "audioinput/audioinput.h"
+#include "settings/configurationsavevisitor.h"
 #include "gui/ledstripstatuswidget.h"
 #include "gui/spectrumsettingswidget.h"
 #include "gui/playersettingswidget.h"
@@ -218,6 +219,8 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 {
   if (isChecked)
   {
+    m_settings->positionOffest = 0;
+
     m_toneToggleButton->setChecked(false);
     m_animationToggleAct->setChecked(false);
     m_colorToggleAct->setChecked(false);
@@ -243,6 +246,8 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
 {
   if (isChecked)
   {
+    m_settings->positionOffest = m_nLedsTotal/2;
+
     m_spectrumToggleButton->setChecked(false);
     m_animationToggleAct->setChecked(false);
     m_colorToggleAct->setChecked(false);
@@ -621,6 +626,23 @@ MainWindow::slotPlayerPlayed()
   Frame frame = m_player->getLastFrame();
 
   m_ledStripStatusWidget->update(frame);
+}
+
+
+void
+MainWindow::slotConfigComboChanged(QString comboText)
+{
+  std::string filename = comboText.toStdString();
+  slotSaveConfiguration(filename);
+}
+
+
+void
+MainWindow::slotSaveConfiguration(const std::string& filename)
+{
+  ConfigurationSaveVisitor saveVisitor;
+//  saveVisitor.setFilename(filename);
+  m_settings->acceptSaver(&saveVisitor);
 }
 
 

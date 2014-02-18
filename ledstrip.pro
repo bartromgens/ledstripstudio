@@ -35,7 +35,9 @@ SOURCES += \
     src/studio/tonestudio.cpp \
     src/main.cpp \
     src/gui/playersettingswidget.cpp \
-    src/gui/ledstripstatuswidget.cpp
+    src/gui/ledstripstatuswidget.cpp \
+    src/settings/configurationstate.cpp \
+    src/settings/configurationsavevisitor.cpp
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -63,7 +65,9 @@ HEADERS += \
     src/studio/tonestudio.h \
     src/studio/imagestudio.h \
     src/gui/playersettingswidget.h \
-    src/gui/ledstripstatuswidget.h
+    src/gui/ledstripstatuswidget.h \
+    src/settings/configurationstate.h \
+    src/settings/configurationsavevisitor.h
 
 FORMS += \
     src/gui/mainwindow.ui \

@@ -60,6 +60,9 @@ public:
 public slots:
   void slotPlayerPlayed();
 
+  void slotSaveConfiguration(const std::string& filename);
+  void slotConfigComboChanged(QString comboText);
+
 protected:
   virtual void closeEvent(QCloseEvent* event);
 
