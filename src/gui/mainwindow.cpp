@@ -14,6 +14,7 @@
 
 #include <QFileDialog>
 #include <QPushButton>
+#include <QComboBox>
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
 const int NLEDS = 160;
@@ -541,6 +542,20 @@ MainWindow::createToolbars()
   m_mainToolBar->addSeparator();
   m_mainToolBar->addAction(m_stripToggleButton);
   m_mainToolBar->addSeparator();
+
+  QComboBox* configCombo = new QComboBox(this);
+  configCombo->setFixedHeight(32);
+  configCombo->addItem("user");
+  configCombo->addItem("test.ini");
+  m_mainToolBar->addWidget(configCombo);
+  connect( configCombo, SIGNAL(currentIndexChanged(QString)), this, SLOT(slotConfigComboChanged(QString)) );
+
+  QAction* saveConfig = new QAction(this);
+  saveConfig->setText("save");
+  m_mainToolBar->addAction(saveConfig);
+  QAction* loadConfig = new QAction(this);
+  loadConfig->setText("load");
+  m_mainToolBar->addAction(loadConfig);
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
   addToolBar(Qt::LeftToolBarArea, m_detailsToolBar);
