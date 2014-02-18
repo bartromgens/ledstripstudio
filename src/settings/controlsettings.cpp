@@ -31,7 +31,7 @@ ControlSettings::~ControlSettings()
 void
 ControlSettings::saveSettings()
 {
-  m_mutex.lock();
+  std::lock_guard<std::mutex> locker(m_mutex);
 
 //  QSettings settings("test.ini", QSettings::NativeFormat);
 
@@ -50,15 +50,13 @@ ControlSettings::saveSettings()
   setValue("freqGreenMax", freqGreenMax);
   setValue("freqBlueMin", freqBlueMin);
   setValue("freqBlueMax", freqBlueMax);
-
-  m_mutex.unlock();
 }
 
 
 void
 ControlSettings::loadSettings()
 {
-  m_mutex.lock();
+  std::lock_guard<std::mutex> locker(m_mutex);
 
   // volume settings
   volumeTotal = value("volumeTotal", "").toInt();
@@ -73,8 +71,6 @@ ControlSettings::loadSettings()
   freqGreenMax = value("freqGreenMax", "").toInt();
   freqBlueMin = value("freqBlueMin", "").toInt();
   freqBlueMax = value("freqBlueMax", "").toInt();
-
-  m_mutex.unlock();
 }
 
 
@@ -97,6 +93,7 @@ ControlSettings::unlock()
 {
   m_mutex.unlock();
 }
+
 
 void
 ControlSettings::acceptSaver(ConfigurationSaveVisitor* visitor)
