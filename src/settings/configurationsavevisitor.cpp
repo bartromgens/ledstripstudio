@@ -1,6 +1,6 @@
 #include "configurationsavevisitor.h"
 
-#include "basic/configurationstate.h"
+#include "settings/configurationstate.h"
 #include "settings/controlsettings.h"
 
 #include <iostream>
