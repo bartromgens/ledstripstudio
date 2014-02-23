@@ -18,7 +18,7 @@
 #include <QComboBox>
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
-const int NLEDS = 160;
+const int NLEDS = 156;
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
