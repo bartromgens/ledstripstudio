@@ -74,7 +74,8 @@ LEDController::send(const Frame& frame)
 
   // make sure n ms has elapsed since the last send, for the Arduino to process the data.
 //  int minSleep = 20; //160 leds
-  int minSleep = 21/160.0 * leds.size();
+//  int minSleep = 21/160.0 * leds.size();
+  int minSleep = 20/160.0 * leds.size();
   int elapsed_ms = m_timer.nsecsElapsed()/1000000;
   int toSleep = minSleep - elapsed_ms;
 
@@ -95,7 +96,7 @@ LEDController::send(const Frame& frame)
 
   // send the frame
 //  std::cout << "=================" << std::endl;
-  int nLedsPerWrite = 8; // TODO: needs to be global setting, needs to be aligned with arduino code.
+  int nLedsPerWrite = 4; // TODO: needs to be global setting, needs to be aligned with arduino code.
   int offset = frame.getOffset();
   int brightness = frame.getBrightness();
   for (std::size_t i = 0; i < leds.size()/nLedsPerWrite; ++i)
@@ -126,15 +127,15 @@ LEDController::send(const Frame& frame)
 void
 LEDController::addLedByte(QByteArray& bytes, const std::vector<LED>& leds, int pos, int offset, int brightness)
 {
-  int red = leds.at(pos).getColor().r * brightness/100.0;
-  int green = leds.at(pos).getColor().g * brightness/100.0;
-  int blue = leds.at(pos).getColor().b * brightness/100.0;
+  std::uint8_t red = leds.at(pos).getColor().r * brightness/100.0;
+  std::uint8_t green = leds.at(pos).getColor().g * brightness/100.0;
+  std::uint8_t blue = leds.at(pos).getColor().b * brightness/100.0;
 
-  int ledPos = (leds.at(pos).getLEDnr() + offset) % leds.size();
+  std::uint8_t ledPos = (leds.at(pos).getLEDnr() + offset) % leds.size();
   bytes.append( ledPos );
-  bytes.append( std::max(red, 0) );
-  bytes.append( std::max(green, 0) );
-  bytes.append( std::max(blue, 0) );
+  bytes.append( std::max(red, static_cast<std::uint8_t>(0) ) );
+  bytes.append( std::max(green, static_cast<std::uint8_t>(0) ) );
+  bytes.append( std::max(blue, static_cast<std::uint8_t>(0) ) );
 }
 
 

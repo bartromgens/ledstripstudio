@@ -3,7 +3,7 @@
 #include "stdlib.h"
 
 // Number of RGB LEDs in strand:
-int nLEDs = 160;
+int nLEDs = 156;
 int nLEDsSet = 0;
 
 // Chose 2 pins for output; can be any valid output pins:
@@ -24,7 +24,7 @@ void setup() {
   
   for (int i = 1; i < nLEDs; i++)
   {
-    strip.setPixelColor(i, strip.Color(127, 0, 0));
+    strip.setPixelColor(i, strip.Color(0, 127, 0));
   }
 
   // Update the strip, to start they are all 'off'
@@ -34,11 +34,11 @@ void setup() {
 
 void loop() 
 {
-  int nLEDsPerWrite = 8;
+  int nLEDsPerWrite = 4;
   
   if (Serial.available() > nLEDsPerWrite*4-1)
   {    
-    int values[nLEDsPerWrite*4];
+    uint8_t values[nLEDsPerWrite*4];
     
     for (int i = 0; i < nLEDsPerWrite*4; ++i)
     {
@@ -48,6 +48,7 @@ void loop()
     for (int i = 0; i < nLEDsPerWrite; ++i)
     {
       int offset = 4*i;  
+//      strip.setPixelColor(values[offset], values[offset+1]);
       strip.setPixelColor(values[offset], strip.Color(values[offset+1], values[offset+2], values[offset+3]));
       nLEDsSet++;  
     } 
@@ -68,4 +69,9 @@ void clearStrip()
   {
     strip.setPixelColor(i, strip.Color(0, 0, 0));
   }
+}
+
+uint32_t getColor(int colorCode)
+{
+  return strip.Color(colorCode, 0, 0);
 }
