@@ -265,7 +265,6 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
 {
   Animation animation;
   Frame frame(nLEDs);
-  Color color;
 
   double brightnessRelative = 0.0;
 
@@ -276,34 +275,43 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
 
   unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
 
+  unsigned int i = 0;
   if (m_maxTone == "C")
   {
-    color = Color( brightness, brightness/2, 0);
+    i = 0;
   }
   else if (m_maxTone == "D")
   {
-    color = Color(brightness, 0, 0);
+    i = 1;
   }
   else if (m_maxTone == "E")
   {
-    color = Color(0, brightness, 0);
+    i = 2;
   }
   else if (m_maxTone == "F")
   {
-    color = Color(0, brightness, brightness);
+    i = 3;
   }
   else if (m_maxTone == "G")
   {
-    color = Color(0, 0, brightness);
+    i = 4;
   }
   else if (m_maxTone == "A")
   {
-    color = Color(brightness, 0, brightness);
+    i = 5;
   }
   else if (m_maxTone == "B")
   {
-    color = Color(brightness, brightness/3, brightness/3);
+    i = 6;
   }
+
+  double offset = 2.8;
+  unsigned int colorInt = static_cast<int>(3.0*127.0/7.0*(i+offset)) % (3*128);
+
+  Color color = Studio::wheel(colorInt);
+  color.r = color.r * brightness/127.0;
+  color.g = color.g * brightness/127.0;
+  color.b = color.b * brightness/127.0;
 
   std::vector<LED> leds = m_toneHistoryFrame.getLEDs();
 

@@ -14,7 +14,7 @@ public:
   Animation createMovingLine(int startPos, int nFrames, const Color& color, double speed);
   Animation createMovingDot(int startPos, int nFrames, const Color& color, double speed);
   Animation createMovingRainbow(double speed);
-  Color wheel(int wheelPos);
+  static Color wheel(int wheelPos);
   Animation createRandomMovingDots(int nDots, int nFrames);
   Animation createCellularAutomata();
   std::vector<int> rule(const std::vector<int>& state);
