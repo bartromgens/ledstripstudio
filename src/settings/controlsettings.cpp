@@ -33,10 +33,6 @@ ControlSettings::saveSettings()
 {
   std::lock_guard<std::mutex> locker(m_mutex);
 
-//  QSettings settings("test.ini", QSettings::NativeFormat);
-
-//  settings.setValue();
-
   // volume settings
   setValue("volumeTotal", volumeTotal);
   setValue("volumeRed", volumeRed);
@@ -98,7 +94,7 @@ ControlSettings::unlock()
 void
 ControlSettings::acceptSaver(ConfigurationSaveVisitor* visitor)
 {
-  visitor->saveMe(this);
+  visitor->saveMe(*this);
 }
 
 

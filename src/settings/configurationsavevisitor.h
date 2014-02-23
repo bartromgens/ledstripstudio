@@ -8,7 +8,7 @@ class ConfigurationSaveVisitor
 public:
   ConfigurationSaveVisitor();
 
-  void saveMe(ControlSettings* controlSettings);
+  void saveMe(const ControlSettings& controlSettings);
 };
 
 #endif // CONFIGURATIONSAVEVISITOR_H
