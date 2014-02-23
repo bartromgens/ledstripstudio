@@ -8,6 +8,8 @@ TARGET = ledstripstudio
 INCLUDEPATH += ./src/
 DEPENDPATH = $$INCLUDEPATH
 
+CONFIG += silent
+
 SOURCES += \
     src/audioinput/audioinput.cpp \
     src/audioinput/audioinputobserver.cpp \
