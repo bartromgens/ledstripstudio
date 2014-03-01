@@ -24,3 +24,4 @@ wisdom3.txt
 tmp/*
 src/gui/ui_spectrumsettingswidget.h
 ledstripstudio
+*pro.user*
