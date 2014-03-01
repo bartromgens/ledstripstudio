@@ -54,24 +54,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
-  ui->centralwidget->size();
-
   setWindowTitle("Light Emitting Strip Studio");
   setWindowIcon(QIcon("./icons/color_wheel2.png"));
-
-  m_configurationGroups.push_back(m_settings);
 
   createActions();
   createToolbars();
 //  createMenus();
 
   connectAllSlots();
-
   createTimers();
 
   m_audioInput->setControlSettings(m_settings);
 
-  m_spectrumSettingsWidget->updateAudioControlGUI();
   m_playerSettingsWidget->setSettings(m_settings.get());
 
   ui->centralwidget->layout()->addWidget(m_playerSettingsWidget);
@@ -83,48 +77,11 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneAnalyser->registerObserver(this);
   m_spectrumAnalyser->registerObserver(this);
 
+  m_configurationGroups.push_back(m_settings);
+
   loadUserOrDefaultConfig();
 }
 
-
-void
-MainWindow::saveConfigurationAll(QSettings& config) const
-{
-  saveConfiguration(config);
-
-  for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
-  {
-    (*iter)->saveConfiguration(config);
-  }
-}
-
-
-void
-MainWindow::loadConfigurationAll(QSettings& config)
-{
-  loadConfiguration(config);
-
-  for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
-  {
-    (*iter)->loadConfiguration(config);
-  }
-}
-
-
-void
-MainWindow::loadUserOrDefaultConfig()
-{
-  if (QFile::exists(m_userConfigFilename))
-  {
-    QSettings config(m_userConfigFilename, QSettings::NativeFormat);
-    loadConfigurationAll(config);
-  }
-  else
-  {
-    QSettings config(m_defaultConfigFilename, QSettings::NativeFormat);
-    loadConfigurationAll(config);
-  }
-}
 
 MainWindow::~MainWindow()
 {
@@ -752,4 +709,46 @@ MainWindow::loadConfiguration(QSettings& config)
   m_animationToggleAct->setChecked(config.value("animation").toBool());
 
   config.endGroup();
+}
+
+
+void
+MainWindow::saveConfigurationAll(QSettings& config) const
+{
+  saveConfiguration(config);
+
+  for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
+  {
+    (*iter)->saveConfiguration(config);
+  }
+}
+
+
+void
+MainWindow::loadConfigurationAll(QSettings& config)
+{
+  loadConfiguration(config);
+
+  for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
+  {
+    (*iter)->loadConfiguration(config);
+  }
+
+  m_spectrumSettingsWidget->updateAudioControlGUI();
+}
+
+
+void
+MainWindow::loadUserOrDefaultConfig()
+{
+  if (QFile::exists(m_userConfigFilename))
+  {
+    QSettings config(m_userConfigFilename, QSettings::NativeFormat);
+    loadConfigurationAll(config);
+  }
+  else
+  {
+    QSettings config(m_defaultConfigFilename, QSettings::NativeFormat);
+    loadConfigurationAll(config);
+  }
 }
