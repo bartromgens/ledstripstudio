@@ -6,11 +6,14 @@
 #include "gui/ledstripstatuswidget.h"
 #include "gui/spectrumsettingswidget.h"
 #include "gui/playersettingswidget.h"
+#include "settings/configurationgroup.h"
+#include "settings/controlsettings.h"
 #include "spectrum/spectrumanalyser.h"
 #include "spectrum/toneanalyser.h"
 #include "studio/imagestudio.h"
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
+
 
 #include <QFileDialog>
 #include <QPushButton>
@@ -18,6 +21,10 @@
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
 const int NLEDS = 156;
+
+QString MainWindow::m_defaultConfigFilename = "default.ini";
+QString MainWindow::m_userConfigFilename = "user.ini";
+
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -35,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumStudio(new SpectrumStudio()),
   m_toneStudio(new ToneStudio()),
   m_imageStudio(new ImageStudio(m_nLedsTotal)),
+  m_configurationGroups(),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, this)),
   m_ledStripStatusWidget(new LedStripStatusWidget(this)),
   m_playerSettingsWidget(new PlayerSettingsWidget(this)),
@@ -50,8 +58,9 @@ MainWindow::MainWindow(QWidget *parent) :
   setWindowTitle("Light Emitting Strip Studio");
   setWindowIcon(QIcon("./icons/color_wheel2.png"));
 
-  QSettings settings(QString::fromStdString("default.ini"), QSettings::NativeFormat);
-  m_settings->loadSettings(settings);
+  m_configurationGroups.push_back(m_settings);
+
+  loadUserOrDefaultConfig();
 
   createActions();
   createToolbars();
@@ -78,6 +87,41 @@ MainWindow::MainWindow(QWidget *parent) :
   setActionsDefaults();
 }
 
+
+void
+MainWindow::saveConfigurationAll(QSettings& config) const
+{
+  for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
+  {
+    (*iter)->saveConfiguration(config);
+  }
+}
+
+
+void
+MainWindow::loadConfigurationAll(QSettings& config)
+{
+  for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
+  {
+    (*iter)->loadConfiguration(config);
+  }
+}
+
+
+void
+MainWindow::loadUserOrDefaultConfig()
+{
+  if (QFile::exists(m_userConfigFilename))
+  {
+    QSettings config(m_userConfigFilename, QSettings::NativeFormat);
+    loadConfigurationAll(config);
+  }
+  else
+  {
+    QSettings config(m_defaultConfigFilename, QSettings::NativeFormat);
+    loadConfigurationAll(config);
+  }
+}
 
 MainWindow::~MainWindow()
 {
@@ -109,8 +153,9 @@ void
 MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
   std::cout << "MainWindow::closeEvent()" << std::endl;
+  hide();
 
-  slotSaveConfiguration("default.ini");
+  slotSaveConfiguration(m_userConfigFilename);
   stopAudioInput();
 
   if (m_audioInputThread)
@@ -632,17 +677,16 @@ MainWindow::slotPlayerPlayed()
 void
 MainWindow::slotConfigComboChanged(QString comboText)
 {
-  std::string filename = comboText.toStdString();
-  slotSaveConfiguration(filename);
+  slotSaveConfiguration(comboText);
 }
 
 
 void
-MainWindow::slotSaveConfiguration(const std::string& filename)
+MainWindow::slotSaveConfiguration(const QString& filename)
 {
   std::cout << "MainWindow::slotSaveConfiguration()" << std::endl;
-  QSettings settings(QString::fromStdString(filename), QSettings::NativeFormat);
-  m_settings->saveSettings(settings);
+  QSettings settings(filename, QSettings::NativeFormat);
+  saveConfigurationAll(settings);
 }
 
 

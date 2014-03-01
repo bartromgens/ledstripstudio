@@ -31,10 +31,13 @@ class ImageStudio;
 class ToneStudio;
 class SpectrumStudio;
 
+class ConfigurationGroup;
 class ControlSettings;
 class LedStripStatusWidget;
 class SpectrumSettingsWidget;
 class PlayerSettingsWidget;
+
+class QSettings;
 
 namespace Ui {
 class MainWindow;
@@ -60,7 +63,7 @@ public:
 public slots:
   void slotPlayerPlayed();
 
-  void slotSaveConfiguration(const std::string& filename);
+  void slotSaveConfiguration(const QString& filename);
   void slotConfigComboChanged(QString comboText);
 
 protected:
@@ -90,6 +93,7 @@ private slots:
   void slotToggleRecording(bool isChecked);
 
 private:
+  // create GUI
   void createMenus();
   void createActions();
   void setActionsDefaults();
@@ -97,11 +101,8 @@ private:
   void connectAllSlots();
   void createTimers();
 
+  // audio input
   void startAudioInputThread();
-  void startAnimationThread() const;
-  void startAnimation() const;
-  void stopAnimation();
-
   void startAudioInput();
   void stopAudioInput();
   void startSpectrumAnalyser() const;
@@ -109,8 +110,17 @@ private:
   void startToneAnalyser() const;
   void stopToneAnalyser() const;
 
+  // animation
+  void startAnimationThread() const;
+  void startAnimation() const;
+  void stopAnimation();
   void playDotAnimation();
   void startDotAnimationThread();
+
+  // configuration
+  void loadUserOrDefaultConfig();
+  void loadConfigurationAll(QSettings& config);
+  void saveConfigurationAll(QSettings& config) const;
 
 private:
   Ui::MainWindow* ui;
@@ -126,6 +136,8 @@ private:
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
   std::shared_ptr<ToneStudio> m_toneStudio;
   std::unique_ptr<ImageStudio> m_imageStudio;
+
+  std::vector<std::shared_ptr<ConfigurationGroup>> m_configurationGroups;
 
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
   LedStripStatusWidget* m_ledStripStatusWidget;
@@ -162,6 +174,9 @@ private:
   std::unique_ptr<QTimer> m_timerEmulator;
 
   QColor m_lastSingleColor;
+
+  static QString m_defaultConfigFilename;
+  static QString m_userConfigFilename;
 };
 
 #endif // MAINWINDOW_H

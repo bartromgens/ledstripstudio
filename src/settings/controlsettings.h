@@ -1,21 +1,23 @@
 #ifndef CONTROLSETTINGS_H
 #define CONTROLSETTINGS_H
 
+#include "settings/configurationgroup.h"
+
 #include <QSettings>
 
 #include <atomic>
 #include <mutex>
 #include <vector>
 
-class ControlSettings
+class ControlSettings : public ConfigurationGroup
 {
 
 public:
   ControlSettings();
   ~ControlSettings();
 
-  void saveSettings(QSettings& settings);
-  void loadSettings(QSettings& settings);
+  virtual void saveConfiguration(QSettings& configuration);
+  virtual void loadConfiguration(QSettings& configuration);
   void setStatusFPS(int fps);
   int getStatusFPS() const;
 
