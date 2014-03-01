@@ -8,7 +8,7 @@ class ConfigurationGroup
 public:
   ConfigurationGroup();
 
-  virtual void saveConfiguration(QSettings& configuration) = 0;
+  virtual void saveConfiguration(QSettings& configuration) const = 0;
   virtual void loadConfiguration(QSettings& configuration) = 0;
 };
 

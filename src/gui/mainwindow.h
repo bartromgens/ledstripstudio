@@ -4,6 +4,7 @@
 #include "basic/animation.h"
 #include "gui/tonetoolbar.h"
 #include "gui/ffttoolbar.h"
+#include "settings/configurationgroup.h"
 #include "spectrum/spectrumobserver.h"
 #include "spectrum/toneobserver.h"
 #include "studio/tonestudio.h"
@@ -31,7 +32,6 @@ class ImageStudio;
 class ToneStudio;
 class SpectrumStudio;
 
-class ConfigurationGroup;
 class ControlSettings;
 class LedStripStatusWidget;
 class SpectrumSettingsWidget;
@@ -43,7 +43,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow, SpectrumObserver, ToneObserver
+class MainWindow : public QMainWindow, public SpectrumObserver, public ToneObserver, public ConfigurationGroup
 {
   Q_OBJECT
   
@@ -51,14 +51,17 @@ public:
   explicit MainWindow(QWidget* parent = 0);
   ~MainWindow();
 
-  Animation createAnimationTest1();
-  Animation createAnimationTest2();
 
   virtual void notifySpectrum(std::map<double, double> spectrum);
-
   virtual void notifyTone(std::map<std::string, double> toneAmplitudes);
 
+  virtual void saveConfiguration(QSettings& config) const;
+  virtual void loadConfiguration(QSettings& config);
+
   void updateLEDs(const std::map<double, double> &spectrum);
+
+  Animation createAnimationTest1();
+  Animation createAnimationTest2();
 
 public slots:
   void slotPlayerPlayed();
@@ -96,7 +99,6 @@ private:
   // create GUI
   void createMenus();
   void createActions();
-  void setActionsDefaults();
   void createToolbars();
   void connectAllSlots();
   void createTimers();

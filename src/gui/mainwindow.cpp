@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   SpectrumObserver(),
   ToneObserver(),
+  ConfigurationGroup(),
   ui(new Ui::MainWindow),
   m_colorDialog(new QColorDialog(this)),
   m_nLedsTotal(NLEDS),
@@ -60,8 +61,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_configurationGroups.push_back(m_settings);
 
-  loadUserOrDefaultConfig();
-
   createActions();
   createToolbars();
 //  createMenus();
@@ -84,13 +83,15 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneAnalyser->registerObserver(this);
   m_spectrumAnalyser->registerObserver(this);
 
-  setActionsDefaults();
+  loadUserOrDefaultConfig();
 }
 
 
 void
 MainWindow::saveConfigurationAll(QSettings& config) const
 {
+  saveConfiguration(config);
+
   for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
   {
     (*iter)->saveConfiguration(config);
@@ -101,6 +102,8 @@ MainWindow::saveConfigurationAll(QSettings& config) const
 void
 MainWindow::loadConfigurationAll(QSettings& config)
 {
+  loadConfiguration(config);
+
   for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
   {
     (*iter)->loadConfiguration(config);
@@ -568,13 +571,6 @@ MainWindow::createActions()
 
 
 void
-MainWindow::setActionsDefaults()
-{
-  m_audioToggleButton->setChecked(true);
-}
-
-
-void
 MainWindow::createToolbars()
 {
   m_mainToolBar = new QToolBar(tr("Main toolbar"), this);
@@ -726,4 +722,34 @@ void
 MainWindow::stopToneAnalyser() const
 {
   m_spectrumAnalyser->unregisterObserver(m_toneAnalyser.get());
+}
+
+
+void
+MainWindow::saveConfiguration(QSettings& config) const
+{
+  config.beginGroup( "Main" );
+
+  config.setValue("audioInput", m_audioToggleButton->isChecked());
+  config.setValue("toneAnalysis", m_toneToggleButton->isChecked());
+  config.setValue("spectrumAnalysis", m_spectrumToggleButton->isChecked());
+  config.setValue("singleColor", m_colorToggleAct->isChecked());
+  config.setValue("animation", m_animationToggleAct->isChecked());
+
+  config.endGroup();
+}
+
+
+void
+MainWindow::loadConfiguration(QSettings& config)
+{
+  config.beginGroup( "Main" );
+
+  m_audioToggleButton->setChecked(config.value("audioInput").toBool());
+  m_toneToggleButton->setChecked(config.value("toneAnalysis").toBool());
+  m_spectrumToggleButton->setChecked(config.value("spectrumAnalysis").toBool());
+  m_colorToggleAct->setChecked(config.value("singleColor").toBool());
+  m_animationToggleAct->setChecked(config.value("animation").toBool());
+
+  config.endGroup();
 }

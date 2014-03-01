@@ -26,6 +26,7 @@ SOURCES += \
     src/player/ledcontroller.cpp \
     src/player/player.cpp \
     src/settings/controlsettings.cpp \
+    src/settings/configurationgroup.cpp \
     src/spectrum/fftw++.cpp \
     src/spectrum/spectrumanalyser.cpp \
     src/spectrum/spectrumobserver.cpp \
@@ -38,7 +39,6 @@ SOURCES += \
     src/main.cpp \
     src/gui/playersettingswidget.cpp \
     src/gui/ledstripstatuswidget.cpp \
-    src/settings/configurationgroup.cpp
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -57,6 +57,7 @@ HEADERS += \
     src/player/ledcontroller.h \
     src/player/player.h \
     src/settings/controlsettings.h \
+    src/settings/configurationgroup.h \
     src/spectrum/spectrumanalyser.h \
     src/spectrum/spectrumobserver.h \
     src/spectrum/toneanalyser.h \
@@ -67,7 +68,6 @@ HEADERS += \
     src/studio/imagestudio.h \
     src/gui/playersettingswidget.h \
     src/gui/ledstripstatuswidget.h \
-    src/settings/configurationgroup.h
 
 FORMS += \
     src/gui/mainwindow.ui \

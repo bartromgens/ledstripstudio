@@ -26,7 +26,7 @@ ControlSettings::~ControlSettings()
 
 
 void
-ControlSettings::saveConfiguration(QSettings& configuration)
+ControlSettings::saveConfiguration(QSettings& configuration) const
 {
   std::lock_guard<std::mutex> locker(m_mutex);
 

@@ -16,8 +16,9 @@ public:
   ControlSettings();
   ~ControlSettings();
 
-  virtual void saveConfiguration(QSettings& configuration);
+  virtual void saveConfiguration(QSettings& configuration) const;
   virtual void loadConfiguration(QSettings& configuration);
+
   void setStatusFPS(int fps);
   int getStatusFPS() const;
 
