@@ -37,9 +37,7 @@ SOURCES += \
     src/studio/tonestudio.cpp \
     src/main.cpp \
     src/gui/playersettingswidget.cpp \
-    src/gui/ledstripstatuswidget.cpp \
-    src/settings/configurationstate.cpp \
-    src/settings/configurationsavevisitor.cpp
+    src/gui/ledstripstatuswidget.cpp
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -67,9 +65,7 @@ HEADERS += \
     src/studio/tonestudio.h \
     src/studio/imagestudio.h \
     src/gui/playersettingswidget.h \
-    src/gui/ledstripstatuswidget.h \
-    src/settings/configurationstate.h \
-    src/settings/configurationsavevisitor.h
+    src/gui/ledstripstatuswidget.h
 
 FORMS += \
     src/gui/mainwindow.ui \
@@ -99,7 +95,7 @@ OTHER_FILES += \
 # library header file directories
 unix:INCLUDEPATH += ./include/
 unix:INCLUDEPATH += ./include/fftwpp/
-#unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/boost/
+unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/boost/
 unix:INCLUDEPATH += /home/bart/prog/1_tools/boost_1_52_0/
 
 win32:INCLUDEPATH += C:/prog/ledstrip/include/
@@ -122,6 +118,7 @@ win32:LIBS += -lportaudio -llibfftw3-3
 # compiler flags
 unix:QMAKE_CXXFLAGS += -std=c++0x
 unix:QMAKE_CXXFLAGS += -Wall
+unix:QMAKE_CXXFLAGS += -Wno-unused-local-typedefs
 unix:QMAKE_LFLAGS += -Bstatic
 
 # linker flags

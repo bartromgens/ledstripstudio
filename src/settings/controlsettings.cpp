@@ -1,11 +1,7 @@
 #include "controlsettings.h"
 
-#include "settings/configurationsavevisitor.h"
-
 ControlSettings::ControlSettings()
-  : QSettings(),
-    ConfigurationState(),
-    positionOffest(-15),
+  : positionOffest(-15),
     brightness(100),
     volumeTotal(0),
     volumeRed(0),
@@ -29,44 +25,52 @@ ControlSettings::~ControlSettings()
 
 
 void
-ControlSettings::saveSettings()
+ControlSettings::saveSettings(QSettings& settings)
 {
   std::lock_guard<std::mutex> locker(m_mutex);
 
+  settings.beginGroup( "ControlSettings" );
+
   // volume settings
-  setValue("volumeTotal", volumeTotal);
-  setValue("volumeRed", volumeRed);
-  setValue("volumeGreen", volumeGreen);
-  setValue("volumeBlue", volumeBlue);
+  settings.setValue("volumeTotal", volumeTotal);
+  settings.setValue("volumeRed", volumeRed);
+  settings.setValue("volumeGreen", volumeGreen);
+  settings.setValue("volumeBlue", volumeBlue);
 
   // frequency settings
-  setValue("freqRedMin", freqRedMin);
-  setValue("freqRedMax", freqRedMax);
-  setValue("freqGreenMin", freqGreenMin);
-  setValue("freqGreenMax", freqGreenMax);
-  setValue("freqBlueMin", freqBlueMin);
-  setValue("freqBlueMax", freqBlueMax);
+  settings.setValue("freqRedMin", freqRedMin);
+  settings.setValue("freqRedMax", freqRedMax);
+  settings.setValue("freqGreenMin", freqGreenMin);
+  settings.setValue("freqGreenMax", freqGreenMax);
+  settings. setValue("freqBlueMin", freqBlueMin);
+  settings.setValue("freqBlueMax", freqBlueMax);
+
+  settings.endGroup();
 }
 
 
 void
-ControlSettings::loadSettings()
+ControlSettings::loadSettings(QSettings& settings)
 {
   std::lock_guard<std::mutex> locker(m_mutex);
 
+  settings.beginGroup( "ControlSettings" );
+
   // volume settings
-  volumeTotal = value("volumeTotal", "").toInt();
-  volumeRed = value("volumeRed", "").toInt();
-  volumeGreen = value("volumeGreen", "").toInt();
-  volumeBlue = value("volumeBlue", "").toInt();
+  volumeTotal = settings.value("volumeTotal", "").toInt();
+  volumeRed = settings.value("volumeRed", "").toInt();
+  volumeGreen = settings.value("volumeGreen", "").toInt();
+  volumeBlue = settings.value("volumeBlue", "").toInt();
 
   // frequency settings
-  freqRedMin = value("freqRedMin", "").toInt();
-  freqRedMax = value("freqRedMax", "").toInt();
-  freqGreenMin = value("freqGreenMin", "").toInt();
-  freqGreenMax = value("freqGreenMax", "").toInt();
-  freqBlueMin = value("freqBlueMin", "").toInt();
-  freqBlueMax = value("freqBlueMax", "").toInt();
+  freqRedMin = settings.value("freqRedMin", "").toInt();
+  freqRedMax = settings.value("freqRedMax", "").toInt();
+  freqGreenMin = settings.value("freqGreenMin", "").toInt();
+  freqGreenMax = settings.value("freqGreenMax", "").toInt();
+  freqBlueMin = settings.value("freqBlueMin", "").toInt();
+  freqBlueMax = settings.value("freqBlueMax", "").toInt();
+
+  settings.endGroup();
 }
 
 
@@ -88,13 +92,6 @@ void
 ControlSettings::unlock()
 {
   m_mutex.unlock();
-}
-
-
-void
-ControlSettings::acceptSaver(ConfigurationSaveVisitor* visitor)
-{
-  visitor->saveMe(*this);
 }
 
 

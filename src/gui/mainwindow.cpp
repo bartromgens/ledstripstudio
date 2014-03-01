@@ -3,7 +3,6 @@
 
 
 #include "audioinput/audioinput.h"
-#include "settings/configurationsavevisitor.h"
 #include "gui/ledstripstatuswidget.h"
 #include "gui/spectrumsettingswidget.h"
 #include "gui/playersettingswidget.h"
@@ -51,7 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
   setWindowTitle("Light Emitting Strip Studio");
   setWindowIcon(QIcon("./icons/color_wheel2.png"));
 
-  m_settings->loadSettings();
+  QSettings settings(QString::fromStdString("default.ini"), QSettings::NativeFormat);
+  m_settings->loadSettings(settings);
 
   createActions();
   createToolbars();
@@ -110,7 +110,7 @@ MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
   std::cout << "MainWindow::closeEvent()" << std::endl;
 
-  m_settings->saveSettings();
+  slotSaveConfiguration("default.ini");
   stopAudioInput();
 
   if (m_audioInputThread)
@@ -640,9 +640,9 @@ MainWindow::slotConfigComboChanged(QString comboText)
 void
 MainWindow::slotSaveConfiguration(const std::string& filename)
 {
-  ConfigurationSaveVisitor saveVisitor;
-//  saveVisitor.setFilename(filename);
-  m_settings->acceptSaver(&saveVisitor);
+  std::cout << "MainWindow::slotSaveConfiguration()" << std::endl;
+  QSettings settings(QString::fromStdString(filename), QSettings::NativeFormat);
+  m_settings->saveSettings(settings);
 }
 
 

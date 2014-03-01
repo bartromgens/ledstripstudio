@@ -1,23 +1,21 @@
 #ifndef CONTROLSETTINGS_H
 #define CONTROLSETTINGS_H
 
-#include "settings/configurationstate.h"
-
 #include <QSettings>
 
 #include <atomic>
 #include <mutex>
 #include <vector>
 
-class ControlSettings : public QSettings, ConfigurationState
+class ControlSettings
 {
 
 public:
   ControlSettings();
   ~ControlSettings();
 
-  void saveSettings();
-  void loadSettings();
+  void saveSettings(QSettings& settings);
+  void loadSettings(QSettings& settings);
   void setStatusFPS(int fps);
   int getStatusFPS() const;
 
@@ -27,8 +25,6 @@ public:
   void lock();
   bool try_lock();
   void unlock();
-
-  virtual void acceptSaver(ConfigurationSaveVisitor* visitor);
 
 public:
   std::atomic<int> positionOffest;
