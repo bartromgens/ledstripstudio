@@ -138,7 +138,7 @@ ImageStudio::getUniqueFilename(const std::string& filename, const std::string& e
   while (fileInfo.exists())
   {
     counter++;
-    uniqueFilename = filename + std::to_string(static_cast<long long>(counter)); static_cast<long long>(counter);
+    uniqueFilename = filename + std::to_string(static_cast<long long>(counter));
     QFile file(QString::fromStdString(uniqueFilename + extension));
     fileInfo.setFile(file);
   }
