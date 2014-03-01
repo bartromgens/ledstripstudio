@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_configurationGroups(),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, this)),
   m_ledStripStatusWidget(new LedStripStatusWidget(this)),
-  m_playerSettingsWidget(new PlayerSettingsWidget(this)),
+  m_playerSettingsWidget(new PlayerSettingsWidget(m_settings, this)),
   m_toneToolbar(m_toneStudio),
   m_fftToolbar(m_audioInput, m_spectrumAnalyser),
   m_timer(),
@@ -66,8 +66,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_audioInput->setControlSettings(m_settings);
 
-  m_playerSettingsWidget->setSettings(m_settings.get());
-
   ui->centralwidget->layout()->addWidget(m_playerSettingsWidget);
   ui->centralwidget->layout()->addWidget(m_ledStripStatusWidget);
   ui->centralwidget->layout()->addWidget(m_spectrumSettingsWidget);
@@ -78,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumAnalyser->registerObserver(this);
 
   m_configurationGroups.push_back(m_settings);
+  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_playerSettingsWidget));
 
   loadUserOrDefaultConfig();
 }
@@ -224,7 +223,7 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 {
   if (isChecked)
   {
-    m_settings->positionOffest = 0;
+    m_settings->positionOffset = 0;
 
     m_toneToggleButton->setChecked(false);
     m_animationToggleAct->setChecked(false);
@@ -251,7 +250,7 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
 {
   if (isChecked)
   {
-    m_settings->positionOffest = m_nLedsTotal/2;
+    m_settings->positionOffset = m_nLedsTotal/2;
 
     m_spectrumToggleButton->setChecked(false);
     m_animationToggleAct->setChecked(false);

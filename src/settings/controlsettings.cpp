@@ -2,7 +2,7 @@
 
 ControlSettings::ControlSettings()
   : ConfigurationGroup(),
-    positionOffest(-15),
+    positionOffset(-15),
     brightness(100),
     volumeTotal(0),
     volumeRed(0),
@@ -26,52 +26,52 @@ ControlSettings::~ControlSettings()
 
 
 void
-ControlSettings::saveConfiguration(QSettings& configuration) const
+ControlSettings::saveConfiguration(QSettings& config) const
 {
   std::lock_guard<std::mutex> locker(m_mutex);
 
-  configuration.beginGroup( "ControlSettings" );
+  config.beginGroup( "ControlSettings" );
 
   // volume settings
-  configuration.setValue("volumeTotal", volumeTotal);
-  configuration.setValue("volumeRed", volumeRed);
-  configuration.setValue("volumeGreen", volumeGreen);
-  configuration.setValue("volumeBlue", volumeBlue);
+  config.setValue("volumeTotal", volumeTotal);
+  config.setValue("volumeRed", volumeRed);
+  config.setValue("volumeGreen", volumeGreen);
+  config.setValue("volumeBlue", volumeBlue);
 
   // frequency settings
-  configuration.setValue("freqRedMin", freqRedMin);
-  configuration.setValue("freqRedMax", freqRedMax);
-  configuration.setValue("freqGreenMin", freqGreenMin);
-  configuration.setValue("freqGreenMax", freqGreenMax);
-  configuration. setValue("freqBlueMin", freqBlueMin);
-  configuration.setValue("freqBlueMax", freqBlueMax);
+  config.setValue("freqRedMin", freqRedMin);
+  config.setValue("freqRedMax", freqRedMax);
+  config.setValue("freqGreenMin", freqGreenMin);
+  config.setValue("freqGreenMax", freqGreenMax);
+  config.setValue("freqBlueMin", freqBlueMin);
+  config.setValue("freqBlueMax", freqBlueMax);
 
-  configuration.endGroup();
+  config.endGroup();
 }
 
 
 void
-ControlSettings::loadConfiguration(QSettings& configuration)
+ControlSettings::loadConfiguration(QSettings& config)
 {
   std::lock_guard<std::mutex> locker(m_mutex);
 
-  configuration.beginGroup( "ControlSettings" );
+  config.beginGroup( "ControlSettings" );
 
   // volume settings
-  volumeTotal = configuration.value("volumeTotal", "").toInt();
-  volumeRed = configuration.value("volumeRed", "").toInt();
-  volumeGreen = configuration.value("volumeGreen", "").toInt();
-  volumeBlue = configuration.value("volumeBlue", "").toInt();
+  volumeTotal = config.value("volumeTotal", "").toInt();
+  volumeRed = config.value("volumeRed", "").toInt();
+  volumeGreen = config.value("volumeGreen", "").toInt();
+  volumeBlue = config.value("volumeBlue", "").toInt();
 
   // frequency settings
-  freqRedMin = configuration.value("freqRedMin", "").toInt();
-  freqRedMax = configuration.value("freqRedMax", "").toInt();
-  freqGreenMin = configuration.value("freqGreenMin", "").toInt();
-  freqGreenMax = configuration.value("freqGreenMax", "").toInt();
-  freqBlueMin = configuration.value("freqBlueMin", "").toInt();
-  freqBlueMax = configuration.value("freqBlueMax", "").toInt();
+  freqRedMin = config.value("freqRedMin", "").toInt();
+  freqRedMax = config.value("freqRedMax", "").toInt();
+  freqGreenMin = config.value("freqGreenMin", "").toInt();
+  freqGreenMax = config.value("freqGreenMax", "").toInt();
+  freqBlueMin = config.value("freqBlueMin", "").toInt();
+  freqBlueMax = config.value("freqBlueMax", "").toInt();
 
-  configuration.endGroup();
+  config.endGroup();
 }
 
 

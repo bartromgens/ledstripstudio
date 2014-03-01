@@ -139,7 +139,7 @@ Player::playFrame()
       m_lastFrame = frames.front();
       m_mainAnimation.pop_frontFrame();
       frame = m_lastFrame;
-      frame.setOffset(m_settings->positionOffest);
+      frame.setOffset(m_settings->positionOffset);
       frame.setBrightness(m_settings->brightness);
     }
 

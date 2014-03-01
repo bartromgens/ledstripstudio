@@ -17,7 +17,7 @@ public:
   ~ControlSettings();
 
   virtual void saveConfiguration(QSettings& configuration) const;
-  virtual void loadConfiguration(QSettings& configuration);
+  virtual void loadConfiguration(QSettings& config);
 
   void setStatusFPS(int fps);
   int getStatusFPS() const;
@@ -30,7 +30,7 @@ public:
   void unlock();
 
 public:
-  std::atomic<int> positionOffest;
+  std::atomic<int> positionOffset;
   std::atomic<int> brightness;
 
   int volumeTotal;
