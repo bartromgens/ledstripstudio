@@ -3,8 +3,11 @@
 
 #include "settings/controlsettings.h"
 
+#include <iostream>
+
 SpectrumSettingsWidget::SpectrumSettingsWidget(std::shared_ptr<ControlSettings> spectrumSettings, QWidget *parent) :
   QWidget(parent),
+  ConfigurationGroup(),
   ui(new Ui::SpectrumSettingsWidget),
   m_settings(spectrumSettings)
 {
@@ -52,51 +55,66 @@ SpectrumSettingsWidget::connectAllSlots() const
 
 
 void
-SpectrumSettingsWidget::updateAudioControlGUI()
-{
-  m_settings->lock();
-  ui->volumeTotalSlider->setValue(m_settings->volumeTotal);
-  ui->volumeRedSlider->setValue(m_settings->volumeRed);
-  ui->volumeGreenSlider->setValue(m_settings->volumeGreen);
-  ui->volumeBlueSlider->setValue(m_settings->volumeBlue);
-
-  ui->freqRminSlider->setValue(m_settings->freqRedMin);
-  ui->freqRmaxSlider->setValue(m_settings->freqRedMax);
-  ui->freqGminSlider->setValue(m_settings->freqGreenMin);
-  ui->freqGmaxSlider->setValue(m_settings->freqGreenMax);
-  ui->freqBminSlider->setValue(m_settings->freqBlueMin);
-  ui->freqBmaxSlider->setValue(m_settings->freqBlueMax);
-  m_settings->unlock();
-}
-
-
-void
 SpectrumSettingsWidget::slotVolumeChanged()
 {
-  if (m_settings->try_lock())
-  {
-    m_settings->volumeTotal = ui->volumeTotalSlider->value();
-    m_settings->volumeRed = ui->volumeRedSlider->value();
-    m_settings->volumeGreen = ui->volumeGreenSlider->value();
-    m_settings->volumeBlue = ui->volumeBlueSlider->value();
-
-    m_settings->unlock();
-  }
+  m_settings->volumeTotal = ui->volumeTotalSlider->value();
+  m_settings->volumeRed = ui->volumeRedSlider->value();
+  m_settings->volumeGreen = ui->volumeGreenSlider->value();
+  m_settings->volumeBlue = ui->volumeBlueSlider->value();
 }
 
 
 void
 SpectrumSettingsWidget::slotFrequencyChanged()
 {
-  if (m_settings->try_lock())
-  {
-    m_settings->freqRedMin = ui->freqRminSpin->value();
-    m_settings->freqRedMax = ui->freqRmaxSpin->value();
-    m_settings->freqGreenMin = ui->freqGminSpin->value();
-    m_settings->freqGreenMax = ui->freqGmaxSpin->value();
-    m_settings->freqBlueMin = ui->freqBminSpin->value();
-    m_settings->freqBlueMax = ui->freqBmaxSpin->value();
+  m_settings->freqRedMin = ui->freqRminSpin->value();
+  m_settings->freqRedMax = ui->freqRmaxSpin->value();
+  m_settings->freqGreenMin = ui->freqGminSpin->value();
+  m_settings->freqGreenMax = ui->freqGmaxSpin->value();
+  m_settings->freqBlueMin = ui->freqBminSpin->value();
+  m_settings->freqBlueMax = ui->freqBmaxSpin->value();
+}
 
-    m_settings->unlock();
-  }
+
+void
+SpectrumSettingsWidget::saveConfiguration(QSettings& config) const
+{
+  config.beginGroup( "SpectrumSettings" );
+
+  // volume settings
+  config.setValue("volumeTotal", ui->volumeTotalSlider->value());
+  config.setValue("volumeRed", ui->volumeRedSlider->value());
+  config.setValue("volumeGreen", ui->volumeGreenSlider->value());
+  config.setValue("volumeBlue", ui->volumeBlueSlider->value());
+
+  // frequency settings
+  config.setValue("freqRedMin", ui->freqRminSpin->value());
+  config.setValue("freqRedMax", ui->freqRmaxSpin->value());
+  config.setValue("freqGreenMin", ui->freqGminSpin->value());
+  config.setValue("freqGreenMax", ui->freqGmaxSpin->value());
+  config.setValue("freqBlueMin", ui->freqBminSpin->value());
+  config.setValue("freqBlueMax", ui->freqBmaxSpin->value());
+
+  config.endGroup();
+}
+
+
+void
+SpectrumSettingsWidget::loadConfiguration(QSettings& config)
+{
+  config.beginGroup( "SpectrumSettings" );
+
+  ui->volumeTotalSlider->setValue(config.value("volumeTotal", "").toInt());
+  ui->volumeRedSlider->setValue(config.value("volumeRed", "").toInt());
+  ui->volumeGreenSlider->setValue(config.value("volumeGreen", "").toInt());
+  ui->volumeBlueSlider->setValue(config.value("volumeBlue", "").toInt());
+
+  ui->freqRminSlider->setValue(config.value("freqRedMin", "").toInt());
+  ui->freqRmaxSlider->setValue(config.value("freqRedMax", "").toInt());
+  ui->freqGminSlider->setValue(config.value("freqGreenMin", "").toInt());
+  ui->freqGmaxSlider->setValue(config.value("freqGreenMax", "").toInt());
+  ui->freqBminSlider->setValue(config.value("freqBlueMin", "").toInt());
+  ui->freqBmaxSlider->setValue(config.value("freqBlueMax", "").toInt());
+
+  config.endGroup();
 }

@@ -59,7 +59,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   createActions();
   createToolbars();
-//  createMenus();
 
   connectAllSlots();
   createTimers();
@@ -75,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneAnalyser->registerObserver(this);
   m_spectrumAnalyser->registerObserver(this);
 
-  m_configurationGroups.push_back(m_settings);
+  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_spectrumSettingsWidget));
   m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_playerSettingsWidget));
 
   loadUserOrDefaultConfig();
@@ -732,8 +731,6 @@ MainWindow::loadConfigurationAll(QSettings& config)
   {
     (*iter)->loadConfiguration(config);
   }
-
-  m_spectrumSettingsWidget->updateAudioControlGUI();
 }
 
 
