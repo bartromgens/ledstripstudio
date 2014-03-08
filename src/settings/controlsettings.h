@@ -1,53 +1,39 @@
 #ifndef CONTROLSETTINGS_H
 #define CONTROLSETTINGS_H
 
-#include "settings/configurationgroup.h"
-
 #include <QSettings>
 
 #include <atomic>
 #include <mutex>
 #include <vector>
 
-class ControlSettings : public ConfigurationGroup
+class ControlSettings
 {
-
 public:
   ControlSettings();
   ~ControlSettings();
 
-  virtual void saveConfiguration(QSettings& configuration) const;
-  virtual void loadConfiguration(QSettings& config);
-
-  void setStatusFPS(int fps);
-  int getStatusFPS() const;
-
   bool isActive() const;
   void setActive(bool isActive);
-
-  void lock();
-  bool try_lock();
-  void unlock();
 
 public:
   std::atomic<int> positionOffset;
   std::atomic<int> brightness;
 
-  int volumeTotal;
-  int volumeRed;
-  int volumeGreen;
-  int volumeBlue;
+  std::atomic<int> volumeTotal;
+  std::atomic<int> volumeRed;
+  std::atomic<int> volumeGreen;
+  std::atomic<int> volumeBlue;
 
-  int freqRedMin;
-  int freqRedMax;
-  int freqGreenMin;
-  int freqGreenMax;
-  int freqBlueMin;
-  int freqBlueMax;
+  std::atomic<int> freqRedMin;
+  std::atomic<int> freqRedMax;
+  std::atomic<int> freqGreenMin;
+  std::atomic<int> freqGreenMax;
+  std::atomic<int> freqBlueMin;
+  std::atomic<int> freqBlueMax;
 
 private:
-  mutable std::mutex m_mutex;
-  bool m_isActive;
+  std::atomic<bool> m_isActive;
 };
 
 #endif // CONTROLSETTINGS_H

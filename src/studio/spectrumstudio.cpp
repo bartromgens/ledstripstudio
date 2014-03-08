@@ -16,21 +16,10 @@ SpectrumStudio::createWaveformAnimationCentral(int nLEDs, const std::map<double,
   double brightnessGreen = 0.0;
   double brightnessBlue = 0.0;
 
-  settings->lock();
-
   double amplifyFactor = settings->volumeTotal/1000.0;
   double amplifyFactorRed = settings->volumeRed/25.0;
   double amplifyFactorGreen = settings->volumeGreen/50.0;
   double amplifyFactorBlue = settings->volumeBlue/100.0;
-
-  int freqRmin = settings->freqRedMin;
-  int freqRmax = settings->freqRedMax;
-  int freqGmin = settings->freqGreenMin;
-  int freqGmax = settings->freqGreenMax;
-  int freqBmin = settings->freqBlueMin;
-  int freqBmax = settings->freqBlueMax;
-
-  settings->unlock();
 
   for (std::map<double, double>::const_iterator iter = spectrum.begin();
        iter != spectrum.end(); ++iter)
@@ -38,17 +27,17 @@ SpectrumStudio::createWaveformAnimationCentral(int nLEDs, const std::map<double,
     double frequency = iter->first;
     double amplitude = iter->second;
 
-    if (frequency > freqRmin && frequency < freqRmax)
+    if (frequency > settings->freqRedMin && frequency < settings->freqRedMax)
     {
       brightnessRed += amplitude*amplifyFactor*amplifyFactorRed;
     }
 
-    if (frequency > freqGmin && frequency < freqGmax)
+    if (frequency > settings->freqGreenMin && frequency < settings->freqGreenMax)
     {
       brightnessGreen += amplitude*amplifyFactor*amplifyFactorGreen;
     }
 
-    if (frequency > freqBmin && frequency < freqBmax)
+    if (frequency > settings->freqBlueMin && frequency < settings->freqBlueMax)
     {
       brightnessBlue += amplitude*amplifyFactor*amplifyFactorBlue;
     }
