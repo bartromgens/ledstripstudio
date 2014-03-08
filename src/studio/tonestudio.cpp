@@ -270,7 +270,7 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
 
   if (m_toneMaxAverage > 0.01)
   {
-    brightnessRelative = std::pow(m_maxToneAmplitude, 3) / std::pow(m_toneMaxAverage, 3);
+    brightnessRelative = std::pow(m_maxToneAmplitude, 3) / std::pow(m_toneMaxAverage*2.0, 3);
   }
 
   unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
