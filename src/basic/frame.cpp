@@ -1,5 +1,7 @@
 #include "frame.h"
 
+#include <cassert>
+
 Frame::Frame(int nLEDs)
   : m_nLEDs(nLEDs),
     m_leds(),
@@ -33,9 +35,14 @@ Frame::getLEDs() const
 void
 Frame::addLED(const LED& led)
 {
-  if (led.getLEDnr() > 0 && led.getLEDnr() < m_nLEDs)
+  if (led.getLEDnr() >= 0 && led.getLEDnr() < m_nLEDs)
   {
     m_leds[led.getLEDnr()] = led;
+  }
+  else
+  {
+    std::cout << "Frame::addLED() - led nr: " << led.getLEDnr() << std::endl;
+    assert(true);
   }
 }
 
