@@ -129,14 +129,12 @@ QMAKE_LFLAGS += -time # show link time
 # location of generated files
 UI_DIR = ./src/gui/
 
-CONFIG(debug, debug|release)
-{
+CONFIG(debug, debug|release) {
+  MAKEFILE = Makefile.debug
   OBJECTS_DIR = ./tmp/debug
   MOC_DIR = ./tmp/debug
-}
-
-CONFIG(release, debug|release)
-{
+} else {
+  MAKEFILE = Makefile.release
   OBJECTS_DIR = ./tmp/release
   MOC_DIR = ./tmp/release
 }
