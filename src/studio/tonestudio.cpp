@@ -264,7 +264,6 @@ Animation
 ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
 {
   Animation animation;
-  Frame frame(nLEDs);
 
   double brightnessRelative = 0.0;
 
@@ -313,13 +312,14 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
   color.g = color.g * brightness/127.0;
   color.b = color.b * brightness/127.0;
 
+  Frame frame(nLEDs);
   std::vector<LED> leds = m_toneHistoryFrame.getLEDs();
 
   for (std::size_t i = 0 ; i < leds.size()/2; ++i)
   {
-    if (i < leds.size()/2-1)
+    unsigned int mirrorI = leds.size()-i-1;
+    if (mirrorI > i + speed)
     {
-      int mirrorI = leds.size()-i-1;
       leds[i].setLEDnr(leds[i].getLEDnr() + speed);
       leds[mirrorI].setLEDnr(leds[mirrorI].getLEDnr() - speed);
 
@@ -328,9 +328,9 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
     }
   }
 
-  for (unsigned int i = 1; i <= speed; ++i)
+  for (unsigned int i = 0; i < speed; ++i)
   {
-    int mirrorI = leds.size()-i-1;
+    int mirrorI = nLEDs-i-1;
 
     LED led(i, color);
     frame.addLED(led);
