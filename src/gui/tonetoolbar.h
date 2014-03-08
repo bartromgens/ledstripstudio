@@ -1,6 +1,7 @@
 #ifndef TONETOOLBAR_H
 #define TONETOOLBAR_H
 
+#include "settings/configurationgroup.h"
 #include "studio/tonestudio.h"
 
 #include <QAction>
@@ -9,18 +10,22 @@
 
 #include <memory>
 
-class ToneToolbar : public QObject
+class ToneToolbar : public QObject, public ConfigurationGroup
 {
   Q_OBJECT
 
 public:
   ToneToolbar(std::shared_ptr<ToneStudio> toneStudio);
+  ~ToneToolbar();
 
   void initialise(QToolBar* parentToolbar);
 
   void toggleToneAnalysis(bool isChecked);
 
   void updateToneSettingsVisibility(ToneStudio::ToneAnimationType type);
+
+  virtual void saveConfiguration(QSettings& config) const;
+  virtual void loadConfiguration(QSettings& config);
 
 private:
 

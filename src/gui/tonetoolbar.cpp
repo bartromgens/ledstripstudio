@@ -1,11 +1,19 @@
 #include "tonetoolbar.h"
 
+#include <QSettings>
+
 #include <memory>
 
 ToneToolbar::ToneToolbar(std::shared_ptr<ToneStudio> toneStudio)
   : QObject(),
+    ConfigurationGroup(),
     m_toneStudio(toneStudio)
 {
+}
+
+ToneToolbar::~ToneToolbar()
+{
+
 }
 
 
@@ -166,4 +174,59 @@ ToneToolbar::slotToggleCornerTone(bool isChecked)
   {
     m_toneStudio->setAnimationType(ToneStudio::None);
   }
+}
+
+
+void
+ToneToolbar::saveConfiguration(QSettings& config) const
+{
+  config.beginGroup( "Tone" );
+
+  config.setValue("ToneAnimationType", m_toneStudio->getAnimationType());
+
+  config.endGroup();
+}
+
+
+void
+ToneToolbar::loadConfiguration(QSettings& config)
+{
+  config.beginGroup( "Tone" );
+
+  ToneStudio::ToneAnimationType toneType = static_cast<ToneStudio::ToneAnimationType>(config.value("ToneAnimationType", "").toInt());
+
+  switch (toneType)
+  {
+    case ToneStudio::None:
+    {
+      break;
+    }
+    case ToneStudio::Loudest:
+    {
+      m_stepToneAct->setChecked(true);
+      break;
+    }
+    case ToneStudio::SmoothSum:
+    {
+      m_smoothToneAct->setChecked(true);
+      break;
+    }
+    case ToneStudio::History:
+    {
+      m_historyToneAct->setChecked(true);
+      break;
+    }
+    case ToneStudio::Individual:
+    {
+      m_individualToneAct->setChecked(true);
+      break;
+    }
+    case ToneStudio::Corner:
+    {
+      m_cornerToneAct->setChecked(true);
+      break;
+    }
+  }
+
+  config.endGroup();
 }

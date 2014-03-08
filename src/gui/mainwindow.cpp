@@ -47,8 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, this)),
   m_ledStripStatusWidget(new LedStripStatusWidget(this)),
   m_playerSettingsWidget(new PlayerSettingsWidget(m_settings, this)),
-  m_toneToolbar(m_toneStudio),
-  m_fftToolbar(m_audioInput, m_spectrumAnalyser),
+  m_toneToolbar(new ToneToolbar(m_toneStudio)),
+  m_fftToolbar(new FFTToolbar(m_audioInput, m_spectrumAnalyser)),
   m_timer(),
   m_lastSingleColor(0, 0, 0)
 {
@@ -70,13 +70,14 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->centralwidget->layout()->addWidget(m_spectrumSettingsWidget);
 
   m_spectrumSettingsWidget->setVisible(false);
-  m_fftToolbar.setVisible(false);
+  m_fftToolbar->setVisible(false);
   m_toneAnalyser->registerObserver(this);
   m_spectrumAnalyser->registerObserver(this);
 
   m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_spectrumSettingsWidget));
   m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_playerSettingsWidget));
-  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(&m_fftToolbar));
+  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_toneToolbar));
+  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_fftToolbar));
 
   loadUserOrDefaultConfig();
 }
@@ -241,7 +242,7 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 
   slotToggleSpectrumSettings(isChecked);
   m_spectrumSettingsToggleAct->setVisible(isChecked);
-  m_fftToolbar.setVisible(isChecked);
+  m_fftToolbar->setVisible(isChecked);
 }
 
 
@@ -264,8 +265,8 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
     stopToneAnalyser();
   }
 
-  m_toneToolbar.toggleToneAnalysis(isChecked);
-  m_fftToolbar.setVisible(isChecked);
+  m_toneToolbar->toggleToneAnalysis(isChecked);
+  m_fftToolbar->setVisible(isChecked);
 }
 
 
@@ -569,7 +570,7 @@ MainWindow::createToolbars()
   m_detailsToolBar->addSeparator();
   m_detailsToolBar->addAction(m_spectrumSettingsToggleAct);
 
-  m_toneToolbar.initialise(m_detailsToolBar);
+  m_toneToolbar->initialise(m_detailsToolBar);
 
   m_detailsToolBar->addAction(m_dotsAnimationAct);
   m_detailsToolBar->addAction(m_rainbowAnimationAct);
@@ -579,7 +580,7 @@ MainWindow::createToolbars()
 
   m_detailsToolBar->addSeparator();
 
-  m_fftToolbar.initialise(m_detailsToolBar);
+  m_fftToolbar->initialise(m_detailsToolBar);
 }
 
 

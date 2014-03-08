@@ -150,8 +150,8 @@ private:
   QToolBar* m_mainToolBar;
   QToolBar* m_detailsToolBar;
 
-  ToneToolbar m_toneToolbar;
-  FFTToolbar m_fftToolbar;
+  ToneToolbar* m_toneToolbar;
+  FFTToolbar* m_fftToolbar;
 
   QMenu* fileMenu;
   QMenu* editMenu;
