@@ -64,9 +64,11 @@ LedStripEmulator::drawStrip(QPainter* qp)
     int x = (i*m_width)+border;
     int y = 2;
     QRect rect(x, y, m_width, m_height-2);
-    qp->drawRect(rect);
     double magicFactor = 254/127.0*1.0;
-    QColor color(std::max(int(led.getColor().r*magicFactor), 0), std::max(int(led.getColor().g*magicFactor), 0), std::max(int(led.getColor().b*magicFactor), 0));
+    QColor color(std::max(int(led.getColor().r*magicFactor), 0),
+                 std::max(int(led.getColor().g*magicFactor), 0),
+                 std::max(int(led.getColor().b*magicFactor), 0));
+    qp->drawRect(rect);
     qp->fillRect(rect, color);
   }
 }
