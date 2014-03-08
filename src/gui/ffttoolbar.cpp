@@ -8,6 +8,7 @@
 
 FFTToolbar::FFTToolbar(std::shared_ptr<AudioInput> audioInput, std::shared_ptr<SpectrumAnalyser> spectrumAnalyser)
   : QObject(),
+    ConfigurationGroup(),
     m_audioInput(audioInput),
     m_spectrumAnalyser(spectrumAnalyser)
 {
@@ -142,4 +143,85 @@ FFTToolbar::slotLinearWindowingAct(bool isChecked)
     m_hannWindowingAct->setChecked(false);
     m_spectrumAnalyser->setWindowingType(SpectrumAnalyser::linear);
   }
+}
+
+
+void
+FFTToolbar::saveConfiguration(QSettings& config) const
+{
+  config.beginGroup( "FFT" );
+
+  FFTSampleSize sampleSize = FFT15;
+  if (m_FFT14sizeAct->isChecked())
+  {
+    sampleSize = FFT14;
+  }
+  else if (m_FFT15sizeAct->isChecked())
+  {
+    sampleSize = FFT15;
+  }
+  else if (m_FFT15sizeAct->isChecked())
+  {
+    sampleSize = FFT16;
+  }
+
+  WindowingFunctionType windowFunc = Linear;
+  if (m_linearWindowingAct->isChecked())
+  {
+    windowFunc = Linear;
+  }
+  else if (m_hannWindowingAct->isChecked())
+  {
+    windowFunc = Hann;
+  }
+
+  config.setValue("FFTSampleSize", sampleSize);
+  config.setValue("WindowingFunction", windowFunc);
+
+  config.endGroup();
+}
+
+
+void
+FFTToolbar::loadConfiguration(QSettings& config)
+{
+  config.beginGroup( "FFT" );
+
+  FFTSampleSize sampleSize = static_cast<FFTSampleSize>(config.value("FFTSampleSize", "").toInt());
+  WindowingFunctionType windowFunc = static_cast<WindowingFunctionType>(config.value("WindowingFunction", "").toInt());
+
+  switch (sampleSize)
+  {
+    case FFT14:
+    {
+      m_FFT14sizeAct->setChecked(true);
+      break;
+    }
+    case FFT15:
+    {
+      m_FFT15sizeAct->setChecked(true);
+      break;
+    }
+    case FFT16:
+    {
+      m_FFT16sizeAct->setChecked(true);
+      break;
+    }
+  }
+
+  switch (windowFunc)
+  {
+    case Hann:
+    {
+      m_hannWindowingAct->setChecked(true);
+      break;
+    }
+    case Linear:
+    {
+      m_linearWindowingAct->setChecked(true);
+      break;
+    }
+  }
+
+  config.endGroup();
 }

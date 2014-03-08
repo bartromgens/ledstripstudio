@@ -1,6 +1,8 @@
 #ifndef FFTTOOLBAR_H
 #define FFTTOOLBAR_H
 
+#include "settings/configurationgroup.h"
+
 #include <QObject>
 
 #include <memory>
@@ -11,7 +13,7 @@ class SpectrumAnalyser;
 class QToolBar;
 class QAction;
 
-class FFTToolbar : public QObject
+class FFTToolbar : public QObject, public ConfigurationGroup
 {
   Q_OBJECT
 
@@ -23,7 +25,24 @@ public:
 
   void setVisible(bool isChecked);
 
+  virtual void saveConfiguration(QSettings& config) const;
+  virtual void loadConfiguration(QSettings& config);
+
 private:
+
+  enum FFTSampleSize
+  {
+    FFT14 = 0,
+    FFT15 = 1,
+    FFT16 = 2
+  };
+
+  enum WindowingFunctionType
+  {
+    Linear = 0,
+    Hann = 1
+  };
+
   void setNSamples(unsigned int nSamples);
 
 private slots:

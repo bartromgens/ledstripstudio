@@ -76,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_spectrumSettingsWidget));
   m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_playerSettingsWidget));
+  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(&m_fftToolbar));
 
   loadUserOrDefaultConfig();
 }
