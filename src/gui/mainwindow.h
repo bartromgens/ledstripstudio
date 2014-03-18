@@ -58,8 +58,6 @@ public:
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);
 
-  void updateLEDs(const std::map<double, double> &spectrum);
-
   Animation createAnimationTest1();
   Animation createAnimationTest2();
 

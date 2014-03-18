@@ -164,7 +164,10 @@ MainWindow::notifySpectrum(std::map<double, double> spectrum)
 //  m_spectrumStudio->drawSpectrumInConsole(spectrum, minFreq, maxFreq);
   if (m_spectrumToggleButton->isChecked())
   {
-    updateLEDs(spectrum);
+    Animation animation = m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, spectrum, m_settings.get());
+    m_player->addAnimation(animation);
+
+    m_player->playFrame();
   }
 }
 
@@ -640,17 +643,6 @@ MainWindow::slotSaveConfiguration(const QString& filename)
   std::cout << "MainWindow::slotSaveConfiguration()" << std::endl;
   QSettings settings(filename, QSettings::NativeFormat);
   saveConfigurationAll(settings);
-}
-
-
-void
-MainWindow::updateLEDs(const std::map<double, double>& spectrum)
-{
-//  std::cout << "MainWindow::updateLEDs" << std::endl;
-  Animation animation = m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, spectrum, m_settings.get());
-  m_player->addAnimation(animation);
-
-  m_player->playFrame();
 }
 
 
