@@ -13,12 +13,11 @@
 
 #include <QTime>
 
-#include <boost/thread.hpp>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <set>
 
 class AudioInput
@@ -65,7 +64,6 @@ private:
   double m_sampleRate;
   unsigned int m_nSamples;
   int m_nChannels;
-//  int m_nSamples;
   PaStream* m_stream;
   paUserData m_data;
   std::shared_ptr<ControlSettings> m_controlSettings;

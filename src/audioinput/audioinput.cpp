@@ -46,7 +46,7 @@ AudioInput::initializeUserData()
 void
 AudioInput::setNSamples(unsigned int nSamples)
 {
-  boost::lock_guard<boost::mutex> lock(m_data.data_mutex);
+  std::lock_guard<std::mutex> lock(m_data.data_mutex);
   m_data.nSamples = nSamples;
   m_nSamples = nSamples;
   m_data.recordedSamplesVec.resize(nSamples);
@@ -140,7 +140,6 @@ AudioInput::startStream()
     {
       if (m_data.data_mutex.try_lock())
       {
-
         std::deque<float> samples = m_data.recordedSamplesVec;
         m_data.data_mutex.unlock();
 
@@ -170,7 +169,7 @@ AudioInput::recordCallback( const void *inputBuffer, void *outputBuffer,
 
   paUserData *data = (paUserData*)userData;
 
-  boost::lock_guard<boost::mutex> lock(data->data_mutex);
+  std::lock_guard<std::mutex> lock(data->data_mutex);
 
   const float *rptr = (const float*)inputBuffer;
 //  float *wptr = &data->recordedSamples[data->frameIndex * data->nChannels];
