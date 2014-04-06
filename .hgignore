@@ -25,3 +25,6 @@ tmp/*
 src/gui/ui_spectrumsettingswidget.h
 ledstripstudio
 *pro.user*
+Makefile.release
+Makefile.debug
+*.orig
