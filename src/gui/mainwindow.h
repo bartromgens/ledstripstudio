@@ -62,6 +62,7 @@ public:
   Animation createAnimationTest1();
   Animation createAnimationTest2();
 
+  void createConfigurationComboBox();
 public slots:
   void slotPlayerPlayed();
 

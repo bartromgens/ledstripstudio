@@ -22,8 +22,8 @@
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
 const int NLEDS = 156;
 
-QString MainWindow::m_defaultConfigFilename = "default.ini";
-QString MainWindow::m_userConfigFilename = "user.ini";
+QString MainWindow::m_defaultConfigFilename = "./config/default.cfg";
+QString MainWindow::m_userConfigFilename = "./config/user.cfg";
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -526,12 +526,7 @@ MainWindow::createToolbars()
   m_mainToolBar->addAction(m_stripToggleButton);
   m_mainToolBar->addSeparator();
 
-  QComboBox* configCombo = new QComboBox(this);
-  configCombo->setFixedHeight(32);
-  configCombo->addItem("user");
-  configCombo->addItem("test.ini");
-  m_mainToolBar->addWidget(configCombo);
-  connect( configCombo, SIGNAL(currentIndexChanged(QString)), this, SLOT(slotConfigComboChanged(QString)) );
+  createConfigurationComboBox();
 
   QAction* saveConfig = new QAction( QIcon("./icons/document-save-as.svg"), "Save configuration as", this );
   connect( saveConfig, SIGNAL(triggered()), this, SLOT(slotSaveConfigurationAs()) );
@@ -558,6 +553,27 @@ MainWindow::createToolbars()
   m_detailsToolBar->addSeparator();
 
   m_fftToolbar->initialise(m_detailsToolBar);
+}
+
+
+void
+MainWindow::createConfigurationComboBox()
+{
+  QComboBox* configCombo = new QComboBox(this);
+  configCombo->setFixedHeight(32);
+
+  QStringList nameFilter("*.cfg");
+  QDir directory("./config");
+  QStringList txtFilesAndDirectories = directory.entryList(nameFilter);
+
+  for (QString& v : txtFilesAndDirectories)
+  {
+    v.remove(".cfg");
+    configCombo->addItem(v);
+  }
+
+  m_mainToolBar->addWidget(configCombo);
+  connect( configCombo, SIGNAL(currentIndexChanged(QString)), this, SLOT(slotConfigComboChanged(QString)) );
 }
 
 
@@ -607,7 +623,8 @@ MainWindow::slotPlayerPlayed()
 void
 MainWindow::slotConfigComboChanged(QString comboText)
 {
-  QSettings settings(comboText, QSettings::NativeFormat);
+  QString filename = "./config/" + comboText + ".cfg";
+  QSettings settings(filename, QSettings::NativeFormat);
   loadConfigurationAll(settings);
 }
 
@@ -703,6 +720,7 @@ MainWindow::saveConfigurationAll(QSettings& config) const
 void
 MainWindow::loadConfigurationAll(QSettings& config)
 {
+  std::cout << "MainWindow::loadConfigurationAll() - loading config file: " << config.fileName().toStdString() << std::endl;
   loadConfiguration(config);
 
   for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
