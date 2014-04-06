@@ -3,7 +3,7 @@
 
 #include <QTime>
 
-#include <boost/thread.hpp>
+#include <cassert>
 
 using namespace fftwpp;
 
@@ -52,7 +52,7 @@ SpectrumAnalyser::notifyAudioData(const std::deque<float>& audioData, int sample
 
   WindowingType windowType;
   {
-    boost::lock_guard<boost::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
     windowType = m_windowingType;
   }
 
@@ -64,7 +64,7 @@ SpectrumAnalyser::notifyAudioData(const std::deque<float>& audioData, int sample
 void
 SpectrumAnalyser::registerObserver(SpectrumObserver* observer)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   assert(observer);
   m_observers.insert(observer);
@@ -74,7 +74,7 @@ SpectrumAnalyser::registerObserver(SpectrumObserver* observer)
 void
 SpectrumAnalyser::unregisterObserver(SpectrumObserver* observer)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   if (std::find(m_observers.begin(), m_observers.end(), observer) != m_observers.end())
   {
@@ -86,7 +86,7 @@ SpectrumAnalyser::unregisterObserver(SpectrumObserver* observer)
 void
 SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   for (auto iter = m_observers.begin(); iter != m_observers.end(); ++iter)
   {
@@ -119,7 +119,7 @@ SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampl
 //  timer.restart();
   std::map<double, double> bins;
   {
-    boost::lock_guard<boost::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
     for(unsigned int i = 0; (i < m_nSamples) && (i < realIn.size()); i++)
     {
       m_f[i] = realInWindowed[i];
@@ -218,7 +218,7 @@ SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sa
 void
 SpectrumAnalyser::setNSamples(unsigned int nSamples)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   m_nSamples = nSamples;
   m_np = nSamples/2 + 1;
@@ -234,7 +234,7 @@ SpectrumAnalyser::setNSamples(unsigned int nSamples)
 unsigned int
 SpectrumAnalyser::getNSamples() const
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   return m_nSamples;
 }
@@ -243,6 +243,6 @@ SpectrumAnalyser::getNSamples() const
 void
 SpectrumAnalyser::setWindowingType(WindowingType type)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_windowingType = type;
 }

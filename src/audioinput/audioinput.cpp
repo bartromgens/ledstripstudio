@@ -231,7 +231,7 @@ AudioInput::terminatePortAudio(PaError err)
 void
 AudioInput::registerObserver(std::shared_ptr<AudioInputObserver> observer)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   assert(observer);
   m_audioObservers.insert(observer);
@@ -241,7 +241,7 @@ AudioInput::registerObserver(std::shared_ptr<AudioInputObserver> observer)
 void
 AudioInput::unregisterObserver(std::shared_ptr<AudioInputObserver> observer)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   if ( std::find(m_audioObservers.begin(), m_audioObservers.end(), observer) != m_audioObservers.end() )
   {
@@ -253,7 +253,7 @@ AudioInput::unregisterObserver(std::shared_ptr<AudioInputObserver> observer)
 void
 AudioInput::notifyObservers(const std::deque<float>& audioData)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   for (auto iter = m_audioObservers.begin(); iter != m_audioObservers.end(); ++iter)
   {

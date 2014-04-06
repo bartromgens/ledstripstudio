@@ -57,7 +57,7 @@ private:
 
   bool m_isPlaying;
 
-  mutable boost::mutex m_mutex;
+  mutable std::mutex m_mutex;
 };
 
 #endif // PLAYER_H

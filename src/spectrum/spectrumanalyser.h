@@ -7,14 +7,13 @@
 
 #include <QTime>
 
-#include <boost/thread.hpp>
-
 #include <algorithm>
 #include <deque>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <stdio.h>
 #include <set>
 #include <vector>
@@ -66,7 +65,7 @@ private:
 
   std::set< SpectrumObserver* > m_observers;
 
-  mutable boost::mutex m_mutex;
+  mutable std::mutex m_mutex;
 
   QTime m_time;
 

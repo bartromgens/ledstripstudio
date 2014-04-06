@@ -74,7 +74,7 @@ private:
 
   std::set< std::shared_ptr<AudioInputObserver> > m_audioObservers;
 
-  mutable boost::mutex m_mutex;
+  mutable std::mutex m_mutex;
 };
 
 #endif // AUDIOINPUT_H

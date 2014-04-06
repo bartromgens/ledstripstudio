@@ -31,7 +31,7 @@ Player::~Player()
 
 std::unique_ptr<LEDController> Player::createLedController(QString serialPortName)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   std::unique_ptr<LEDController> ledController( new LEDController() );
   ledController->setSerialPortName(serialPortName);
@@ -50,7 +50,7 @@ Player::getFPS() const
 Frame
 Player::getLastFrame() const
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
   return m_lastFrame;
 }
 
@@ -58,7 +58,7 @@ Player::getLastFrame() const
 void
 Player::addAnimation(const Animation& animation)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
 //  QElapsedTimer time;
   if (!m_mainAnimation.getFrames().empty())
@@ -98,7 +98,7 @@ Player::playAllAnimations()
 void
 Player::stopAnimations()
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   m_isPlaying = false;
   m_mainAnimation.clearFrames();
@@ -131,7 +131,7 @@ Player::playFrame()
 {
   Frame frame(0);
   {
-    boost::lock_guard<boost::mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
 
     const std::deque<Frame>& frames = m_mainAnimation.getFrames();
     if (!frames.empty())

@@ -66,7 +66,7 @@ LEDController::disconnect()
 void
 LEDController::send(const Frame& frame)
 {
-  boost::lock_guard<boost::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   QByteArray bytes;
 

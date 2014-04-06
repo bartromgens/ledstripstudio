@@ -9,10 +9,9 @@
 
 #include <boost/asio.hpp>
 #include <boost/asio/serial_port.hpp>
-#include <boost/thread.hpp>
 
 #include <deque>
-//#include <mutex>
+#include <mutex>
 #include <memory>
 #include <vector>
 
@@ -57,7 +56,7 @@ private:
   QElapsedTimer m_timer;
   QElapsedTimer m_timer2;
   std::deque<int> m_fpsHistory;
-  mutable boost::mutex m_mutex;
+  mutable std::mutex m_mutex;
 
   std::unique_ptr<boost::asio::io_service> m_io_service;
   std::unique_ptr<boost::asio::serial_port> m_serialPort; // the serial port this instance is connected to
