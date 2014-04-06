@@ -68,6 +68,8 @@ public slots:
   void slotSaveConfiguration(const QString& filename);
   void slotConfigComboChanged(QString comboText);
 
+  void slotSaveConfigurationAs();
+
 protected:
   virtual void closeEvent(QCloseEvent* event);
 

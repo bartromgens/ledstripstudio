@@ -533,13 +533,9 @@ MainWindow::createToolbars()
   m_mainToolBar->addWidget(configCombo);
   connect( configCombo, SIGNAL(currentIndexChanged(QString)), this, SLOT(slotConfigComboChanged(QString)) );
 
-  QAction* saveConfig = new QAction(this);
-  saveConfig->setText("save");
-  saveConfig->setIcon(QIcon("./icons/save.png"));
+  QAction* saveConfig = new QAction( QIcon("./icons/document-save-as.svg"), "Save configuration as", this );
+  connect( saveConfig, SIGNAL(triggered()), this, SLOT(slotSaveConfigurationAs()) );
   m_mainToolBar->addAction(saveConfig);
-  QAction* loadConfig = new QAction(this);
-  loadConfig->setText("load");
-  m_mainToolBar->addAction(loadConfig);
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
   addToolBar(Qt::LeftToolBarArea, m_detailsToolBar);
@@ -611,7 +607,8 @@ MainWindow::slotPlayerPlayed()
 void
 MainWindow::slotConfigComboChanged(QString comboText)
 {
-  slotSaveConfiguration(comboText);
+  QSettings settings(comboText, QSettings::NativeFormat);
+  loadConfigurationAll(settings);
 }
 
 
@@ -649,6 +646,15 @@ void
 MainWindow::stopToneAnalyser() const
 {
   m_spectrumAnalyser->unregisterObserver(m_toneAnalyser.get());
+}
+
+
+void
+MainWindow::slotSaveConfigurationAs()
+{
+  QString filename = QFileDialog::getSaveFileName(this, "Save configuration as", QDir::currentPath() + "/config/", "Configuration files (*.cfg)");
+  QSettings config(filename, QSettings::NativeFormat);
+  saveConfigurationAll(config);
 }
 
 
