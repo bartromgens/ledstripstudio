@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "basic/animation.h"
+#include "gui/actionconsistency.h"
 #include "gui/tonetoolbar.h"
 #include "gui/ffttoolbar.h"
 #include "settings/configurationgroup.h"
@@ -122,6 +123,7 @@ private:
   void loadConfigurationAll(QSettings& config);
   void saveConfigurationAll(QSettings& config) const;
 
+
 private:
   Ui::MainWindow* ui;
   QColorDialog* m_colorDialog;
@@ -169,6 +171,8 @@ private:
   QAction* m_imageAnimationAct;
   QAction* m_recordAnimationAct;
   QAction* m_openColorPickerAct;
+
+  ActionConsistency* m_actionConsistency;
 
   std::unique_ptr<QTimer> m_timer;
   std::unique_ptr<QTimer> m_timerEmulator;

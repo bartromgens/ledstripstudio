@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_playerSettingsWidget(new PlayerSettingsWidget(m_settings, this)),
   m_toneToolbar(new ToneToolbar(m_toneStudio)),
   m_fftToolbar(new FFTToolbar(m_audioInput, m_spectrumAnalyser)),
+  m_actionConsistency(new ActionConsistency()),
   m_timer(),
   m_lastSingleColor(0, 0, 0)
 {
@@ -118,12 +119,9 @@ MainWindow::closeEvent(QCloseEvent* /*event*/)
   slotSaveConfiguration(m_userConfigFilename);
   stopAudioInput();
 
-  if (m_audioInputThread)
+  if (m_audioInputThread && !m_audioInputThread->timed_join(boost::posix_time::seconds(2)))
   {
-    if(!m_audioInputThread->timed_join(boost::posix_time::seconds(2)))
-    {
-      m_audioInputThread->interrupt();
-    }
+    m_audioInputThread->interrupt();
   }
 }
 
@@ -158,10 +156,6 @@ MainWindow::stopAudioInput()
 void
 MainWindow::notifySpectrum(std::map<double, double> spectrum)
 {
-//  std::cout << "MainWindow::notifySpectrum()" << std::endl;
-//  int minFreq = 200;
-//  int maxFreq = 1000;
-//  m_spectrumStudio->drawSpectrumInConsole(spectrum, minFreq, maxFreq);
   if (m_spectrumToggleButton->isChecked())
   {
     Animation animation = m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, spectrum, m_settings.get());
@@ -225,40 +219,31 @@ MainWindow::slotToggleAudioInput(bool isChecked)
 void
 MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 {
+  m_actionConsistency->toggleSpectrumAnalaysis(isChecked);
+
   if (isChecked)
   {
-    m_settings->positionOffset = 0;
-
-    m_toneToggleButton->setChecked(false);
-    m_animationToggleAct->setChecked(false);
-    m_colorToggleAct->setChecked(false);
     startSpectrumAnalyser();
   }
   else
   {
-    m_spectrumSettingsToggleAct->setVisible(false);
-    if (!m_toneToggleButton->isChecked())
-    {
-      stopSpectrumAnalyser();
-    }
+    stopSpectrumAnalyser();
   }
 
-  slotToggleSpectrumSettings(isChecked);
-  m_spectrumSettingsToggleAct->setVisible(isChecked);
   m_fftToolbar->setVisible(isChecked);
+  slotToggleSpectrumSettings(isChecked);
 }
 
 
 void
 MainWindow::slotToggleToneAnalysis(bool isChecked)
 {
+  m_settings->positionOffset = m_nLedsTotal/2;
+
+  m_actionConsistency->toggleToneAnalysis(isChecked);
+
   if (isChecked)
   {
-    m_settings->positionOffset = m_nLedsTotal/2;
-
-    m_spectrumToggleButton->setChecked(false);
-    m_animationToggleAct->setChecked(false);
-    m_colorToggleAct->setChecked(false);
     startSpectrumAnalyser();
     startToneAnalyser();
   }
@@ -267,7 +252,6 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
     stopSpectrumAnalyser();
     stopToneAnalyser();
   }
-
   m_toneToolbar->toggleToneAnalysis(isChecked);
   m_fftToolbar->setVisible(isChecked);
 }
@@ -276,22 +260,7 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
 void
 MainWindow::slotToggleAnimation(bool isChecked)
 {
-  m_dotsAnimationAct->setVisible(isChecked);
-  m_rainbowAnimationAct->setVisible(isChecked);
-  m_imageAnimationAct->setVisible(isChecked);
-
-  if (isChecked)
-  {
-    m_spectrumToggleButton->setChecked(false);
-    m_toneToggleButton->setChecked(false);
-    m_colorToggleAct->setChecked(false);
-  }
-  else
-  {
-    m_dotsAnimationAct->setChecked(false);
-    m_rainbowAnimationAct->setChecked(false);
-    m_imageAnimationAct->setChecked(false);
-  }
+  m_actionConsistency->toggleAnimation(isChecked);
 }
 
 
@@ -302,9 +271,6 @@ MainWindow::slotToggleSingleColor(bool isChecked)
 
   if (isChecked)
   {
-    m_spectrumToggleButton->setChecked(false);
-    m_toneToggleButton->setChecked(false);
-    m_animationToggleAct->setChecked(false);
     slotColorSelected(m_lastSingleColor);
   }
 }
@@ -471,6 +437,7 @@ MainWindow::createActions()
   m_toneToggleButton->setCheckable(true);
   connect(m_toneToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneAnalysis(bool)));
 
+
   m_animationToggleAct = new QAction(this);
   m_animationToggleAct->setIcon(QIcon("./icons/animation-mode.png"));
   m_animationToggleAct->setStatusTip(tr("Start animation mode."));
@@ -527,6 +494,16 @@ MainWindow::createActions()
   connect(m_recordAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleRecording(bool)));
   m_recordAnimationAct->setChecked(false);
   m_recordAnimationAct->setVisible(true);
+
+  m_actionConsistency->m_toneToggleButton = m_toneToggleButton;
+  m_actionConsistency->m_animationToggleAct = m_animationToggleAct;
+  m_actionConsistency->m_colorToggleAct = m_colorToggleAct;
+  m_actionConsistency->m_spectrumSettingsToggleAct = m_spectrumSettingsToggleAct;
+  m_actionConsistency->m_spectrumToggleButton = m_spectrumToggleButton;
+  m_actionConsistency->m_dotsAnimationAct = m_dotsAnimationAct;
+  m_actionConsistency->m_rainbowAnimationAct = m_rainbowAnimationAct;
+  m_actionConsistency->m_imageAnimationAct = m_imageAnimationAct;
+  m_actionConsistency->m_openColorPickerAct = m_openColorPickerAct;
 }
 
 
@@ -558,6 +535,7 @@ MainWindow::createToolbars()
 
   QAction* saveConfig = new QAction(this);
   saveConfig->setText("save");
+  saveConfig->setIcon(QIcon("./icons/save.png"));
   m_mainToolBar->addAction(saveConfig);
   QAction* loadConfig = new QAction(this);
   loadConfig->setText("load");
