@@ -30,7 +30,7 @@ LedStripStatusWidget::slotEmulatorRGBToggled(bool isChecked)
 void
 LedStripStatusWidget::slotEmulatorToggled(bool isChecked)
 {
-  ui->frame->setVisible(isChecked);
+  ui->ledStripEmulator->setVisible(isChecked);
 }
 
 
