@@ -56,7 +56,7 @@ Animation::combineAnimations(const std::list<Animation>& animations)
 
 
 Animation
-Animation::combineTwoAnimations(const Animation& animationA, const Animation& animationB) const
+Animation::combineTwoAnimations(const Animation& animationA, const Animation& animationB)
 {
   Animation animation;
 

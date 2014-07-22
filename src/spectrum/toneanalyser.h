@@ -17,7 +17,7 @@ public:
 
   std::map<std::string, double> computeToneAmplitude(const std::map<double, double>& spectrum);
 
-  void notifySpectrum(std::map<double, double> spectrum);
+  void notifySpectrum(const std::map<double, double>& spectrum);
 
   void registerObserver(ToneObserver* observer);
   void unregisterObserver(ToneObserver* observer);

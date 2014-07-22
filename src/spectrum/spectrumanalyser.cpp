@@ -97,7 +97,7 @@ SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 
 
 std::map<double, double>
-SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampleRate, SpectrumAnalyser::WindowingType windowType)
+SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::WindowingType windowType)
 {
 //  QTime timer;
 //  timer.start();
@@ -117,7 +117,9 @@ SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampl
     realInWindowed = realIn;
   }
 
+//  std::cout << "SpectrumAnalyser::computeSpectrum() - hannWindowFunction time: " << timer.elapsed() << std::endl;
 //  timer.restart();
+
   std::map<double, double> bins;
   {
     std::lock_guard<std::mutex> lock(m_mutex);
@@ -126,8 +128,6 @@ SpectrumAnalyser::computeSpectrum(std::deque<float> realIn, int nBins, int sampl
       m_f[i] = realInWindowed[i];
     }
 
-    //  std::cout << "SpectrumAnalyser::computeSpectrum() - hannWindowFunction time: " << timer.elapsed() << std::endl;
-    //  timer.restart();
 
     // forward FFT real to complex
     m_forward->fft(m_f, m_g);
@@ -158,12 +158,11 @@ SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in) const
 
   std::deque<float> out(sizeIn, 0.0);
 
-//  QTime timer;
-//  timer.start();
+  double factor = (2.0*M_PI)/sizeIn;
   for (std::size_t i = 0; i < sizeIn; i++)
   {
 //    out[i] = 0.5 * ( 1.0 + cos((2.0*M_PI*i)/sizeIn) ) * in[i];
-    out[i] = 0.5 * ( 1.0 - cos((2.0*M_PI*i)/sizeIn) ) * in[i];
+    out[i] = 0.5 * ( 1.0 - cos(factor*i) ) * in[i];
 //    std::cout << 0.5 * ( 1.0 - cos((2.0*M_PI*i)/sizeIn) ) << std::endl;
   }
 

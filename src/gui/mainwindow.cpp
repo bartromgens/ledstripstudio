@@ -156,12 +156,11 @@ MainWindow::stopAudioInput()
 
 
 void
-MainWindow::notifySpectrum(std::map<double, double> spectrum)
+MainWindow::notifySpectrum(const std::map<double, double>& spectrum)
 {
   if (m_spectrumToggleButton->isChecked())
   {
-    Animation animation = m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, spectrum, m_settings.get());
-    m_player->addAnimation(animation);
+    m_player->addAnimation( m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, spectrum, m_settings.get()) );
 
     m_player->playFrame();
   }
@@ -169,11 +168,9 @@ MainWindow::notifySpectrum(std::map<double, double> spectrum)
 
 
 void
-MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
+MainWindow::notifyTone(const std::map<std::string, double>& toneAmplitudes)
 {
-  Animation animation;
-  animation = m_toneStudio->createToneAnimation(m_nLedsTotal, toneAmplitudes);
-  m_player->addAnimation(animation);
+  m_player->addAnimation( m_toneStudio->createToneAnimation(m_nLedsTotal, toneAmplitudes) );
   m_player->playFrame();
 }
 

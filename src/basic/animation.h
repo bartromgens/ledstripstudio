@@ -16,7 +16,7 @@ public:
     Background
   };
 
-  Animation();
+  explicit Animation();
 
   void addFrame(const Frame& frame);
   void pop_frontFrame();
@@ -25,8 +25,8 @@ public:
 
   void clearFrames();
 
-  Animation combineAnimations(const std::list<Animation>& animations);
-  Animation combineTwoAnimations(const Animation& animationA, const Animation& animationB) const;
+  static Animation combineAnimations(const std::list<Animation>& animations);
+  static Animation combineTwoAnimations(const Animation& animationA, const Animation& animationB);
 
   void setAdditionType(AdditionType type);
   AdditionType getAdditionType() const;

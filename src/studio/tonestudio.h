@@ -23,7 +23,7 @@ public:
   void setAnimationType(ToneAnimationType type);
   ToneAnimationType getAnimationType() const;
 
-  Animation createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones);
+  Animation createToneAnimation(unsigned int nLEDs, const std::map<std::string, double>& tones);
 
   static void writeToneToConsole(const std::map<std::string, double>& tones);
 
@@ -36,10 +36,10 @@ private:
   void createToneColorMap(const std::map<std::string, double> &tones);
 
   Animation createToneAnimationLoudest(unsigned int nLEDs);
-  Animation createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::string, double> tones);
+  Animation createToneAnimationSmoothSum(unsigned int nLEDs, const std::map<std::string, double>& tones);
   Animation createToneAnimationHistory(unsigned int nLEDs, unsigned int speed);
-  Animation createToneAnimationIndividual(unsigned int nLEDs, std::map<std::string, double> tones);
-  Animation createToneAnimationCorners(unsigned int nLEDs, std::map<std::string, double> tones);
+  Animation createToneAnimationIndividual(unsigned int nLEDs, const std::map<std::string, double>& tones);
+  Animation createToneAnimationCorners(unsigned int nLEDs, const std::map<std::string, double>& tones);
 
 private:
   ToneAnimationType m_animationType;

@@ -53,8 +53,8 @@ public:
   ~MainWindow();
 
 
-  virtual void notifySpectrum(std::map<double, double> spectrum);
-  virtual void notifyTone(std::map<std::string, double> toneAmplitudes);
+  virtual void notifySpectrum(const std::map<double, double>& spectrum);
+  virtual void notifyTone(const std::map<std::string, double>& toneAmplitudes);
 
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);

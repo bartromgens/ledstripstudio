@@ -102,7 +102,7 @@ ToneStudio::calcToneMinAverage()
 
 
 Animation
-ToneStudio::createToneAnimation(unsigned int nLEDs, std::map<std::string, double> tones)
+ToneStudio::createToneAnimation(unsigned int nLEDs, const std::map<std::string, double>& tones)
 {
   m_maxToneAmplitude = 0.0;
 
@@ -196,7 +196,7 @@ ToneStudio::createToneAnimationLoudest(unsigned int nLEDs)
 
 
 Animation
-ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, std::map<std::string, double> tones)
+ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, const std::map<std::string, double>& tones)
 {
   Animation animation;
 
@@ -346,7 +346,7 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
 
 
 Animation
-ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, std::map<std::string, double> tones)
+ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, const std::map<std::string, double>& tones)
 {
   const double minThreshold = 30;
   const double amplificationExponent = 2.0;
@@ -451,7 +451,7 @@ ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, std::map<std::stri
 
 
 Animation
-ToneStudio::createToneAnimationCorners(unsigned int nLEDs, std::map<std::string, double> tones)
+ToneStudio::createToneAnimationCorners(unsigned int nLEDs, const std::map<std::string, double>& tones)
 {
   if (m_toneColorMap.empty())
   {

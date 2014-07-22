@@ -25,9 +25,9 @@ ToneAnalyser::~ToneAnalyser()
 
 
 void
-ToneAnalyser::notifySpectrum(std::map<double, double> spectrum)
+ToneAnalyser::notifySpectrum(const std::map<double, double>& spectrum)
 {
-  std::map<std::string, double> toneAmplitude = computeToneAmplitude(spectrum);
+  const std::map<std::string, double>& toneAmplitude = computeToneAmplitude(spectrum);
   notifyObservers(toneAmplitude);
 }
 

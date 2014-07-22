@@ -9,7 +9,7 @@ class ToneObserver
 public:
   ToneObserver();
 
-  virtual void notifyTone(std::map<std::string, double> toneAmplitudes) = 0;
+  virtual void notifyTone(const std::map<std::string, double>& toneAmplitudes) = 0;
 };
 
 #endif // TONEOBSERVER_H
