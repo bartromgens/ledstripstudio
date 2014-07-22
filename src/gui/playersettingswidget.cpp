@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-PlayerSettingsWidget::PlayerSettingsWidget(std::shared_ptr<ControlSettings> settings, QWidget *parent) :
+PlayerSettingsWidget::PlayerSettingsWidget(ControlSettings& settings, QWidget* parent) :
   QWidget(parent),
   ConfigurationGroup(),
   ui(new Ui::PlayerSettingsWidget),
@@ -33,16 +33,14 @@ PlayerSettingsWidget::connectAllSlots() const
 void
 PlayerSettingsWidget::slotOffsetChanged(int value)
 {
-  assert(m_settings);
-  m_settings->positionOffset = value;
+  m_settings.positionOffset = value;
 }
 
 
 void
 PlayerSettingsWidget::slotBrightnessChanged(int value)
 {
-  assert(m_settings);
-  m_settings->brightness = value;
+  m_settings.brightness = value;
 }
 
 
@@ -63,10 +61,10 @@ PlayerSettingsWidget::loadConfiguration(QSettings& config)
 {
   config.beginGroup( "PlayerSettings" );
 
-  m_settings->positionOffset = config.value("positionOffset", "").toInt();
-  m_settings->brightness = config.value("brightness", "").toInt();
-  ui->offsetHorizontalSlider->setValue(m_settings->positionOffset);
-  ui->brightnessHorizontalSlider->setValue(m_settings->brightness);
+  m_settings.positionOffset = config.value("positionOffset", "").toInt();
+  m_settings.brightness = config.value("brightness", "").toInt();
+  ui->offsetHorizontalSlider->setValue(m_settings.positionOffset);
+  ui->brightnessHorizontalSlider->setValue(m_settings.brightness);
 
   config.endGroup();
 }

@@ -4,12 +4,12 @@
 
 #include <cmath>
 
-AudioInput::AudioInput(unsigned int nSamples, unsigned int nLEDs)
+AudioInput::AudioInput(unsigned int nSamples, unsigned int nLEDs, ControlSettings& settings)
   : m_sampleRate(44100),
     m_nSamples(nSamples),
     m_nChannels(2),
     m_data(),
-    m_controlSettings(0),
+    m_controlSettings(settings),
     m_nUpdates(0),
     m_nLEDs(nLEDs),
     m_audioObservers(),
@@ -24,13 +24,6 @@ AudioInput::AudioInput(unsigned int nSamples, unsigned int nLEDs)
 AudioInput::~AudioInput()
 {
   std::cout << "AudioInput::~AudioInput()" << std::endl;
-}
-
-
-void
-AudioInput::setControlSettings(std::shared_ptr<ControlSettings> settings)
-{
-  m_controlSettings = settings;
 }
 
 
@@ -134,7 +127,7 @@ AudioInput::startStream()
   {
     Pa_Sleep(15); // put the caller to sleep while the observers do their thing. related to FPS of ledstrip.
 
-    run = m_controlSettings->isActive();
+    run = m_controlSettings.isActive();
 
     if (m_data.recordedSamplesVec.size() >= m_nSamples)
     {

@@ -37,9 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
   m_colorDialog(new QColorDialog(this)),
   m_nLedsTotal(NLEDS),
   m_settings(new ControlSettings()),
-  m_player(new Player(m_settings)),
+  m_player(new Player(*m_settings)),
+  m_audioInput(new AudioInput(SPECTRUM_SAMPLES, m_nLedsTotal, *m_settings)),
   m_studio(new Studio(m_nLedsTotal)),
-  m_audioInput(new AudioInput(SPECTRUM_SAMPLES, m_nLedsTotal)),
   m_spectrumAnalyser(new SpectrumAnalyser(SPECTRUM_SAMPLES)),
   m_toneAnalyser(new ToneAnalyser()),
   m_spectrumStudio(new SpectrumStudio()),
@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_configurationGroups(),
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(*m_settings, this)),
   m_ledStripStatusWidget(new LedStripStatusWidget(this)),
-  m_playerSettingsWidget(new PlayerSettingsWidget(m_settings, this)),
+  m_playerSettingsWidget(new PlayerSettingsWidget(*m_settings, this)),
   m_toneToolbar(new ToneToolbar(*m_toneStudio)),
   m_fftToolbar(new FFTToolbar(*m_audioInput, *m_spectrumAnalyser)),
   m_actionConsistency(new ActionConsistency()),
@@ -67,8 +67,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connectAllSlots();
   createTimers();
-
-  m_audioInput->setControlSettings(m_settings);
 
   ui->centralwidget->layout()->addWidget(m_playerSettingsWidget);
   ui->centralwidget->layout()->addWidget(m_ledStripStatusWidget);

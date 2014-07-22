@@ -12,7 +12,7 @@
 class Player
 {
 public:
-  Player(std::shared_ptr<ControlSettings> controlSettings);
+  Player(ControlSettings& controlSettings);
   ~Player();
 
   void addAnimation(const Animation &animation);
@@ -46,7 +46,7 @@ private:
 
 private:
   std::unique_ptr<LEDController> m_ledController;
-  std::shared_ptr<ControlSettings> m_settings;
+  ControlSettings& m_settings;
   Frame m_lastFrame;
   Animation m_mainAnimation;
 

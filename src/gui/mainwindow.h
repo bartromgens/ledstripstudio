@@ -132,10 +132,10 @@ private:
   QColorDialog* m_colorDialog;
   std::size_t m_nLedsTotal;
 
-  std::shared_ptr<ControlSettings> m_settings;
+  std::unique_ptr<ControlSettings> m_settings;
   std::unique_ptr<Player> m_player;
-  std::unique_ptr<Studio> m_studio;
   std::unique_ptr<AudioInput> m_audioInput;
+  std::unique_ptr<Studio> m_studio;
   std::unique_ptr<SpectrumAnalyser> m_spectrumAnalyser;
   std::unique_ptr<ToneAnalyser> m_toneAnalyser;
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;

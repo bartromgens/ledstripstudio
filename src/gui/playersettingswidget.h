@@ -18,7 +18,7 @@ class PlayerSettingsWidget : public QWidget, public ConfigurationGroup
   Q_OBJECT
   
 public:
-  explicit PlayerSettingsWidget(std::shared_ptr<ControlSettings> settings, QWidget *parent = 0);
+  explicit PlayerSettingsWidget(ControlSettings& settings, QWidget* parent = 0);
   ~PlayerSettingsWidget();
 
   virtual void saveConfiguration(QSettings& config) const;
@@ -34,7 +34,7 @@ private:
 private:
   Ui::PlayerSettingsWidget* ui;
 
-  std::shared_ptr<ControlSettings> m_settings;
+  ControlSettings& m_settings;
 };
 
 #endif // PLAYERSETTINGSWIDGET_H

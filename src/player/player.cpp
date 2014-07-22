@@ -4,7 +4,7 @@
 #include <QTime>
 
 
-Player::Player(std::shared_ptr<ControlSettings> controlSettings)
+Player::Player(ControlSettings& controlSettings)
   : m_ledController(),
     m_settings(controlSettings),
     m_lastFrame(0),
@@ -139,8 +139,8 @@ Player::playFrame()
       m_lastFrame = frames.front();
       m_mainAnimation.pop_frontFrame();
       frame = m_lastFrame;
-      frame.setOffset(m_settings->positionOffset);
-      frame.setBrightness(m_settings->brightness);
+      frame.setOffset(m_settings.positionOffset);
+      frame.setBrightness(m_settings.brightness);
     }
 
     if (m_isRecording)
