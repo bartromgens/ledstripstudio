@@ -4,7 +4,6 @@
 #include "frame.h"
 
 #include <deque>
-#include <list>
 #include <vector>
 
 class Animation
