@@ -610,6 +610,8 @@ MainWindow::slotClearStrip()
   Animation animation = studio.createSingleColorSingleFrameAnimation(Color(0, 0, 0));
   m_player->addAnimation(animation);
   m_player->playFrame();
+  m_player->addAnimation(animation);
+  m_player->playFrame();
 }
 
 

@@ -130,7 +130,7 @@ private:
 private:
   Ui::MainWindow* ui;
   QColorDialog* m_colorDialog;
-  std::size_t m_nLedsTotal;
+  const std::size_t m_nLedsTotal;
 
   std::unique_ptr<ControlSettings> m_settings;
   std::unique_ptr<Player> m_player;
