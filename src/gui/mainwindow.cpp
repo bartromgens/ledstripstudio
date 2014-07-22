@@ -15,9 +15,10 @@
 #include "studio/spectrumstudio.h"
 
 
-#include <QFileDialog>
-#include <QPushButton>
 #include <QComboBox>
+#include <QDebug>
+#include <QPushButton>
+#include <QFileDialog>
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
 const int NLEDS = 156;
@@ -53,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_timer(),
   m_lastSingleColor(0, 0, 0)
 {
+  qDebug() << __PRETTY_FUNCTION__;
+
   ui->setupUi(this);
 
   setWindowTitle("Light Emitting Strip Studio");
@@ -91,7 +94,7 @@ MainWindow::~MainWindow()
 
   delete ui;
 
-  std::cout << "MainWindow::~MainWindow()" << std::endl;
+  qDebug() << __PRETTY_FUNCTION__;
 }
 
 
@@ -113,7 +116,7 @@ MainWindow::createTimers()
 void
 MainWindow::closeEvent(QCloseEvent* /*event*/)
 {
-  std::cout << "MainWindow::closeEvent()" << std::endl;
+  qDebug() << __PRETTY_FUNCTION__;
   hide();
 
   slotSaveConfiguration(m_userConfigFilename);
@@ -129,7 +132,7 @@ MainWindow::closeEvent(QCloseEvent* /*event*/)
 void
 MainWindow::startAudioInputThread()
 {
-  std::cout << "MainWindow::startAudioInputThread()" << std::endl;
+  qDebug() << __PRETTY_FUNCTION__;
   m_audioInputThread.reset(new boost::thread(&MainWindow::startAudioInput, this));
 }
 
@@ -148,7 +151,7 @@ MainWindow::startAudioInput()
 void
 MainWindow::stopAudioInput()
 {
-  std::cout << "MainWindow::stopAudioInput()" << std::endl;
+  qDebug() << __PRETTY_FUNCTION__;
   m_settings->setActive(false);
 }
 
@@ -179,7 +182,7 @@ MainWindow::notifyTone(std::map<std::string, double> toneAmplitudes)
 void
 MainWindow::startAnimationThread() const
 {
-  std::cout << "MainWindow::startAnimation()" << std::endl;
+  qDebug() << __PRETTY_FUNCTION__;
   boost::thread t1(&MainWindow::startAnimation, this);
   t1.detach();
 }
@@ -202,7 +205,7 @@ MainWindow::stopAnimation()
 void
 MainWindow::slotToggleAudioInput(bool isChecked)
 {
-  std::cout << "MainWindow::slotToggleAudioInput()" << std::endl;
+  qDebug() << __PRETTY_FUNCTION__;
   if (isChecked)
   {
     m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-high.png"));
@@ -632,7 +635,7 @@ MainWindow::slotConfigComboChanged(QString comboText)
 void
 MainWindow::slotSaveConfiguration(const QString& filename)
 {
-  std::cout << "MainWindow::slotSaveConfiguration()" << std::endl;
+  qDebug() << __PRETTY_FUNCTION__;
   QSettings settings(filename, QSettings::NativeFormat);
   saveConfigurationAll(settings);
 }
@@ -720,7 +723,7 @@ MainWindow::saveConfigurationAll(QSettings& config) const
 void
 MainWindow::loadConfigurationAll(QSettings& config)
 {
-  std::cout << "MainWindow::loadConfigurationAll() - loading config file: " << config.fileName().toStdString() << std::endl;
+  qDebug() << __PRETTY_FUNCTION__ << " - loading config file: " << config.fileName();
   loadConfiguration(config);
 
   for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)

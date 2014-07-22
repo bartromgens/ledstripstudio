@@ -1,6 +1,7 @@
 #include "spectrumanalyser.h"
 #include "spectrumobserver.h"
 
+#include <QDebug>
 #include <QTime>
 
 #include <cassert>
@@ -21,7 +22,7 @@ SpectrumAnalyser::SpectrumAnalyser(int nSamples)
 {
   fftw::maxthreads = 1; // single thread is faster for the size the input data
 
-  std::cout << "SpectrumAnalyser::SpectrumAnalyser() - m_n: " << m_nSamples << std::endl;
+  qDebug() << __PRETTY_FUNCTION__ << " - m_n: " << m_nSamples;
 
   m_f = FFTWdouble(m_nSamples);
   m_g = FFTWComplex(m_np);
@@ -38,7 +39,7 @@ SpectrumAnalyser::~SpectrumAnalyser()
   FFTWdelete(m_f);
 
   delete m_forward;
-  std::cout << "SpectrumAnalyser::~SpectrumAnalyser()" << std::endl;
+  qDebug() << __PRETTY_FUNCTION__;
 }
 
 
