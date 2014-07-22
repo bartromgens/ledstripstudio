@@ -79,26 +79,11 @@ ToneToolbar::toggleToneAnalysis(bool isChecked)
 void
 ToneToolbar::updateToneSettingsVisibility(ToneStudio::ToneAnimationType type)
 {
-  if (type != ToneStudio::Loudest)
-  {
-    m_stepToneAct->setChecked(false);
-  }
-  if (type != ToneStudio::SmoothSum)
-  {
-    m_smoothToneAct->setChecked(false);
-  }
-  if (type != ToneStudio::History)
-  {
-    m_historyToneAct->setChecked(false);
-  }
-  if (type != ToneStudio::Individual)
-  {
-    m_individualToneAct->setChecked(false);
-  }
-  if (type != ToneStudio::Corner)
-  {
-    m_cornerToneAct->setChecked(false);
-  }
+  m_stepToneAct->setChecked(type == ToneStudio::Loudest);
+  m_smoothToneAct->setChecked(type == ToneStudio::SmoothSum);
+  m_historyToneAct->setChecked(type == ToneStudio::History);
+  m_individualToneAct->setChecked(type == ToneStudio::Individual);
+  m_cornerToneAct->setChecked(type == ToneStudio::Corner);
 }
 
 

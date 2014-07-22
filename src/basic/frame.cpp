@@ -41,7 +41,7 @@ Frame::addLED(const LED& led)
   }
   else
   {
-    std::cout << "Frame::addLED() - led nr: " << led.getLEDnr() << std::endl;
+    std::cout << "Frame::addLED() - led nr: " << led.getLEDnr() << std::endl; // TODO fixme
     assert(true);
   }
 }
