@@ -20,6 +20,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 
+
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
 const int NLEDS = 156;
 
@@ -45,11 +46,11 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneStudio(new ToneStudio()),
   m_imageStudio(new ImageStudio(m_nLedsTotal)),
   m_configurationGroups(),
-  m_spectrumSettingsWidget(new SpectrumSettingsWidget(m_settings, this)),
+  m_spectrumSettingsWidget(new SpectrumSettingsWidget(*m_settings, this)),
   m_ledStripStatusWidget(new LedStripStatusWidget(this)),
   m_playerSettingsWidget(new PlayerSettingsWidget(m_settings, this)),
-  m_toneToolbar(new ToneToolbar(m_toneStudio)),
-  m_fftToolbar(new FFTToolbar(m_audioInput, m_spectrumAnalyser)),
+  m_toneToolbar(new ToneToolbar(*m_toneStudio)),
+  m_fftToolbar(new FFTToolbar(*m_audioInput, *m_spectrumAnalyser)),
   m_actionConsistency(new ActionConsistency()),
   m_timer(),
   m_lastSingleColor(0, 0, 0)
@@ -78,10 +79,10 @@ MainWindow::MainWindow(QWidget *parent) :
   m_toneAnalyser->registerObserver(this);
   m_spectrumAnalyser->registerObserver(this);
 
-  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_spectrumSettingsWidget));
-  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_playerSettingsWidget));
-  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_toneToolbar));
-  m_configurationGroups.push_back(std::shared_ptr<ConfigurationGroup>(m_fftToolbar));
+  m_configurationGroups.push_back(m_spectrumSettingsWidget);
+  m_configurationGroups.push_back(m_playerSettingsWidget);
+  m_configurationGroups.push_back(m_toneToolbar);
+  m_configurationGroups.push_back(m_fftToolbar);
 
   loadUserOrDefaultConfig();
 }
@@ -626,6 +627,7 @@ MainWindow::slotPlayerPlayed()
 void
 MainWindow::slotConfigComboChanged(QString comboText)
 {
+  qDebug() << __PRETTY_FUNCTION__;
   QString filename = "./config/" + comboText + ".cfg";
   QSettings settings(filename, QSettings::NativeFormat);
   loadConfigurationAll(settings);
@@ -635,8 +637,8 @@ MainWindow::slotConfigComboChanged(QString comboText)
 void
 MainWindow::slotSaveConfiguration(const QString& filename)
 {
-  qDebug() << __PRETTY_FUNCTION__;
   QSettings settings(filename, QSettings::NativeFormat);
+  qDebug() << __PRETTY_FUNCTION__ << "file: " << filename;
   saveConfigurationAll(settings);
 }
 
@@ -644,28 +646,28 @@ MainWindow::slotSaveConfiguration(const QString& filename)
 void
 MainWindow::startSpectrumAnalyser() const
 {
-  m_audioInput->registerObserver(m_spectrumAnalyser);
+  m_audioInput->registerObserver( m_spectrumAnalyser.get() );
 }
 
 
 void
 MainWindow::stopSpectrumAnalyser() const
 {
-  m_audioInput->unregisterObserver(m_spectrumAnalyser);
+  m_audioInput->unregisterObserver( m_spectrumAnalyser.get() );
 }
 
 
 void
 MainWindow::startToneAnalyser() const
 {
-  m_spectrumAnalyser->registerObserver(m_toneAnalyser.get());
+  m_spectrumAnalyser->registerObserver( m_toneAnalyser.get() );
 }
 
 
 void
 MainWindow::stopToneAnalyser() const
 {
-  m_spectrumAnalyser->unregisterObserver(m_toneAnalyser.get());
+  m_spectrumAnalyser->unregisterObserver( m_toneAnalyser.get() );
 }
 
 
@@ -674,6 +676,7 @@ MainWindow::slotSaveConfigurationAs()
 {
   QString filename = QFileDialog::getSaveFileName(this, "Save configuration as", QDir::currentPath() + "/config/", "Configuration files (*.cfg)");
   QSettings config(filename, QSettings::NativeFormat);
+  qDebug() << __PRETTY_FUNCTION__ << "file: " << filename;
   saveConfigurationAll(config);
 }
 
@@ -681,6 +684,8 @@ MainWindow::slotSaveConfigurationAs()
 void
 MainWindow::saveConfiguration(QSettings& config) const
 {
+  qDebug() << __PRETTY_FUNCTION__;
+
   config.beginGroup( "Main" );
 
   config.setValue("audioInput", m_audioToggleButton->isChecked());
@@ -696,6 +701,8 @@ MainWindow::saveConfiguration(QSettings& config) const
 void
 MainWindow::loadConfiguration(QSettings& config)
 {
+  qDebug() << __PRETTY_FUNCTION__;
+
   config.beginGroup( "Main" );
 
   m_audioToggleButton->setChecked(config.value("audioInput").toBool());
@@ -711,6 +718,8 @@ MainWindow::loadConfiguration(QSettings& config)
 void
 MainWindow::saveConfigurationAll(QSettings& config) const
 {
+  qDebug() << __PRETTY_FUNCTION__;
+
   saveConfiguration(config);
 
   for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
@@ -724,6 +733,7 @@ void
 MainWindow::loadConfigurationAll(QSettings& config)
 {
   qDebug() << __PRETTY_FUNCTION__ << " - loading config file: " << config.fileName();
+
   loadConfiguration(config);
 
   for (auto iter = m_configurationGroups.begin(); iter != m_configurationGroups.end(); ++iter)
@@ -739,11 +749,13 @@ MainWindow::loadUserOrDefaultConfig()
   if (QFile::exists(m_userConfigFilename))
   {
     QSettings config(m_userConfigFilename, QSettings::NativeFormat);
+    qDebug() << __PRETTY_FUNCTION__ << " - user config: " << m_userConfigFilename;
     loadConfigurationAll(config);
   }
   else
   {
     QSettings config(m_defaultConfigFilename, QSettings::NativeFormat);
+    qDebug() << __PRETTY_FUNCTION__ << " - default config: " << m_defaultConfigFilename;
     loadConfigurationAll(config);
   }
 }

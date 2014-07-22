@@ -38,8 +38,8 @@ public:
 
   void setControlSettings(std::shared_ptr<ControlSettings> settings);
 
-  void registerObserver(std::shared_ptr<AudioInputObserver> observer);
-  void unregisterObserver(std::shared_ptr<AudioInputObserver> observer);
+  void registerObserver(AudioInputObserver* observer);
+  void unregisterObserver(AudioInputObserver* observer);
   void notifyObservers(const std::deque<float>& audioData);
 
   void setNSamples(unsigned int nSamples);
@@ -72,7 +72,7 @@ private:
   int m_offSet;
   unsigned int m_nLEDs;
 
-  std::set< std::shared_ptr<AudioInputObserver> > m_audioObservers;
+  std::set<AudioInputObserver*> m_audioObservers;
 
   mutable std::mutex m_mutex;
 };

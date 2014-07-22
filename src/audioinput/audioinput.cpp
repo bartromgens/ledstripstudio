@@ -229,7 +229,7 @@ AudioInput::terminatePortAudio(PaError err)
 
 
 void
-AudioInput::registerObserver(std::shared_ptr<AudioInputObserver> observer)
+AudioInput::registerObserver(AudioInputObserver* observer)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -239,7 +239,7 @@ AudioInput::registerObserver(std::shared_ptr<AudioInputObserver> observer)
 
 
 void
-AudioInput::unregisterObserver(std::shared_ptr<AudioInputObserver> observer)
+AudioInput::unregisterObserver(AudioInputObserver* observer)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 

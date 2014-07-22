@@ -133,16 +133,16 @@ private:
   std::size_t m_nLedsTotal;
 
   std::shared_ptr<ControlSettings> m_settings;
-  std::shared_ptr<Player> m_player;
+  std::unique_ptr<Player> m_player;
   std::unique_ptr<Studio> m_studio;
-  std::shared_ptr<AudioInput> m_audioInput;
-  std::shared_ptr<SpectrumAnalyser> m_spectrumAnalyser;
-  std::shared_ptr<ToneAnalyser> m_toneAnalyser;
+  std::unique_ptr<AudioInput> m_audioInput;
+  std::unique_ptr<SpectrumAnalyser> m_spectrumAnalyser;
+  std::unique_ptr<ToneAnalyser> m_toneAnalyser;
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
-  std::shared_ptr<ToneStudio> m_toneStudio;
+  std::unique_ptr<ToneStudio> m_toneStudio;
   std::unique_ptr<ImageStudio> m_imageStudio;
 
-  std::vector<std::shared_ptr<ConfigurationGroup>> m_configurationGroups;
+  std::vector<ConfigurationGroup*> m_configurationGroups;
 
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
   LedStripStatusWidget* m_ledStripStatusWidget;

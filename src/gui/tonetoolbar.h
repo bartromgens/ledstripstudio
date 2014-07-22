@@ -15,7 +15,7 @@ class ToneToolbar : public QObject, public ConfigurationGroup
   Q_OBJECT
 
 public:
-  ToneToolbar(std::shared_ptr<ToneStudio> toneStudio);
+  ToneToolbar(ToneStudio& toneStudio);
   ~ToneToolbar();
 
   void initialise(QToolBar* parentToolbar);
@@ -37,7 +37,7 @@ private slots:
   void slotToggleCornerTone(bool isChecked);
 
 private:
-  std::shared_ptr<ToneStudio> m_toneStudio;
+  ToneStudio& m_toneStudio;
 
   QAction* m_stepToneAct;
   QAction* m_smoothToneAct;

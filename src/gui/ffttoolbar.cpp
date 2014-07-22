@@ -6,7 +6,7 @@
 #include <QToolBar>
 #include <QAction>
 
-FFTToolbar::FFTToolbar(std::shared_ptr<AudioInput> audioInput, std::shared_ptr<SpectrumAnalyser> spectrumAnalyser)
+FFTToolbar::FFTToolbar(AudioInput& audioInput, SpectrumAnalyser& spectrumAnalyser)
   : QObject(),
     ConfigurationGroup(),
     m_audioInput(audioInput),
@@ -80,8 +80,8 @@ FFTToolbar::setVisible(bool isChecked)
 void
 FFTToolbar::setNSamples(unsigned int nSamples)
 {
-  m_audioInput->setNSamples(nSamples);
-  m_spectrumAnalyser->setNSamples(nSamples);
+  m_audioInput.setNSamples(nSamples);
+  m_spectrumAnalyser.setNSamples(nSamples);
 }
 
 
@@ -130,7 +130,7 @@ FFTToolbar::slotHannWindowingAct(bool isChecked)
   if (isChecked)
   {
     m_linearWindowingAct->setChecked(false);
-    m_spectrumAnalyser->setWindowingType(SpectrumAnalyser::hann);
+    m_spectrumAnalyser.setWindowingType(SpectrumAnalyser::hann);
   }
 }
 
@@ -141,7 +141,7 @@ FFTToolbar::slotLinearWindowingAct(bool isChecked)
   if (isChecked)
   {
     m_hannWindowingAct->setChecked(false);
-    m_spectrumAnalyser->setWindowingType(SpectrumAnalyser::linear);
+    m_spectrumAnalyser.setWindowingType(SpectrumAnalyser::linear);
   }
 }
 

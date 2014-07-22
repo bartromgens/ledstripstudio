@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-SpectrumSettingsWidget::SpectrumSettingsWidget(std::shared_ptr<ControlSettings> spectrumSettings, QWidget *parent) :
+SpectrumSettingsWidget::SpectrumSettingsWidget(ControlSettings& spectrumSettings, QWidget *parent) :
   QWidget(parent),
   ConfigurationGroup(),
   ui(new Ui::SpectrumSettingsWidget),
@@ -57,22 +57,22 @@ SpectrumSettingsWidget::connectAllSlots() const
 void
 SpectrumSettingsWidget::slotVolumeChanged()
 {
-  m_settings->volumeTotal = ui->volumeTotalSlider->value();
-  m_settings->volumeRed = ui->volumeRedSlider->value();
-  m_settings->volumeGreen = ui->volumeGreenSlider->value();
-  m_settings->volumeBlue = ui->volumeBlueSlider->value();
+  m_settings.volumeTotal = ui->volumeTotalSlider->value();
+  m_settings.volumeRed = ui->volumeRedSlider->value();
+  m_settings.volumeGreen = ui->volumeGreenSlider->value();
+  m_settings.volumeBlue = ui->volumeBlueSlider->value();
 }
 
 
 void
 SpectrumSettingsWidget::slotFrequencyChanged()
 {
-  m_settings->freqRedMin = ui->freqRminSpin->value();
-  m_settings->freqRedMax = ui->freqRmaxSpin->value();
-  m_settings->freqGreenMin = ui->freqGminSpin->value();
-  m_settings->freqGreenMax = ui->freqGmaxSpin->value();
-  m_settings->freqBlueMin = ui->freqBminSpin->value();
-  m_settings->freqBlueMax = ui->freqBmaxSpin->value();
+  m_settings.freqRedMin = ui->freqRminSpin->value();
+  m_settings.freqRedMax = ui->freqRmaxSpin->value();
+  m_settings.freqGreenMin = ui->freqGminSpin->value();
+  m_settings.freqGreenMax = ui->freqGmaxSpin->value();
+  m_settings.freqBlueMin = ui->freqBminSpin->value();
+  m_settings.freqBlueMax = ui->freqBmaxSpin->value();
 }
 
 

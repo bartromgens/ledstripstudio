@@ -18,7 +18,7 @@ class SpectrumSettingsWidget : public QWidget, public ConfigurationGroup
   Q_OBJECT
 
 public:
-  explicit SpectrumSettingsWidget(std::shared_ptr<ControlSettings> spectrumSettings, QWidget *parent = 0);
+  explicit SpectrumSettingsWidget(ControlSettings& spectrumSettings, QWidget *parent = 0);
   ~SpectrumSettingsWidget();
 
   virtual void saveConfiguration(QSettings& config) const;
@@ -34,7 +34,7 @@ private slots:
 private:
   Ui::SpectrumSettingsWidget *ui;
 
-  std::shared_ptr<ControlSettings> m_settings;
+  ControlSettings& m_settings;
 };
 
 #endif // SPECTRUMSETTINGSWIDGET_H

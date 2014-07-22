@@ -18,7 +18,7 @@ class FFTToolbar : public QObject, public ConfigurationGroup
   Q_OBJECT
 
 public:
-  FFTToolbar(std::shared_ptr<AudioInput> audioInput, std::shared_ptr<SpectrumAnalyser> spectrumAnalyser);
+  FFTToolbar(AudioInput& audioInput, SpectrumAnalyser& spectrumAnalyser);
   ~FFTToolbar();
 
   void initialise(QToolBar* parentToolbar);
@@ -53,8 +53,8 @@ private slots:
   void slotLinearWindowingAct(bool isChecked);
 
 private:
-  std::shared_ptr<AudioInput> m_audioInput;
-  std::shared_ptr<SpectrumAnalyser> m_spectrumAnalyser;
+  AudioInput& m_audioInput;
+  SpectrumAnalyser& m_spectrumAnalyser;
 
   QAction* m_FFT14sizeAct;
   QAction* m_FFT15sizeAct;

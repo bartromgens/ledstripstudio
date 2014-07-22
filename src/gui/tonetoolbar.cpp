@@ -4,7 +4,7 @@
 
 #include <memory>
 
-ToneToolbar::ToneToolbar(std::shared_ptr<ToneStudio> toneStudio)
+ToneToolbar::ToneToolbar(ToneStudio& toneStudio)
   : QObject(),
     ConfigurationGroup(),
     m_toneStudio(toneStudio)
@@ -108,11 +108,11 @@ ToneToolbar::slotToggleStepTone(bool isChecked)
   if (isChecked)
   {
     updateToneSettingsVisibility(ToneStudio::Loudest);
-    m_toneStudio->setAnimationType(ToneStudio::Loudest);
+    m_toneStudio.setAnimationType(ToneStudio::Loudest);
   }
   else
   {
-    m_toneStudio->setAnimationType(ToneStudio::None);
+    m_toneStudio.setAnimationType(ToneStudio::None);
   }
 }
 
@@ -123,11 +123,11 @@ ToneToolbar::slotToggleSmoothTone(bool isChecked)
   if (isChecked)
   {
     updateToneSettingsVisibility(ToneStudio::SmoothSum);
-    m_toneStudio->setAnimationType(ToneStudio::SmoothSum);
+    m_toneStudio.setAnimationType(ToneStudio::SmoothSum);
   }
   else
   {
-    m_toneStudio->setAnimationType(ToneStudio::None);
+    m_toneStudio.setAnimationType(ToneStudio::None);
   }
 }
 
@@ -138,11 +138,11 @@ ToneToolbar::slotToggleToneHistory(bool isChecked)
   if (isChecked)
   {
     updateToneSettingsVisibility(ToneStudio::History);
-    m_toneStudio->setAnimationType(ToneStudio::History);
+    m_toneStudio.setAnimationType(ToneStudio::History);
   }
   else
   {
-    m_toneStudio->setAnimationType(ToneStudio::None);
+    m_toneStudio.setAnimationType(ToneStudio::None);
   }
 }
 
@@ -153,11 +153,11 @@ ToneToolbar::slotToggleIndividualTone(bool isChecked)
   if (isChecked)
   {
     updateToneSettingsVisibility(ToneStudio::Individual);
-    m_toneStudio->setAnimationType(ToneStudio::Individual);
+    m_toneStudio.setAnimationType(ToneStudio::Individual);
   }
   else
   {
-    m_toneStudio->setAnimationType(ToneStudio::None);
+    m_toneStudio.setAnimationType(ToneStudio::None);
   }
 }
 
@@ -168,11 +168,11 @@ ToneToolbar::slotToggleCornerTone(bool isChecked)
   if (isChecked)
   {
     updateToneSettingsVisibility(ToneStudio::Corner);
-    m_toneStudio->setAnimationType(ToneStudio::Corner);
+    m_toneStudio.setAnimationType(ToneStudio::Corner);
   }
   else
   {
-    m_toneStudio->setAnimationType(ToneStudio::None);
+    m_toneStudio.setAnimationType(ToneStudio::None);
   }
 }
 
@@ -182,7 +182,7 @@ ToneToolbar::saveConfiguration(QSettings& config) const
 {
   config.beginGroup( "Tone" );
 
-  config.setValue("ToneAnimationType", m_toneStudio->getAnimationType());
+  config.setValue("ToneAnimationType", m_toneStudio.getAnimationType());
 
   config.endGroup();
 }
