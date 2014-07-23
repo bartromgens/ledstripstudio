@@ -29,6 +29,16 @@ SpectrumAnalyser::SpectrumAnalyser(int nSamples)
 
   m_forward = new fftwpp::rcfft1d(m_nSamples, m_f, m_g);
 
+  m_hannWindowFactors.reserve(m_nSamples);
+
+  double factor = (2.0*M_PI)/m_nSamples;
+  for (std::size_t i = 0; i < m_nSamples; i++)
+  {
+//    out[i] = 0.5 * ( 1.0 + cos((2.0*M_PI*i)/sizeIn) ) * in[i];
+    m_hannWindowFactors[i] = 0.5 * ( 1.0 - cos(factor*i) );
+//    std::cout << 0.5 * ( 1.0 - cos((2.0*M_PI*i)/sizeIn) ) << std::endl;
+  }
+
 //  m_time.start();
 }
 
@@ -128,7 +138,6 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, in
       m_f[i] = realInWindowed[i];
     }
 
-
     // forward FFT real to complex
     m_forward->fft(m_f, m_g);
 
@@ -154,16 +163,12 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, in
 std::deque<float>
 SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in) const
 {
-  std::size_t sizeIn = in.size();
+  assert(in.size() >= m_nSamples);
 
-  std::deque<float> out(sizeIn, 0.0);
-
-  double factor = (2.0*M_PI)/sizeIn;
-  for (std::size_t i = 0; i < sizeIn; i++)
+  std::deque<float> out(m_nSamples);
+  for (std::size_t i = 0; i < m_nSamples; i++)
   {
-//    out[i] = 0.5 * ( 1.0 + cos((2.0*M_PI*i)/sizeIn) ) * in[i];
-    out[i] = 0.5 * ( 1.0 - cos(factor*i) ) * in[i];
-//    std::cout << 0.5 * ( 1.0 - cos((2.0*M_PI*i)/sizeIn) ) << std::endl;
+    out[i] = m_hannWindowFactors[i] * in[i];
   }
 
   return out;
@@ -191,20 +196,22 @@ SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
 std::map<double, double>
 SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sampleRate, double upperFrequency) const
 {
+  assert(data.size() == m_np);
   std::map<double, double> hist;
   double binWidth = sampleRate/nBins;
 //  std::cout << "buildHist() - min, max: " << min << ", " << max << std::endl;
 
-  int max = data.size();
+  int max = m_np;
   int min = 0;
+  int difference = max-min;
 
   double frequency = 0.0;
 
-  for (std::size_t i = 0; i < data.size() && frequency < upperFrequency; ++i)
+  for (std::size_t i = 0; i < m_np && frequency < upperFrequency; ++i)
   {
-    int bin = static_cast<int>( (i-min) / ((max-min)/(nBins)) );
+    int bin = static_cast<int>( (i-min) / (difference/nBins) );
 
-    frequency = bin*binWidth;
+    double frequency = bin*binWidth;
     if ( (bin >= 0) && ( bin < nBins) && (frequency < sampleRate/2))
     {
       hist[frequency] += data[i];

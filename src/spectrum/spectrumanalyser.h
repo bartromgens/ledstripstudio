@@ -70,6 +70,8 @@ private:
   QTime m_time;
 
   WindowingType m_windowingType;
+
+  std::vector<double> m_hannWindowFactors;
 };
 
 #endif // SPECTRUMANALYSER_H
