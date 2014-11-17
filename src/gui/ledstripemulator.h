@@ -11,14 +11,14 @@ class LedStripEmulator : public QWidget
 
 public:
   LedStripEmulator(QWidget* parent = 0);
-  ~LedStripEmulator();
+  virtual ~LedStripEmulator();
 
   void setFrame(const Frame& frame);
   void setHeight(int height);
   void setWidth(int width);
 
 protected:
-  void paintEvent(QPaintEvent* event);
+  virtual void paintEvent(QPaintEvent* event);
   void drawStrip(QPainter* qp);
 
 private:

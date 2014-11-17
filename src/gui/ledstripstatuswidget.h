@@ -15,7 +15,7 @@ class LedStripStatusWidget : public QWidget
   
 public:
   explicit LedStripStatusWidget(QWidget* parent = 0);
-  ~LedStripStatusWidget();
+  virtual ~LedStripStatusWidget();
 
   void update(const Frame& frame);
   

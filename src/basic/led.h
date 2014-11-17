@@ -17,6 +17,7 @@ public:
 
   const Color& getColor() const;
   QColor getQColor() const;
+
 private:
   int m_ledNr;
   Color m_color;

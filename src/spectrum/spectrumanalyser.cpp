@@ -20,9 +20,7 @@ SpectrumAnalyser::SpectrumAnalyser(int nSamples)
     m_time(),
     m_windowingType(linear)
 {
-  fftw::maxthreads = 1; // single thread is faster for the size the input data
-
-  qDebug() << __PRETTY_FUNCTION__ << " - m_n: " << m_nSamples;
+  fftw::maxthreads = 1; // single thread is faster for the size of most input data
 
   m_f = FFTWdouble(m_nSamples);
   m_g = FFTWComplex(m_np);
@@ -34,12 +32,8 @@ SpectrumAnalyser::SpectrumAnalyser(int nSamples)
   double factor = (2.0*M_PI)/m_nSamples;
   for (std::size_t i = 0; i < m_nSamples; i++)
   {
-//    out[i] = 0.5 * ( 1.0 + cos((2.0*M_PI*i)/sizeIn) ) * in[i];
     m_hannWindowFactors[i] = 0.5 * ( 1.0 - cos(factor*i) );
-//    std::cout << 0.5 * ( 1.0 - cos((2.0*M_PI*i)/sizeIn) ) << std::endl;
   }
-
-//  m_time.start();
 }
 
 
@@ -49,7 +43,6 @@ SpectrumAnalyser::~SpectrumAnalyser()
   FFTWdelete(m_f);
 
   delete m_forward;
-  qDebug() << __PRETTY_FUNCTION__;
 }
 
 
@@ -109,9 +102,6 @@ SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 std::map<double, double>
 SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::WindowingType windowType)
 {
-//  QTime timer;
-//  timer.start();
-
   std::deque<float> realInWindowed;
 
   if (windowType == SpectrumAnalyser::hann)
@@ -126,9 +116,6 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, in
   {
     realInWindowed = realIn;
   }
-
-//  std::cout << "SpectrumAnalyser::computeSpectrum() - hannWindowFunction time: " << timer.elapsed() << std::endl;
-//  timer.restart();
 
   std::map<double, double> bins;
   {
@@ -152,10 +139,7 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, in
     bins = binSpectrum(magnitude, nBins, sampleRate, upperFrequency);
   }
 
-//  std::cout << "SpectrumAnalyser::computeSpectrum() - end. timer: " << timer.elapsed() << std::endl;
-
   notifyObservers(bins);
-
   return bins;
 }
 

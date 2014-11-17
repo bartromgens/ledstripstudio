@@ -19,7 +19,7 @@ class SpectrumSettingsWidget : public QWidget, public ConfigurationGroup
 
 public:
   explicit SpectrumSettingsWidget(ControlSettings& spectrumSettings, QWidget *parent = 0);
-  ~SpectrumSettingsWidget();
+  virtual ~SpectrumSettingsWidget();
 
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);

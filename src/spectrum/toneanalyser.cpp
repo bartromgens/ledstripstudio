@@ -57,8 +57,6 @@ ToneAnalyser::computeToneAmplitude(const std::map<double, double>& spectrum)
       }
     }
 
-//    std::cout << "ToneAnalyser::computeToneAmplitude() - frequency: " << frequency << ", nOctaves: " << nOctaves << std::endl;
-
     if (nOctaves > 2)
     {
       for (auto iterBaseTones = m_baseTones.begin(); iterBaseTones != m_baseTones.end(); ++iterBaseTones)

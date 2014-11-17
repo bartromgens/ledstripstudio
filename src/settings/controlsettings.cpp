@@ -32,7 +32,8 @@ ControlSettings::isActive() const
 }
 
 
-void ControlSettings::setActive(bool isActive)
+void
+ControlSettings::setActive(bool isActive)
 {
   m_isActive = isActive;
 }
