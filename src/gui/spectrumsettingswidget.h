@@ -18,14 +18,15 @@ class SpectrumSettingsWidget : public QWidget, public ConfigurationGroup
   Q_OBJECT
 
 public:
-  explicit SpectrumSettingsWidget(ControlSettings& spectrumSettings, QWidget *parent = 0);
-  ~SpectrumSettingsWidget();
+  explicit SpectrumSettingsWidget(ControlSettings& spectrumSettings, QWidget* parent = 0);
+  virtual ~SpectrumSettingsWidget();
 
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);
 
 private:
   void connectAllSlots() const;
+  void updateSettings();
 
 private slots:
   void slotFrequencyChanged();

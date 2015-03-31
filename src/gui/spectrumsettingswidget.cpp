@@ -5,8 +5,8 @@
 
 #include <iostream>
 
-SpectrumSettingsWidget::SpectrumSettingsWidget(ControlSettings& spectrumSettings, QWidget *parent) :
-  QWidget(parent),
+SpectrumSettingsWidget::SpectrumSettingsWidget(ControlSettings& spectrumSettings, QWidget *parent)
+: QWidget(parent),
   ConfigurationGroup(),
   ui(new Ui::SpectrumSettingsWidget),
   m_settings(spectrumSettings)
@@ -53,26 +53,34 @@ SpectrumSettingsWidget::connectAllSlots() const
   connect( ui->freqBmaxSpin, SIGNAL( valueChanged(int) ), ui->freqBmaxSlider, SLOT(setValue(int)) );
 }
 
-
 void
-SpectrumSettingsWidget::slotVolumeChanged()
+SpectrumSettingsWidget::updateSettings()
 {
   m_settings.volumeTotal = ui->volumeTotalSlider->value();
   m_settings.volumeRed = ui->volumeRedSlider->value();
   m_settings.volumeGreen = ui->volumeGreenSlider->value();
   m_settings.volumeBlue = ui->volumeBlueSlider->value();
-}
 
-
-void
-SpectrumSettingsWidget::slotFrequencyChanged()
-{
   m_settings.freqRedMin = ui->freqRminSpin->value();
   m_settings.freqRedMax = ui->freqRmaxSpin->value();
   m_settings.freqGreenMin = ui->freqGminSpin->value();
   m_settings.freqGreenMax = ui->freqGmaxSpin->value();
   m_settings.freqBlueMin = ui->freqBminSpin->value();
   m_settings.freqBlueMax = ui->freqBmaxSpin->value();
+}
+
+
+void
+SpectrumSettingsWidget::slotVolumeChanged()
+{
+  updateSettings();
+}
+
+
+void
+SpectrumSettingsWidget::slotFrequencyChanged()
+{
+  updateSettings();
 }
 
 
@@ -117,4 +125,6 @@ SpectrumSettingsWidget::loadConfiguration(QSettings& config)
   ui->freqBmaxSlider->setValue(config.value("freqBlueMax", "").toInt());
 
   config.endGroup();
+
+  updateSettings();
 }
