@@ -12,8 +12,9 @@
 class ToneAnalyser : public SpectrumObserver
 {
 public:
+
   ToneAnalyser();
-  ~ToneAnalyser();
+  virtual ~ToneAnalyser();
 
   std::map<std::string, double> computeToneAmplitude(const std::map<double, double>& spectrum);
 
@@ -24,8 +25,10 @@ public:
   void notifyObservers(const std::map<std::string, double>& toneAmplitudes);
 
 private:
+
   std::map<std::string, double> m_baseTones;
   std::set< ToneObserver* > m_observers;
+
 };
 
 #endif // TONEANALYSER_H

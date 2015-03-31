@@ -8,7 +8,7 @@ class SpectrumObserver
 {
 public:
   SpectrumObserver();
-  ~SpectrumObserver();
+  virtual ~SpectrumObserver();
 
   virtual void notifySpectrum(const std::map<double, double>& spectrum) = 0;
 };

@@ -24,6 +24,7 @@ class SpectrumObserver;
 class SpectrumAnalyser : public AudioInputObserver
 {
 public:
+
   enum WindowingType
   {
     none,
@@ -32,8 +33,9 @@ public:
   };
 
 public:
+
   SpectrumAnalyser(int nSamples);
-  ~SpectrumAnalyser();
+  virtual ~SpectrumAnalyser();
 
   virtual void notifyAudioData(const std::deque<float>& audioData, int sampleRate);
 
@@ -47,12 +49,15 @@ public:
   unsigned int getNSamples() const;
 
   void setWindowingType(WindowingType type);
+
 private:
+
   std::map<double, double> binSpectrum(const std::vector<double>& data, int nBins, int sampleRate, double upperFrequency) const;
   std::deque<float> hannWindowFunction(const std::deque<float>& in) const;
   std::deque<float> linearWindowFunction(const std::deque<float>& in) const;
 
 private:
+
   double* m_f; // FFT input
   Complex* m_g; // FFT output
   unsigned int m_nSamples; // number of samples
@@ -66,8 +71,6 @@ private:
   std::set< SpectrumObserver* > m_observers;
 
   mutable std::mutex m_mutex;
-
-  QTime m_time;
 
   WindowingType m_windowingType;
 

@@ -17,7 +17,6 @@ SpectrumAnalyser::SpectrumAnalyser(int nSamples)
     m_np(nSamples/2+1),
     m_observers(),
     m_mutex(),
-    m_time(),
     m_windowingType(linear)
 {
   fftw::maxthreads = 1; // single thread is faster for the size of most input data

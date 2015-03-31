@@ -6,10 +6,12 @@
 class AudioInputObserver
 {
 public:
+
   AudioInputObserver();
-  ~AudioInputObserver();
+  virtual ~AudioInputObserver();
 
   virtual void notifyAudioData(const std::deque<float>& audioData, int sampleRate) = 0;
+
 };
 
 #endif // AUDIOINPUTOBSERVER_H

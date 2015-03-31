@@ -49,6 +49,7 @@ class MainWindow : public QMainWindow, public SpectrumObserver, public ToneObser
   Q_OBJECT
   
 public:
+
   explicit MainWindow(QWidget* parent = 0);
   virtual ~MainWindow();
 
@@ -64,6 +65,7 @@ public:
   void createConfigurationComboBox();
 
 public slots:
+
   void slotPlayerPlayed();
 
   void slotSaveConfiguration(const QString& filename);
@@ -72,9 +74,11 @@ public slots:
   void slotSaveConfigurationAs();
 
 protected:
+
   virtual void closeEvent(QCloseEvent* event);
 
 private slots:
+
   void update();
 
   void slotClearStrip();
@@ -98,6 +102,7 @@ private slots:
   void slotToggleRecording(bool isChecked);
 
 private:
+
   // create GUI
   void createMenus();
   void createActions();
@@ -126,8 +131,8 @@ private:
   void loadConfigurationAll(QSettings& config);
   void saveConfigurationAll(QSettings& config) const;
 
-
 private:
+
   Ui::MainWindow* ui;
   QColorDialog* m_colorDialog;
   const std::size_t m_nLedsTotal;

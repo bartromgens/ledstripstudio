@@ -160,7 +160,7 @@ MainWindow::notifySpectrum(const std::map<double, double>& spectrum)
 {
   if (m_spectrumToggleButton->isChecked())
   {
-    m_player->addAnimation( m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, spectrum, m_settings.get()) );
+    m_player->addAnimation( m_spectrumStudio->createWaveformAnimationCentral(m_nLedsTotal, spectrum, *m_settings) );
 
     m_player->playFrame();
   }
