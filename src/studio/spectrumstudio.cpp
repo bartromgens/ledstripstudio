@@ -107,8 +107,7 @@ SpectrumStudio::createWaveformAnimationCentral(int nLEDs, const std::map<double,
 void
 SpectrumStudio::drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const
 {
-  for (std::map<double, double>::const_iterator iter = spectrum.begin();
-       iter != spectrum.end(); ++iter)
+  for (auto iter = spectrum.begin(); iter != spectrum.end(); ++iter)
   {
     int frequency = static_cast<int>(iter->first);
     if (frequency > minFreq && frequency < maxFreq)
