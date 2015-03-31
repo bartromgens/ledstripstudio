@@ -7,46 +7,44 @@
 #include <QString>
 #include <QElapsedTimer>
 
-#include <boost/asio.hpp>
-#include <boost/asio/serial_port.hpp>
-
 #include <deque>
 #include <mutex>
 #include <memory>
 #include <vector>
 
-class QextSerialPort;
+#include <boost/asio/serial_port.hpp>
+
+namespace boost
+{
+  namespace asio
+  {
+    class io_service;
+  }
+}
 
 class LEDController
 {
+
 public:
-  LEDController();
+
+  explicit LEDController(const QString& serialPortName);
   ~LEDController();
 
+  bool connect();
   void send(const Frame& frame);
 
-  void clearAll();
-
-  void connect();
-
-  void setSerialPortName(QString serialPortName);
-
-  void setBrightness(int brightness);
-
-  void setColor(const Color& color);
-  void setLEDnr(int letdNr);
-
-  int getFPS();
+  int getFPS() const;
 
 private:
+
   void disconnect();
 
-  void writeBytes(const QByteArray& bytes);
   void addLedByte(QByteArray &bytes, const std::vector<LED> &leds, int pos, int offset, int brightness);
-
-  void read();
+  void writeBytes(const QByteArray& bytes);
+  void clearAll();
 
 private:
+
   std::vector<int> m_ledNr;
   std::vector<Color> m_color;
   std::vector<std::vector<Color> > m_colorOld;
@@ -54,12 +52,12 @@ private:
   QByteArray m_byteMessage;
   QString m_serialPortName;
   QElapsedTimer m_timer;
-  QElapsedTimer m_timer2;
   std::deque<int> m_fpsHistory;
   mutable std::mutex m_mutex;
 
   std::unique_ptr<boost::asio::io_service> m_io_service;
   std::unique_ptr<boost::asio::serial_port> m_serialPort; // the serial port this instance is connected to
+
 };
 
 #endif // LEDCONTROLLER_H

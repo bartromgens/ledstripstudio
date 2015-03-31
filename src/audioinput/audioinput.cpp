@@ -2,7 +2,9 @@
 #include "spectrum/spectrumanalyser.h"
 #include "spectrum/toneanalyser.h"
 
+#include <cassert>
 #include <cmath>
+
 
 AudioInput::AudioInput(unsigned int nSamples, unsigned int nLEDs, ControlSettings& settings)
   : m_sampleRate(44100),
@@ -13,7 +15,7 @@ AudioInput::AudioInput(unsigned int nSamples, unsigned int nLEDs, ControlSetting
     m_nUpdates(0),
     m_nLEDs(nLEDs),
     m_audioObservers(),
-    m_mutex()
+    m_observerMutex()
 {
   std::cout << "AudioInput::AudioInput() - sample size: " << m_nSamples << std::endl;
 
@@ -207,7 +209,7 @@ AudioInput::terminatePortAudio(PaError err)
 void
 AudioInput::registerObserver(AudioInputObserver* observer)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_observerMutex);
 
   assert(observer);
   m_audioObservers.insert(observer);
@@ -217,7 +219,7 @@ AudioInput::registerObserver(AudioInputObserver* observer)
 void
 AudioInput::unregisterObserver(AudioInputObserver* observer)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_observerMutex);
 
   if ( std::find(m_audioObservers.begin(), m_audioObservers.end(), observer) != m_audioObservers.end() )
   {
@@ -229,7 +231,7 @@ AudioInput::unregisterObserver(AudioInputObserver* observer)
 void
 AudioInput::notifyObservers(const std::deque<float>& audioData)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_observerMutex);
 
   for (auto iter = m_audioObservers.begin(); iter != m_audioObservers.end(); ++iter)
   {

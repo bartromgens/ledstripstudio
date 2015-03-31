@@ -37,7 +37,7 @@ public:
   SpectrumAnalyser(int nSamples);
   virtual ~SpectrumAnalyser();
 
-  virtual void notifyAudioData(const std::deque<float>& audioData, int sampleRate);
+  virtual void notifyAudioData(std::deque<float> audioData, int sampleRate);
 
   void registerObserver(SpectrumObserver* observer);
   void unregisterObserver(SpectrumObserver* observer);

@@ -73,7 +73,7 @@ private:
 
   std::set<AudioInputObserver*> m_audioObservers;
 
-  mutable std::mutex m_mutex;
+  mutable std::mutex m_observerMutex;
 };
 
 #endif // AUDIOINPUT_H

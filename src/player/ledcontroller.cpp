@@ -1,13 +1,15 @@
 #include "ledcontroller.h"
 #include "basic/universalsleep.h"
 
-LEDController::LEDController()
-  : m_serialPortName(),
-    m_timer(),
-    m_timer2(),
-    m_fpsHistory(),
-    m_io_service(new boost::asio::io_service()),
-    m_serialPort()
+#include <boost/asio.hpp>
+
+
+LEDController::LEDController(const QString& serialPortName)
+: m_serialPortName(serialPortName),
+  m_timer(),
+  m_fpsHistory(),
+  m_io_service(new boost::asio::io_service()),
+  m_serialPort()
 {
 }
 
@@ -19,7 +21,7 @@ LEDController::~LEDController()
 }
 
 
-void
+bool
 LEDController::connect()
 {
   try
@@ -30,11 +32,10 @@ LEDController::connect()
   {
     std::cout << "LEDController::LEDController() - warning: " << e.what() << std::endl;
     std::cout << "LEDController::LEDController() - could not create a serial connection on " << m_serialPortName.toStdString() << std::endl;
-    return;
+    return false;
   }
 
   m_timer.start();
-  m_timer2.start();
 
 //  unsigned int baud = 921600;
   unsigned int baud = 2000000;
@@ -48,6 +49,8 @@ LEDController::connect()
   m_serialPort->set_option(parityType);
   m_serialPort->set_option(boost::asio::serial_port_base::character_size(8));
   m_serialPort->set_option(stopBits);
+
+  return true;
 }
 
 
@@ -91,8 +94,6 @@ LEDController::send(const Frame& frame)
     m_timer.restart();
     return;
   }
-
-  m_timer2.restart();
 
   // send the frame
 //  std::cout << "=================" << std::endl;
@@ -152,13 +153,6 @@ LEDController::writeBytes(const QByteArray& bytes)
 
 
 void
-LEDController::read()
-{
-
-}
-
-
-void
 LEDController::clearAll()
 {
   m_ledNr.clear();
@@ -166,22 +160,8 @@ LEDController::clearAll()
 }
 
 
-void
-LEDController::setColor(const Color& color)
-{
-  m_color.push_back(color);
-}
-
-
-void
-LEDController::setLEDnr(int ledNr)
-{
-  m_ledNr.push_back(ledNr);
-}
-
-
 int
-LEDController::getFPS()
+LEDController::getFPS() const
 {
   if (m_fpsHistory.empty())
   {
@@ -197,11 +177,4 @@ LEDController::getFPS()
   int averageFPS = sumFPS/m_fpsHistory.size();
 
   return averageFPS;
-}
-
-
-void
-LEDController::setSerialPortName(QString serialPortName)
-{
-  m_serialPortName = serialPortName;
 }

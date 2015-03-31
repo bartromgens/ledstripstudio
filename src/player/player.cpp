@@ -29,12 +29,12 @@ Player::~Player()
 }
 
 
-std::unique_ptr<LEDController> Player::createLedController(QString serialPortName)
+std::unique_ptr<LEDController>
+Player::createLedController(QString serialPortName)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
-  std::unique_ptr<LEDController> ledController( new LEDController() );
-  ledController->setSerialPortName(serialPortName);
+  std::unique_ptr<LEDController> ledController( new LEDController(serialPortName) );
   ledController->connect();
   return ledController;
 }
@@ -110,20 +110,6 @@ Player::isPlaying() const
 }
 
 
-int
-Player::getNAnimations() const
-{
-  return m_mainAnimation.getFrames().size();
-}
-
-
-//void
-//Player::playFrameThread()
-//{
-//  boost::thread t1(&Player::playFrame, this);
-//}
-
-
 void
 Player::playFrame()
 {
@@ -162,12 +148,6 @@ void
 Player::stopRecording()
 {
   m_isRecording = false;
-}
-
-void
-Player::setAnimationFPS(unsigned int fps)
-{
-  m_animationFPS = fps;
 }
 
 
