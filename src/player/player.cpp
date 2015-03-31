@@ -86,8 +86,6 @@ Player::playAllAnimations()
   {
     int elapsed_ms = timer.nsecsElapsed()/1000000.0;
     unsigned int toSleep = std::max( 0, msPerFrame - elapsed_ms );
-//    std::cout << "elapsed: " << elapsed_ms << std::endl;
-//    std::cout << "to sleep: " << toSleep << std::endl;
     universalsleep::sleep_ms(toSleep);
     timer.restart();
     playFrame();

@@ -16,7 +16,7 @@ class ToneToolbar : public QObject, public ConfigurationGroup
 
 public:
   ToneToolbar(ToneStudio& toneStudio);
-  ~ToneToolbar();
+  virtual ~ToneToolbar();
 
   void initialise(QToolBar* parentToolbar);
 

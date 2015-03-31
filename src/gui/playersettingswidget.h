@@ -19,7 +19,7 @@ class PlayerSettingsWidget : public QWidget, public ConfigurationGroup
   
 public:
   explicit PlayerSettingsWidget(ControlSettings& settings, QWidget* parent = 0);
-  ~PlayerSettingsWidget();
+  virtual ~PlayerSettingsWidget();
 
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);

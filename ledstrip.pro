@@ -100,13 +100,12 @@ OTHER_FILES += \
 unix:INCLUDEPATH += ./include/
 unix:INCLUDEPATH += ./include/fftwpp/
 
-win32:INCLUDEPATH += C:/prog/ledstrip/include/
-win32:INCLUDEPATH += C:/prog/ledstrip/include/fftwpp/
-win32:INCLUDEPATH += C:/prog/tools/boost_1_50_0_build/include/
+win32:INCLUDEPATH += C:/dev/ledstrip/include/
+win32:INCLUDEPATH += C:/dev/ledstrip/include/fftwpp/
+win32:INCLUDEPATH += C:/dev/tools/boost_1_50_0_build/include/
 
 # library locations
 unix:LIBS += -L./lib/ # location of FFTW and AudioPort libraries
-#unix:LIBS += -L/home/bart/dev/1_tools/boost_1_52_0/stage/lib/ # location of boost ./lib/ directory
 
 win32:LIBS += -LC:/dev/ledstrip/lib/vs2010x86/ # location of FFTW and AudioPort libraries for windows
 win32:LIBS += -LC:/dev/tools/boost_1_50_0_build/lib/

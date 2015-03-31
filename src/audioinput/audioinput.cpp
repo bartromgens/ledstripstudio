@@ -118,9 +118,6 @@ AudioInput::startStream()
     terminatePortAudio(err);
   }
 
-  QTime timer;
-  timer.start();
-
   bool run = true;
   while( ( err = Pa_IsStreamActive( m_stream ) ) == 1
          && run)
@@ -137,8 +134,6 @@ AudioInput::startStream()
         m_data.data_mutex.unlock();
 
         notifyObservers(samples);
-//        std::cout << "AudioInput::startStream() - notifyObservers time: " << timer.elapsed() << std::endl;
-        timer.restart();
       }
     }
   }
@@ -150,58 +145,46 @@ AudioInput::startStream()
 
 
 int
-AudioInput::recordCallback( const void *inputBuffer, void *outputBuffer,
+AudioInput::recordCallback( const void* inputBuffer,
+                            void* /*outputBuffer*/,
                             unsigned long framesPerBuffer,
-                            const PaStreamCallbackTimeInfo* timeInfo,
-                            PaStreamCallbackFlags statusFlags,
-                            void *userData )
+                            const PaStreamCallbackTimeInfo* /*timeInfo*/,
+                            PaStreamCallbackFlags /*statusFlags*/,
+                            void* userData )
 {
-
-  QTime timer;
-  timer.start();
-
-  paUserData *data = (paUserData*)userData;
+  paUserData* data = (paUserData*)userData;
 
   std::lock_guard<std::mutex> lock(data->data_mutex);
 
-  const float *rptr = (const float*)inputBuffer;
+  const float* rptr = (const float*)inputBuffer;
 //  float *wptr = &data->recordedSamples[data->frameIndex * data->nChannels];
-  int finished(0);
 //  unsigned long framesLeft = data->maxFrameIndex - data->frameIndex;
-
-  (void) outputBuffer; // Prevent unused variable warnings.
-  (void) timeInfo;
-  (void) statusFlags;
-  (void) userData;
 
   if( inputBuffer == NULL )
   {
     std::cout << "AudioInput::recordCallback() - inputBuffer NULL" << std::endl;
+    return 0;
   }
-  else
+
+  for (unsigned int i = 0; i < framesPerBuffer; i++)
   {
-    for (unsigned int i = 0; i < framesPerBuffer; i++)
+    if (data->recordedSamplesVec.size() > data->nSamples)
+    {
+      data->recordedSamplesVec.pop_front();
+    }
+    data->recordedSamplesVec.push_back((float)(*rptr++));
+
+    if( data->nChannels == 2 )
     {
       if (data->recordedSamplesVec.size() > data->nSamples)
       {
         data->recordedSamplesVec.pop_front();
       }
       data->recordedSamplesVec.push_back((float)(*rptr++));
-
-      if( data->nChannels == 2 )
-      {
-        if (data->recordedSamplesVec.size() > data->nSamples)
-        {
-          data->recordedSamplesVec.pop_front();
-        }
-        data->recordedSamplesVec.push_back((float)(*rptr++));
-      }
     }
   }
-//  data->frameIndex += framesToCalc;
-//  std::cout << "time elapsed: " << timer.elapsed() << std::endl;
 
-  return finished;
+  return 0;
 }
 
 

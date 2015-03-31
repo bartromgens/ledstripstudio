@@ -50,8 +50,7 @@ class MainWindow : public QMainWindow, public SpectrumObserver, public ToneObser
   
 public:
   explicit MainWindow(QWidget* parent = 0);
-  ~MainWindow();
-
+  virtual ~MainWindow();
 
   virtual void notifySpectrum(const std::map<double, double>& spectrum);
   virtual void notifyTone(const std::map<std::string, double>& toneAmplitudes);
@@ -63,6 +62,7 @@ public:
   Animation createAnimationTest2();
 
   void createConfigurationComboBox();
+
 public slots:
   void slotPlayerPlayed();
 
