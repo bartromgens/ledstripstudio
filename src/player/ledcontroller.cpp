@@ -11,6 +11,7 @@ LEDController::LEDController(const QString& serialPortName)
   m_io_service(new boost::asio::io_service()),
   m_serialPort()
 {
+  m_timer.start();
 }
 
 
@@ -35,7 +36,6 @@ LEDController::connect()
     return false;
   }
 
-  m_timer.start();
 
 //  unsigned int baud = 921600;
   unsigned int baud = 2000000;
@@ -79,8 +79,8 @@ LEDController::send(const Frame& frame)
 //  int minSleep = 20; //160 leds
 //  int minSleep = 21/160.0 * leds.size();
   int minSleep = 20/160.0 * leds.size();
-  int elapsed_ms = m_timer.nsecsElapsed()/1000000;
-  int toSleep = minSleep - elapsed_ms;
+  qint64 elapsed_ms = m_timer.nsecsElapsed()/1000000;
+  qint64 toSleep = minSleep - elapsed_ms;
 
   if (toSleep > 0)
   {
