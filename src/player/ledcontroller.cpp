@@ -57,11 +57,14 @@ LEDController::connect()
 void
 LEDController::disconnect()
 {
-  boost::system::error_code err;
-  m_serialPort->close(err);
-  if (err)
+  if (m_serialPort)
   {
-    std::cout << "LEDController::disconnect() - ERROR: " << err.message() << std::endl;
+    boost::system::error_code err;
+    m_serialPort->close(err);
+    if (err)
+    {
+      std::cerr << "LEDController::disconnect() - ERROR: " << err.message() << std::endl;
+    }
   }
 }
 
