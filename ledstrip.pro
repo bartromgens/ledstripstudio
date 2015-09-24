@@ -1,4 +1,7 @@
+# needs Qt5.3 or newer
+
 QT += core gui
+QT += widgets
 QT += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
