@@ -36,15 +36,13 @@ LEDController::connect()
     return false;
   }
 
-
-//  unsigned int baud = 921600;
-  unsigned int baud = 2000000;
-  boost::asio::serial_port_base::baud_rate baud_option(baud);
+  unsigned int baud = 2000000;  // 921600;
+  boost::asio::serial_port_base::baud_rate baudOption(baud);
   boost::asio::serial_port_base::flow_control flowControl(boost::asio::serial_port_base::flow_control::none);
   boost::asio::serial_port_base::parity parityType(boost::asio::serial_port_base::parity::none);
   boost::asio::serial_port_base::stop_bits stopBits(boost::asio::serial_port_base::stop_bits::two);
 
-  m_serialPort->set_option(baud_option); // set the baud rate after the port has been opened
+  m_serialPort->set_option(baudOption); // set the baud rate after the port has been opened
   m_serialPort->set_option(flowControl);
   m_serialPort->set_option(parityType);
   m_serialPort->set_option(boost::asio::serial_port_base::character_size(8));
