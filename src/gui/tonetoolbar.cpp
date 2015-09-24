@@ -5,15 +5,15 @@
 #include <memory>
 
 ToneToolbar::ToneToolbar(ToneStudio& toneStudio)
-  : QObject(),
-    ConfigurationGroup(),
-    m_toneStudio(toneStudio)
+: QObject(),
+  ConfigurationGroup(),
+  m_toneStudio(toneStudio),
+  m_actionGroup(this)
 {
 }
 
 ToneToolbar::~ToneToolbar()
 {
-
 }
 
 
@@ -21,6 +21,7 @@ void
 ToneToolbar::initialise(QToolBar* parentToolbar)
 {
   m_stepToneAct = new QAction(parentToolbar);
+  m_stepToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Loudest)));
   m_stepToneAct->setIcon(QIcon("./icons/step-tone-setting.png"));
   m_stepToneAct->setStatusTip(tr("Set loudest tone mode."));
   m_stepToneAct->setCheckable(true);
@@ -28,6 +29,7 @@ ToneToolbar::initialise(QToolBar* parentToolbar)
   connect(m_stepToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleStepTone(bool)));
 
   m_smoothToneAct = new QAction(parentToolbar);
+  m_smoothToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::SmoothSum)));
   m_smoothToneAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
   m_smoothToneAct->setStatusTip(tr("Set smooth tone mode."));
   m_smoothToneAct->setCheckable(true);
@@ -35,6 +37,7 @@ ToneToolbar::initialise(QToolBar* parentToolbar)
   m_smoothToneAct->setVisible(false);
 
   m_historyToneAct = new QAction(parentToolbar);
+  m_historyToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::History)));
   m_historyToneAct->setIcon(QIcon("./icons/tone-animation-history.png"));
   m_historyToneAct->setStatusTip(tr("Set history tone mode."));
   m_historyToneAct->setCheckable(true);
@@ -42,6 +45,7 @@ ToneToolbar::initialise(QToolBar* parentToolbar)
   m_historyToneAct->setVisible(false);
 
   m_individualToneAct = new QAction(parentToolbar);
+  m_individualToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Individual)));
   m_individualToneAct->setIcon(QIcon("./icons/tone-animation-individual.png"));
   m_individualToneAct->setStatusTip(tr("Set individual tone mode."));
   m_individualToneAct->setCheckable(true);
@@ -49,11 +53,18 @@ ToneToolbar::initialise(QToolBar* parentToolbar)
   m_individualToneAct->setVisible(false);
 
   m_cornerToneAct = new QAction(parentToolbar);
+  m_cornerToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Corner)));
   m_cornerToneAct->setIcon(QIcon("./icons/tone-animation-corner.png"));
   m_cornerToneAct->setStatusTip(tr("Set corner tone mode."));
   m_cornerToneAct->setCheckable(true);
   connect(m_cornerToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleCornerTone(bool)));
   m_cornerToneAct->setVisible(false);
+
+  m_actionGroup.addAction(m_stepToneAct);
+  m_actionGroup.addAction(m_smoothToneAct);
+  m_actionGroup.addAction(m_historyToneAct);
+  m_actionGroup.addAction(m_individualToneAct);
+  m_actionGroup.addAction(m_cornerToneAct);
 
   parentToolbar->addAction(m_historyToneAct);
   parentToolbar->addAction(m_cornerToneAct);
@@ -76,89 +87,14 @@ ToneToolbar::toggleToneAnalysis(bool isChecked)
 }
 
 
-void
-ToneToolbar::updateToneSettingsVisibility(ToneStudio::ToneAnimationType type)
+ToneStudio::AnimationType
+ToneToolbar::getAnimationType() const
 {
-  m_stepToneAct->setChecked(type == ToneStudio::Loudest);
-  m_smoothToneAct->setChecked(type == ToneStudio::SmoothSum);
-  m_historyToneAct->setChecked(type == ToneStudio::History);
-  m_individualToneAct->setChecked(type == ToneStudio::Individual);
-  m_cornerToneAct->setChecked(type == ToneStudio::Corner);
-}
-
-
-void
-ToneToolbar::slotToggleStepTone(bool isChecked)
-{
-  if (isChecked)
+  if (m_actionGroup.checkedAction())
   {
-    updateToneSettingsVisibility(ToneStudio::Loudest);
-    m_toneStudio.setAnimationType(ToneStudio::Loudest);
+    return static_cast<ToneStudio::AnimationType>( m_actionGroup.checkedAction()->data().toInt() );
   }
-  else
-  {
-    m_toneStudio.setAnimationType(ToneStudio::None);
-  }
-}
-
-
-void
-ToneToolbar::slotToggleSmoothTone(bool isChecked)
-{
-  if (isChecked)
-  {
-    updateToneSettingsVisibility(ToneStudio::SmoothSum);
-    m_toneStudio.setAnimationType(ToneStudio::SmoothSum);
-  }
-  else
-  {
-    m_toneStudio.setAnimationType(ToneStudio::None);
-  }
-}
-
-
-void
-ToneToolbar::slotToggleToneHistory(bool isChecked)
-{
-  if (isChecked)
-  {
-    updateToneSettingsVisibility(ToneStudio::History);
-    m_toneStudio.setAnimationType(ToneStudio::History);
-  }
-  else
-  {
-    m_toneStudio.setAnimationType(ToneStudio::None);
-  }
-}
-
-
-void
-ToneToolbar::slotToggleIndividualTone(bool isChecked)
-{
-  if (isChecked)
-  {
-    updateToneSettingsVisibility(ToneStudio::Individual);
-    m_toneStudio.setAnimationType(ToneStudio::Individual);
-  }
-  else
-  {
-    m_toneStudio.setAnimationType(ToneStudio::None);
-  }
-}
-
-
-void
-ToneToolbar::slotToggleCornerTone(bool isChecked)
-{
-  if (isChecked)
-  {
-    updateToneSettingsVisibility(ToneStudio::Corner);
-    m_toneStudio.setAnimationType(ToneStudio::Corner);
-  }
-  else
-  {
-    m_toneStudio.setAnimationType(ToneStudio::None);
-  }
+  return ToneStudio::AnimationType::None;
 }
 
 
@@ -167,7 +103,7 @@ ToneToolbar::saveConfiguration(QSettings& config) const
 {
   config.beginGroup( "Tone" );
 
-  config.setValue("ToneAnimationType", m_toneStudio.getAnimationType());
+  config.setValue("ToneAnimationType", static_cast<int>( getAnimationType() ));
 
   config.endGroup();
 }
@@ -178,35 +114,35 @@ ToneToolbar::loadConfiguration(QSettings& config)
 {
   config.beginGroup( "Tone" );
 
-  ToneStudio::ToneAnimationType toneType = static_cast<ToneStudio::ToneAnimationType>(config.value("ToneAnimationType", "").toInt());
+  ToneStudio::AnimationType toneType = static_cast<ToneStudio::AnimationType>(config.value("ToneAnimationType", "").toInt());
 
   switch (toneType)
   {
-    case ToneStudio::None:
+    case ToneStudio::AnimationType::None:
     {
       break;
     }
-    case ToneStudio::Loudest:
+    case ToneStudio::AnimationType::Loudest:
     {
       m_stepToneAct->setChecked(true);
       break;
     }
-    case ToneStudio::SmoothSum:
+    case ToneStudio::AnimationType::SmoothSum:
     {
       m_smoothToneAct->setChecked(true);
       break;
     }
-    case ToneStudio::History:
+    case ToneStudio::AnimationType::History:
     {
       m_historyToneAct->setChecked(true);
       break;
     }
-    case ToneStudio::Individual:
+    case ToneStudio::AnimationType::Individual:
     {
       m_individualToneAct->setChecked(true);
       break;
     }
-    case ToneStudio::Corner:
+    case ToneStudio::AnimationType::Corner:
     {
       m_cornerToneAct->setChecked(true);
       break;

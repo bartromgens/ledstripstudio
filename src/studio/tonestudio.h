@@ -6,7 +6,7 @@
 class ToneStudio
 {
 public:
-  enum ToneAnimationType
+  enum class AnimationType
   {
     None,
     Loudest,
@@ -20,10 +20,9 @@ public:
   ToneStudio();
   ~ToneStudio();
 
-  void setAnimationType(ToneAnimationType type);
-  ToneAnimationType getAnimationType() const;
-
-  Animation createToneAnimation(unsigned int nLEDs, const std::map<std::string, double>& tones);
+  Animation createToneAnimation(unsigned int nLEDs,
+                                const std::map<std::string, double>& tones,
+                                ToneStudio::AnimationType animationType, double colorWheelOffset=2.8);
 
   static void writeToneToConsole(const std::map<std::string, double>& tones);
 
@@ -37,12 +36,11 @@ private:
 
   Animation createToneAnimationLoudest(unsigned int nLEDs);
   Animation createToneAnimationSmoothSum(unsigned int nLEDs, const std::map<std::string, double>& tones);
-  Animation createToneAnimationHistory(unsigned int nLEDs, unsigned int speed);
+  Animation createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, double colorWheelOffset);
   Animation createToneAnimationIndividual(unsigned int nLEDs, const std::map<std::string, double>& tones);
   Animation createToneAnimationCorners(unsigned int nLEDs, const std::map<std::string, double>& tones);
 
 private:
-  ToneAnimationType m_animationType;
 
   Frame m_toneHistoryFrame;
   std::map<std::string, Color> m_toneColorMap;

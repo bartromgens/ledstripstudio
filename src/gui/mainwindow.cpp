@@ -170,7 +170,11 @@ MainWindow::notifySpectrum(const std::map<double, double>& spectrum)
 void
 MainWindow::notifyTone(const std::map<std::string, double>& toneAmplitudes)
 {
-  m_player->addAnimation( m_toneStudio->createToneAnimation(m_nLedsTotal, toneAmplitudes) );
+  double colorWheelOffset = 2.8;
+  m_player->addAnimation( m_toneStudio->createToneAnimation( m_nLedsTotal,
+                                                             toneAmplitudes,
+                                                             m_toneToolbar->getAnimationType(),
+                                                             colorWheelOffset ) );
   m_player->playFrame();
 }
 

@@ -6,8 +6,7 @@
 #include <string>
 
 ToneStudio::ToneStudio()
-  : m_animationType(Loudest),
-    m_toneHistoryFrame(0),
+  : m_toneHistoryFrame(0),
     m_toneColorMap(),
     m_maxToneHistory(),
     m_toneMaxAverage(0.0),
@@ -19,20 +18,6 @@ ToneStudio::ToneStudio()
 
 ToneStudio::~ToneStudio()
 {
-}
-
-
-void
-ToneStudio::setAnimationType(ToneStudio::ToneAnimationType type)
-{
-  m_animationType = type;
-}
-
-
-ToneStudio::ToneAnimationType
-ToneStudio::getAnimationType() const
-{
-  return m_animationType;
 }
 
 
@@ -102,7 +87,10 @@ ToneStudio::calcToneMinAverage()
 
 
 Animation
-ToneStudio::createToneAnimation(unsigned int nLEDs, const std::map<std::string, double>& tones)
+ToneStudio::createToneAnimation(unsigned int nLEDs,
+                                const std::map<std::string, double>& tones,
+                                ToneStudio::AnimationType animationType,
+                                double colorWheelOffset)
 {
   m_maxToneAmplitude = 0.0;
 
@@ -113,29 +101,29 @@ ToneStudio::createToneAnimation(unsigned int nLEDs, const std::map<std::string, 
 
   const unsigned int speed = 1;
 
-  switch (m_animationType)
+  switch (animationType)
   {
-    case Loudest:
+    case ToneStudio::AnimationType::Loudest:
     {
       return createToneAnimationLoudest(nLEDs);
     }
-    case SmoothSum:
+    case ToneStudio::AnimationType::SmoothSum:
     {
       return createToneAnimationSmoothSum(nLEDs, tones);
     }
-    case History:
+    case ToneStudio::AnimationType::History:
     {
-      return createToneAnimationHistory(nLEDs, speed);
+      return createToneAnimationHistory(nLEDs, speed, colorWheelOffset);
     }
-    case Individual:
+    case ToneStudio::AnimationType::Individual:
     {
       return createToneAnimationIndividual(nLEDs, tones);
     }
-    case Corner:
+    case ToneStudio::AnimationType::Corner:
     {
       return createToneAnimationCorners(nLEDs, tones);
     }
-    case None:
+    case ToneStudio::AnimationType::None:
     {
       return Animation();
     }
@@ -261,7 +249,7 @@ ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, const std::map<std:
 
 
 Animation
-ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
+ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, double colorWheelOffset)
 {
   Animation animation;
 
@@ -305,7 +293,7 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed)
   }
 
   double offset = 2.8;
-  unsigned int colorInt = static_cast<int>(3.0*127.0/7.0*(i+offset)) % (3*128);
+  unsigned int colorInt = static_cast<int>(3.0*127.0/7.0*(i+colorWheelOffset)) % (3*128);
 
   Color color = Studio::wheel(colorInt);
   color.r = color.r * brightness/127.0;
