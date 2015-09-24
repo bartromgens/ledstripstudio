@@ -7,12 +7,13 @@
 #include <QString>
 #include <QElapsedTimer>
 
+#include <boost/asio/serial_port.hpp>
+
 #include <deque>
 #include <mutex>
 #include <memory>
 #include <vector>
 
-#include <boost/asio/serial_port.hpp>
 
 namespace boost
 {
