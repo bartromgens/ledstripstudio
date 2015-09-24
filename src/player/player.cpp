@@ -2,6 +2,7 @@
 #include "basic/universalsleep.h"
 
 #include <QTime>
+#include <QtSerialPort/QSerialPortInfo>
 
 
 Player::Player(ControlSettings& controlSettings)
@@ -15,6 +16,12 @@ Player::Player(ControlSettings& controlSettings)
     m_isPlaying(false),
     m_mutex()
 {
+  QStringList ports;
+  for (QSerialPortInfo port : QSerialPortInfo::availablePorts())
+  {
+    std::cout << port.portName().toStdString() << std::endl;
+    ports += port.portName();
+  }
   const QString serialPortName = "/dev/ttyACM0";
   //  const QString serialPortName = "COM7"; // windows
   m_ledController = createLedController(serialPortName);

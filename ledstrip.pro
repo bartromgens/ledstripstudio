@@ -1,4 +1,5 @@
 QT += core gui
+QT += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -6,7 +7,11 @@ TEMPLATE = app
 CONFIG += qt
 
 # application name
-TARGET = ledstripstudio
+CONFIG(debug, debug|release) {
+  TARGET = ledstripstudio_debug
+} else {
+  TARGET = ledstripstudio
+}
 
 # let everything find the source directory without specifying its location
 INCLUDEPATH += ./src/
@@ -116,12 +121,12 @@ win32:LIBS += -LC:/dev/tools/boost_1_50_0_build/lib/
 
 # libraries
 unix:LIBS += -lportaudio -lasound -lfftw3 -lm
-unix:LIBS += -lboost_thread -lboost_system
+unix:LIBS += -lboost_thread -lboost_system -lusb
 
 win32:LIBS += -lportaudio -llibfftw3-3
 
 # compiler flags
-unix:QMAKE_CXXFLAGS += -std=c++0x
+unix:QMAKE_CXXFLAGS += -std=c++11
 unix:QMAKE_CXXFLAGS += -Wall
 unix:QMAKE_CXXFLAGS += -Wno-unused-local-typedefs
 unix:QMAKE_LFLAGS += -Bstatic
@@ -133,11 +138,9 @@ QMAKE_LFLAGS += -time # show link time
 UI_DIR = ./src/gui/
 
 CONFIG(debug, debug|release) {
-  MAKEFILE = Makefile.debug
   OBJECTS_DIR = ./tmp/debug
   MOC_DIR = ./tmp/debug
 } else {
-  MAKEFILE = Makefile.release
   OBJECTS_DIR = ./tmp/release
   MOC_DIR = ./tmp/release
 }
