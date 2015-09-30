@@ -99,7 +99,10 @@ SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 
 
 std::map<double, double>
-SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::WindowingType windowType)
+SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn,
+                                  int nBins,
+                                  int sampleRate,
+                                  SpectrumAnalyser::WindowingType windowType)
 {
   std::deque<float> realInWindowed;
 
@@ -177,7 +180,10 @@ SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
 
 
 std::map<double, double>
-SpectrumAnalyser::binSpectrum(const std::vector<double>& data, int nBins, int sampleRate, double upperFrequency) const
+SpectrumAnalyser::binSpectrum(const std::vector<double>& data,
+                              int nBins,
+                              int sampleRate,
+                              double upperFrequency) const
 {
   assert(data.size() == m_np);
   std::map<double, double> hist;
