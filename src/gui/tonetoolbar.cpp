@@ -114,7 +114,8 @@ ToneToolbar::loadConfiguration(QSettings& config)
 {
   config.beginGroup( "Tone" );
 
-  ToneStudio::AnimationType toneType = static_cast<ToneStudio::AnimationType>(config.value("ToneAnimationType", "").toInt());
+  ToneStudio::AnimationType toneType =
+      static_cast<ToneStudio::AnimationType>(config.value("ToneAnimationType", "").toInt());
 
   switch (toneType)
   {
