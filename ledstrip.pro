@@ -122,7 +122,7 @@ win32:LIBS += -LC:/dev/tools/boost_1_50_0_build/lib/
 
 # libraries
 unix:LIBS += -lportaudio -lasound -lfftw3 -lm
-unix:LIBS += -lboost_thread -lboost_system -lusb
+unix:LIBS += -lboost_thread -lboost_system
 
 win32:LIBS += -lportaudio -llibfftw3-3
 
