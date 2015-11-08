@@ -167,9 +167,6 @@ SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
   std::size_t sizeIn = in.size();
 
   std::deque<float> out(sizeIn, 0.0);
-
-  QTime timer;
-  timer.start();
   for (std::size_t i = 0; i < sizeIn; i++)
   {
     out[i] = (1.0*i)/sizeIn * in[i];
