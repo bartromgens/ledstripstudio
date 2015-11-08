@@ -261,41 +261,37 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, d
     brightnessRelative = std::pow(m_maxToneAmplitude, 3) / std::pow(m_toneMaxAverage*2.0, 3);
   }
 
-  unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
 
   unsigned int i = 0;
-  if (m_maxTone == Tone::C)
+  switch (m_maxTone)
   {
-    i = 0;
-  }
-  else if (m_maxTone == Tone::D)
-  {
-    i = 1;
-  }
-  else if (m_maxTone == Tone::E)
-  {
-    i = 2;
-  }
-  else if (m_maxTone == Tone::F)
-  {
-    i = 3;
-  }
-  else if (m_maxTone == Tone::G)
-  {
-    i = 4;
-  }
-  else if (m_maxTone == Tone::A)
-  {
-    i = 5;
-  }
-  else if (m_maxTone == Tone::B)
-  {
-    i = 6;
+    case Tone::C :
+      i = 0;
+      break;
+    case Tone::D :
+      i = 1;
+      break;
+    case Tone::E :
+      i = 2;
+      break;
+    case Tone::F :
+      i = 3;
+      break;
+    case Tone::G :
+      i = 4;
+      break;
+    case Tone::A :
+      i = 5;
+      break;
+    case Tone::B :
+      i = 6;
+      break;
   }
 
+  unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
   unsigned int colorInt = static_cast<int>( 3.0*127.0/7.0* (i + colorWheelOffset) ) % (3*128);
-
   Color color = Studio::wheel(colorInt);
+
   color.r = color.r * brightness/127.0;
   color.g = color.g * brightness/127.0;
   color.b = color.b * brightness/127.0;

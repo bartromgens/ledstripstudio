@@ -12,6 +12,7 @@ ToneToolbar::ToneToolbar(ToneStudio& toneStudio)
 {
 }
 
+
 ToneToolbar::~ToneToolbar()
 {
 }
