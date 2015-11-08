@@ -14,6 +14,7 @@
 #include <QToolBar>
 #include <QColorDialog>
 #include <QDockWidget>
+#include <QSlider>
 #include <QTimer>
 
 #include <boost/thread.hpp>
@@ -54,7 +55,7 @@ public:
   virtual ~MainWindow();
 
   virtual void notifySpectrum(const std::map<double, double>& spectrum);
-  virtual void notifyTone(const std::map<std::string, double>& toneAmplitudes);
+  virtual void notifyTone(const std::map<Tone, double>& toneAmplitudes);
 
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);

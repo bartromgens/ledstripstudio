@@ -3,6 +3,7 @@
 
 #include "spectrumobserver.h"
 #include "toneobserver.h"
+#include "basic/tone.h"
 
 #include <iostream>
 #include <string>
@@ -16,18 +17,18 @@ public:
   ToneAnalyser();
   virtual ~ToneAnalyser();
 
-  std::map<std::string, double> computeToneAmplitude(const std::map<double, double>& spectrum);
+  std::map<Tone, double> computeToneAmplitude(const std::map<double, double>& spectrum);
 
   void notifySpectrum(const std::map<double, double>& spectrum);
 
   void registerObserver(ToneObserver* observer);
   void unregisterObserver(ToneObserver* observer);
-  void notifyObservers(const std::map<std::string, double>& toneAmplitudes);
+  void notifyObservers(const std::map<Tone, double>& toneAmplitudes);
 
 private:
 
-  std::map<std::string, double> m_baseTones;
-  std::set< ToneObserver* > m_observers;
+  std::map<Tone, double> m_baseTones;
+  std::set<ToneObserver*> m_observers;
 
 };
 

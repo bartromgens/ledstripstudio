@@ -1,5 +1,6 @@
 #include "tonestudio.h"
 
+#include "spectrum/toneanalyser.h"
 #include "studio.h"
 
 #include <cmath>
@@ -37,7 +38,7 @@ ToneStudio::writeToneToConsole(const std::map<std::string, double>& tones)
 
 
 void
-ToneStudio::calcMaxAndMinTone(const std::map<std::string, double>& tones)
+ToneStudio::calcMaxAndMinTone(const std::map<Tone, double>& tones)
 {
   m_maxToneAmplitude = 0.0;
   m_minToneAmplitude = 1.0e99;
@@ -88,7 +89,7 @@ ToneStudio::calcToneMinAverage()
 
 Animation
 ToneStudio::createToneAnimation(unsigned int nLEDs,
-                                const std::map<std::string, double>& tones,
+                                const std::map<Tone, double>& tones,
                                 ToneStudio::AnimationType animationType,
                                 double colorWheelOffset)
 {
@@ -144,31 +145,31 @@ ToneStudio::createToneAnimationLoudest(unsigned int nLEDs)
   {
     Color color;
 
-    if (m_maxTone == "C")
+    if (m_maxTone == Tone::C)
     {
       color = Color(127, 0, 0);
     }
-    else if (m_maxTone == "D")
+    else if (m_maxTone == Tone::D)
     {
       color = Color(127, 127, 0);
     }
-    else if (m_maxTone == "E")
+    else if (m_maxTone == Tone::E)
     {
       color = Color(0, 127, 0);
     }
-    else if (m_maxTone == "F")
+    else if (m_maxTone == Tone::F)
     {
       color = Color(0, 127, 127);
     }
-    else if (m_maxTone == "G")
+    else if (m_maxTone == Tone::G)
     {
       color = Color(0, 0, 127);
     }
-    else if (m_maxTone == "A")
+    else if (m_maxTone == Tone::A)
     {
       color = Color(127, 0, 127);
     }
-    else if (m_maxTone == "B")
+    else if (m_maxTone == Tone::B)
     {
       color = Color(127, 50, 50);
     }
@@ -184,7 +185,7 @@ ToneStudio::createToneAnimationLoudest(unsigned int nLEDs)
 
 
 Animation
-ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, const std::map<std::string, double>& tones)
+ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, const std::map<Tone, double>& tones)
 {
   Animation animation;
 
@@ -196,36 +197,36 @@ ToneStudio::createToneAnimationSmoothSum(unsigned int nLEDs, const std::map<std:
     double g = 0.0;
     double b = 0.0;
 
-    for (std::map<std::string, double>::const_iterator iter = tones.begin(); iter != tones.end(); ++iter)
+    for (std::map<Tone, double>::const_iterator iter = tones.begin(); iter != tones.end(); ++iter)
     {
-      if (iter->first == "C")
+      if (iter->first == Tone::C)
       {
         r += iter->second;
       }
-      else if (iter->first == "D")
+      else if (iter->first == Tone::D)
       {
         r += iter->second/2.0;
 //        g += iter->second/2.0;
       }
-      else if (iter->first == "E")
+      else if (iter->first == Tone::E)
       {
         g += iter->second;
       }
-      else if (iter->first == "F")
+      else if (iter->first == Tone::F)
       {
         g += iter->second/2.0;
 //        b += iter->second/2.0;
       }
-      else if (iter->first == "G")
+      else if (iter->first == Tone::G)
       {
         b += iter->second;
       }
-      else if (iter->first == "A")
+      else if (iter->first == Tone::A)
       {
         b += iter->second/2.0;
 //        r += iter->second/2.0;
       }
-      else if (iter->first == "B")
+      else if (iter->first == Tone::B)
       {
         r += iter->second;
       }
@@ -263,37 +264,36 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, d
   unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
 
   unsigned int i = 0;
-  if (m_maxTone == "C")
+  if (m_maxTone == Tone::C)
   {
     i = 0;
   }
-  else if (m_maxTone == "D")
+  else if (m_maxTone == Tone::D)
   {
     i = 1;
   }
-  else if (m_maxTone == "E")
+  else if (m_maxTone == Tone::E)
   {
     i = 2;
   }
-  else if (m_maxTone == "F")
+  else if (m_maxTone == Tone::F)
   {
     i = 3;
   }
-  else if (m_maxTone == "G")
+  else if (m_maxTone == Tone::G)
   {
     i = 4;
   }
-  else if (m_maxTone == "A")
+  else if (m_maxTone == Tone::A)
   {
     i = 5;
   }
-  else if (m_maxTone == "B")
+  else if (m_maxTone == Tone::B)
   {
     i = 6;
   }
 
-  double offset = 2.8;
-  unsigned int colorInt = static_cast<int>(3.0*127.0/7.0*(i+colorWheelOffset)) % (3*128);
+  unsigned int colorInt = static_cast<int>( 3.0*127.0/7.0* (i + colorWheelOffset) ) % (3*128);
 
   Color color = Studio::wheel(colorInt);
   color.r = color.r * brightness/127.0;
@@ -334,7 +334,7 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, d
 
 
 Animation
-ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, const std::map<std::string, double>& tones)
+ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, const std::map<Tone, double>& tones)
 {
   const double minThreshold = 30;
   const double amplificationExponent = 2.0;
@@ -356,7 +356,7 @@ ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, const std::map<std
 
   // calculate tone amplifications, based on max amplitude and tone amplitude
   double totalAmplification = 0.0;
-  std::map<std::string, double> toneAmplification;
+  std::map<Tone, double> toneAmplification;
   for (auto it = tones.cbegin(); it != tones.cend(); ++it )
   {
     double amplification = it->second/m_maxToneAmplitude;
@@ -371,10 +371,10 @@ ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, const std::map<std
   }
 
   // calculate number of leds per tone
-  std::map<std::string, unsigned int> nLEDsPerToneMap;
+  std::map<Tone, unsigned int> nLEDsPerToneMap;
   for (auto it = tones.cbegin(); it != tones.cend(); ++it )
   {
-    std::string tone = it->first;
+    Tone tone = it->first;
     double amplification = toneAmplification[tone];
 
     int nLEDsPerTone = std::ceil(nLEDs / totalAmplification * amplification);
@@ -404,7 +404,7 @@ ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, const std::map<std
   int ledCounter = 0;
   for (auto it = tones.cbegin(); it != tones.cend(); ++it)
   {
-    std::string tone = it->first;
+    Tone tone = it->first;
     double amplification = toneAmplification[tone];
 
     Color color2;
@@ -439,7 +439,7 @@ ToneStudio::createToneAnimationIndividual(unsigned int nLEDs, const std::map<std
 
 
 Animation
-ToneStudio::createToneAnimationCorners(unsigned int nLEDs, const std::map<std::string, double>& tones)
+ToneStudio::createToneAnimationCorners(unsigned int nLEDs, const std::map<Tone, double>& tones)
 {
   if (m_toneColorMap.empty())
   {
@@ -452,7 +452,7 @@ ToneStudio::createToneAnimationCorners(unsigned int nLEDs, const std::map<std::s
   int toneCounter = 0;
   for (auto iter = tones.cbegin(); iter != tones.cend(); ++iter)
   {
-    std::string tone = iter->first;
+    Tone tone = iter->first;
     double amplitude = iter->second;
 
     double ampRatio = amplitude/m_maxToneAmplitude;
@@ -483,12 +483,12 @@ ToneStudio::createToneAnimationCorners(unsigned int nLEDs, const std::map<std::s
 
 
 void
-ToneStudio::createRandomToneColorMap(const std::map<std::string, double>& tones)
+ToneStudio::createRandomToneColorMap(const std::map<Tone, double>& tones)
 {
-  std::map<std::string, Color> toneColorMap;
+  std::map<Tone, Color> toneColorMap;
   for (auto iter = tones.cbegin(); iter != tones.cend(); ++iter)
   {
-    std::string tone = iter->first;
+    Tone tone = iter->first;
     toneColorMap[tone] = Color::randomColor();
   }
 
@@ -497,40 +497,40 @@ ToneStudio::createRandomToneColorMap(const std::map<std::string, double>& tones)
 
 
 void
-ToneStudio::createToneColorMap(const std::map<std::string, double>& tones)
+ToneStudio::createToneColorMap(const std::map<Tone, double>& tones)
 {
-  std::map<std::string, Color> toneColorMap;
+  std::map<Tone, Color> toneColorMap;
   for (auto iter = tones.cbegin(); iter != tones.cend(); ++iter)
   {
     Color color;
     int brightness = 127;
-    std::string tone = iter->first;
+    Tone tone = iter->first;
 
-    if (tone == "C")
+    if (tone == Tone::C)
     {
       color = Color(0, brightness, brightness);
     }
-    else if (tone == "D")
+    else if (tone == Tone::D)
     {
       color = Color(brightness, 0, 0);
     }
-    else if (tone == "E")
+    else if (tone == Tone::E)
     {
       color = Color(0, brightness, 0);
     }
-    else if (tone == "F")
+    else if (tone == Tone::F)
     {
       color = Color(0, 0, brightness);
     }
-    else if (tone == "G")
+    else if (tone == Tone::G)
     {
       color = Color(brightness, 34, 4);
     }
-    else if (tone == "A")
+    else if (tone == Tone::A)
     {
       color = Color(50, brightness, 0);
     }
-    else if (tone == "B")
+    else if (tone == Tone::B)
     {
       color = Color(brightness, 75, 0);
     }

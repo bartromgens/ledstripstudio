@@ -40,7 +40,7 @@ private:
 
   void disconnect();
 
-  void addLedByte(QByteArray &bytes, const std::vector<LED> &leds, int pos, int offset, int brightness);
+  void addLedByte(QByteArray &bytes, const std::vector<LED>& leds, int pos, int offset, int brightness);
   void writeBytes(const QByteArray& bytes);
   void clearAll();
 

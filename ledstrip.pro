@@ -49,7 +49,7 @@ SOURCES += \
     src/main.cpp \
     src/gui/playersettingswidget.cpp \
     src/gui/ledstripstatuswidget.cpp \
-    src/gui/actionconsistency.cpp
+    src/gui/actionconsistency.cpp \
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -59,6 +59,7 @@ HEADERS += \
     src/basic/color.h \
     src/basic/frame.h \
     src/basic/led.h \
+    src/basic/tone.h \
     src/basic/universalsleep.h \
     src/gui/ffttoolbar.h \
     src/gui/mainwindow.h \
@@ -79,7 +80,7 @@ HEADERS += \
     src/studio/imagestudio.h \
     src/gui/playersettingswidget.h \
     src/gui/ledstripstatuswidget.h \
-    src/gui/actionconsistency.h
+    src/gui/actionconsistency.h \
 
 FORMS += \
     src/gui/mainwindow.ui \
