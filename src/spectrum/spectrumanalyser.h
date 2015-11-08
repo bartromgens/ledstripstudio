@@ -50,6 +50,8 @@ public:
 
   void setWindowingType(WindowingType type);
 
+  void initialiseHannWindowFactors(std::size_t size);
+
 private:
 
   std::map<double, double> binSpectrum(const std::vector<double>& data, int nBins, int sampleRate, double upperFrequency) const;

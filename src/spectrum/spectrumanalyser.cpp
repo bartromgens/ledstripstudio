@@ -11,6 +11,7 @@ using namespace fftwpp;
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+
 SpectrumAnalyser::SpectrumAnalyser(int nSamples)
   : AudioInputObserver(),
     m_nSamples(nSamples),
@@ -26,13 +27,7 @@ SpectrumAnalyser::SpectrumAnalyser(int nSamples)
 
   m_forward = new fftwpp::rcfft1d(m_nSamples, m_f, m_g);
 
-  m_hannWindowFactors.reserve(m_nSamples);
-
-  double factor = (2.0*M_PI)/m_nSamples;
-  for (std::size_t i = 0; i < m_nSamples; i++)
-  {
-    m_hannWindowFactors[i] = 0.5 * ( 1.0 - cos(factor*i) );
-  }
+  initialiseHannWindowFactors(m_nSamples+1);
 }
 
 
@@ -91,9 +86,9 @@ SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
-  for (auto iter = m_observers.begin(); iter != m_observers.end(); ++iter)
+  for (const auto& observer : m_observers)
   {
-    (*iter)->notifySpectrum(spectrum);
+    observer->notifySpectrum(spectrum);
   }
 }
 
@@ -150,9 +145,10 @@ std::deque<float>
 SpectrumAnalyser::hannWindowFunction(const std::deque<float>& in) const
 {
   assert(in.size() >= m_nSamples);
+  assert(m_hannWindowFactors.size() >= m_nSamples);
 
-  std::deque<float> out(m_nSamples);
-  for (std::size_t i = 0; i < m_nSamples; i++)
+  std::deque<float> out(m_nSamples, 0.0);
+  for (std::size_t i = 0; i < m_nSamples; ++i)
   {
     out[i] = m_hannWindowFactors[i] * in[i];
   }
@@ -185,7 +181,6 @@ SpectrumAnalyser::binSpectrum(const std::vector<double>& data,
   assert(data.size() == m_np);
   std::map<double, double> hist;
   double binWidth = sampleRate/nBins;
-//  std::cout << "buildHist() - min, max: " << min << ", " << max << std::endl;
 
   int max = m_np;
   int min = 0;
@@ -214,12 +209,11 @@ SpectrumAnalyser::setNSamples(unsigned int nSamples)
   std::lock_guard<std::mutex> lock(m_mutex);
 
   m_nSamples = nSamples;
+  initialiseHannWindowFactors(m_nSamples);
+
   m_np = nSamples/2 + 1;
-
   m_f = FFTWdouble(nSamples);
-
   m_g = FFTWComplex(m_np);
-
   m_forward = new fftwpp::rcfft1d(nSamples, m_f, m_g);
 }
 
@@ -238,4 +232,17 @@ SpectrumAnalyser::setWindowingType(WindowingType type)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   m_windowingType = type;
+}
+
+
+void
+SpectrumAnalyser::initialiseHannWindowFactors(std::size_t size)
+{
+  m_hannWindowFactors.resize(size, 0.0);
+
+  double factor = (2.0*M_PI)/size;
+  for (std::size_t i = 0; i < size; i++)
+  {
+    m_hannWindowFactors[i] = 0.5 * ( 1.0 - std::cos(factor*i) );
+  }
 }
