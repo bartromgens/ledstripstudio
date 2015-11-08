@@ -32,14 +32,14 @@ public:
 
 private:
 
-  enum FFTSampleSize
+  enum class FFTSampleSize
   {
     FFT14 = 0,
     FFT15 = 1,
     FFT16 = 2
   };
 
-  enum WindowingFunctionType
+  enum class WindowingFunctionType
   {
     Linear = 0,
     Hann = 1

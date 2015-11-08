@@ -133,32 +133,32 @@ FFTToolbar::saveConfiguration(QSettings& config) const
 {
   config.beginGroup( "FFT" );
 
-  FFTSampleSize sampleSize = FFT15;
+  FFTToolbar::FFTSampleSize sampleSize = FFTSampleSize::FFT15;
   if (m_FFT14sizeAct->isChecked())
   {
-    sampleSize = FFT14;
+    sampleSize = FFTSampleSize::FFT14;
   }
   else if (m_FFT15sizeAct->isChecked())
   {
-    sampleSize = FFT15;
+    sampleSize = FFTSampleSize::FFT15;
   }
   else if (m_FFT15sizeAct->isChecked())
   {
-    sampleSize = FFT16;
+    sampleSize = FFTSampleSize::FFT16;
   }
 
-  WindowingFunctionType windowFunc = Linear;
+  FFTToolbar::WindowingFunctionType windowFunc = WindowingFunctionType::Linear;
   if (m_linearWindowingAct->isChecked())
   {
-    windowFunc = Linear;
+    windowFunc = WindowingFunctionType::Linear;
   }
   else if (m_hannWindowingAct->isChecked())
   {
-    windowFunc = Hann;
+    windowFunc = WindowingFunctionType::Hann;
   }
 
-  config.setValue("FFTSampleSize", sampleSize);
-  config.setValue("WindowingFunction", windowFunc);
+  config.setValue("FFTSampleSize", static_cast<int>(sampleSize));
+  config.setValue("WindowingFunction", static_cast<int>(windowFunc));
 
   config.endGroup();
 }
@@ -176,17 +176,17 @@ FFTToolbar::loadConfiguration(QSettings& config)
 
   switch (sampleSize)
   {
-    case FFT14:
+    case FFTSampleSize::FFT14:
     {
       m_FFT14sizeAct->setChecked(true);
       break;
     }
-    case FFT15:
+    case FFTSampleSize::FFT15:
     {
       m_FFT15sizeAct->setChecked(true);
       break;
     }
-    case FFT16:
+    case FFTSampleSize::FFT16:
     {
       m_FFT16sizeAct->setChecked(true);
       break;
@@ -195,12 +195,12 @@ FFTToolbar::loadConfiguration(QSettings& config)
 
   switch (windowFunc)
   {
-    case Hann:
+    case WindowingFunctionType::Hann:
     {
       m_hannWindowingAct->setChecked(true);
       break;
     }
-    case Linear:
+    case WindowingFunctionType::Linear:
     {
       m_linearWindowingAct->setChecked(true);
       break;
