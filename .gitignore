@@ -10,4 +10,7 @@ tmp/*
 
 Makefile*
 
+wisdom3.txt
+
 ledstripstudio
+ledstripstudio_debug
