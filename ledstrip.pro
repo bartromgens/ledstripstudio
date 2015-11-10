@@ -37,6 +37,7 @@ SOURCES += \
     src/player/player.cpp \
     src/settings/controlsettings.cpp \
     src/settings/configurationgroup.cpp \
+    src/spectrum/beatanalyser.cpp \
     src/spectrum/fftw++.cpp \
     src/spectrum/spectrumanalyser.cpp \
     src/spectrum/spectrumobserver.cpp \
@@ -70,6 +71,7 @@ HEADERS += \
     src/player/player.h \
     src/settings/controlsettings.h \
     src/settings/configurationgroup.h \
+    src/spectrum/beatanalyser.h \
     src/spectrum/spectrumanalyser.h \
     src/spectrum/spectrumobserver.h \
     src/spectrum/toneanalyser.h \

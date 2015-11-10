@@ -8,6 +8,7 @@
 #include "gui/playersettingswidget.h"
 #include "settings/configurationgroup.h"
 #include "settings/controlsettings.h"
+#include "spectrum/beatanalyser.h"
 #include "spectrum/spectrumanalyser.h"
 #include "spectrum/toneanalyser.h"
 #include "studio/imagestudio.h"
@@ -40,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_player(new Player(*m_settings)),
   m_audioInput(new AudioInput(SPECTRUM_SAMPLES, m_nLedsTotal, *m_settings)),
   m_studio(new Studio(m_nLedsTotal)),
+  m_beatAnalyser(new BeatAnalyser()),
   m_spectrumAnalyser(new SpectrumAnalyser(SPECTRUM_SAMPLES)),
   m_toneAnalyser(new ToneAnalyser()),
   m_spectrumStudio(new SpectrumStudio()),
@@ -88,8 +90,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+  stopBeatAnalyser();
   stopToneAnalyser();
   stopSpectrumAnalyser();
+  slotClearStrip();
 
   delete ui;
 
@@ -170,10 +174,11 @@ MainWindow::notifySpectrum(const std::map<double, double>& spectrum)
 void
 MainWindow::notifyTone(const std::map<Tone, double>& toneAmplitudes)
 {
+  const double colorWheelOffset = 2.8;
   m_player->addAnimation( m_toneStudio->createToneAnimation( m_nLedsTotal,
                                                              toneAmplitudes,
                                                              m_toneToolbar->getAnimationType(),
-                                                             2.8 ) );
+                                                             colorWheelOffset ) );
   m_player->playFrame();
 }
 
@@ -214,6 +219,20 @@ MainWindow::slotToggleAudioInput(bool isChecked)
   {
     m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.png"));
     stopAudioInput();
+  }
+}
+
+
+void
+MainWindow::slotToggleBeatAnalysis(bool isChecked)
+{
+  if (isChecked)
+  {
+    startBeatAnalyser();
+  }
+  else
+  {
+    stopBeatAnalyser();
   }
 }
 
@@ -427,6 +446,12 @@ MainWindow::createActions()
   connect(m_audioToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleAudioInput(bool)));
 //  m_audioToggleButton->setChecked(true);
 
+  m_beatToggleButton = new QAction(this);
+  m_beatToggleButton->setIcon(QIcon("./icons/beat.png"));
+  m_beatToggleButton->setStatusTip("Start beat detection");
+  m_beatToggleButton->setCheckable(true);
+  connect(m_beatToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleBeatAnalysis(bool)));
+
   m_spectrumToggleButton = new QAction(this);
   m_spectrumToggleButton->setIcon(QIcon("./icons/wave_high_frequency.png"));
   m_spectrumToggleButton->setStatusTip(tr("Start spectrum mode."));
@@ -438,7 +463,6 @@ MainWindow::createActions()
   m_toneToggleButton->setStatusTip(tr("Start tone mode."));
   m_toneToggleButton->setCheckable(true);
   connect(m_toneToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneAnalysis(bool)));
-
 
   m_animationToggleAct = new QAction(this);
   m_animationToggleAct->setIcon(QIcon("./icons/animation-mode.png"));
@@ -516,6 +540,7 @@ MainWindow::createToolbars()
   addToolBar(Qt::TopToolBarArea, m_mainToolBar);
   m_mainToolBar->setIconSize(QSize(32, 32));
 
+  m_mainToolBar->addAction(m_beatToggleButton);
   m_mainToolBar->addAction(m_spectrumToggleButton);
   m_mainToolBar->addAction(m_toneToggleButton);
   m_mainToolBar->addAction(m_animationToggleAct);
@@ -640,6 +665,19 @@ MainWindow::slotSaveConfiguration(const QString& filename)
   QSettings settings(filename, QSettings::NativeFormat);
   qDebug() << __PRETTY_FUNCTION__ << "file: " << filename;
   saveConfigurationAll(settings);
+}
+
+void
+MainWindow::startBeatAnalyser() const
+{
+  m_audioInput->registerObserver(m_beatAnalyser.get());
+}
+
+
+void
+MainWindow::stopBeatAnalyser() const
+{
+  m_audioInput->unregisterObserver(m_beatAnalyser.get());
 }
 
 

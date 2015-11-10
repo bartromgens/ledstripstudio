@@ -261,7 +261,6 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, d
     brightnessRelative = std::pow(m_maxToneAmplitude, 3) / std::pow(m_toneMaxAverage*2.0, 3);
   }
 
-
   unsigned int i = 0;
   switch (m_maxTone)
   {

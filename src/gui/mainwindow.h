@@ -24,10 +24,10 @@
 #include <memory>
 
 class AudioInput;
-class Player;
-class ToneAnalyser;
+class BeatAnalyser;
 class SpectrumAnalyser;
-class LedStripEmulator;
+class ToneAnalyser;
+class Player;
 
 class Studio;
 class ImageStudio;
@@ -38,6 +38,7 @@ class ControlSettings;
 class LedStripStatusWidget;
 class SpectrumSettingsWidget;
 class PlayerSettingsWidget;
+class LedStripEmulator;
 
 class QSettings;
 
@@ -48,7 +49,7 @@ class MainWindow;
 class MainWindow : public QMainWindow, public SpectrumObserver, public ToneObserver, public ConfigurationGroup
 {
   Q_OBJECT
-  
+
 public:
 
   explicit MainWindow(QWidget* parent = 0);
@@ -86,6 +87,7 @@ private slots:
 
   void slotToggleAudioInput(bool isChecked);
 
+  void slotToggleBeatAnalysis(bool isChecked);
   void slotToggleSpectrumAnalysis(bool isChecked);
   void slotToggleToneAnalysis(bool isChecked);
   void slotToggleAnimation(bool isChecked);
@@ -115,6 +117,8 @@ private:
   void startAudioInputThread();
   void startAudioInput();
   void stopAudioInput();
+  void startBeatAnalyser() const;
+  void stopBeatAnalyser() const;
   void startSpectrumAnalyser() const;
   void stopSpectrumAnalyser() const;
   void startToneAnalyser() const;
@@ -142,6 +146,7 @@ private:
   std::unique_ptr<Player> m_player;
   std::unique_ptr<AudioInput> m_audioInput;
   std::unique_ptr<Studio> m_studio;
+  std::unique_ptr<BeatAnalyser> m_beatAnalyser;
   std::unique_ptr<SpectrumAnalyser> m_spectrumAnalyser;
   std::unique_ptr<ToneAnalyser> m_toneAnalyser;
   std::unique_ptr<SpectrumStudio> m_spectrumStudio;
@@ -168,6 +173,7 @@ private:
 
   QAction* m_stripToggleButton;
   QAction* m_audioToggleButton;
+  QAction* m_beatToggleButton;
   QAction* m_spectrumToggleButton;
   QAction* m_toneToggleButton;
   QAction* m_animationToggleAct;
