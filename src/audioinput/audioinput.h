@@ -29,7 +29,7 @@ public:
   };
 
 public:
-  AudioInput(unsigned int nSamples, unsigned int nLEDs, ControlSettings& settings);
+  AudioInput(unsigned int nSamples, ControlSettings& settings);
   ~AudioInput();
 
   void openStream();
@@ -66,10 +66,6 @@ private:
   PaStream* m_stream;
   paUserData m_data;
   ControlSettings& m_controlSettings;
-  int m_nUpdates;
-
-  int m_offSet;
-  unsigned int m_nLEDs;
 
   std::set<AudioInputObserver*> m_audioObservers;
 

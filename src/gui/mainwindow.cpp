@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_nLedsTotal(NLEDS),
   m_settings(new ControlSettings()),
   m_player(new Player(*m_settings)),
-  m_audioInput(new AudioInput(SPECTRUM_SAMPLES, m_nLedsTotal, *m_settings)),
+  m_audioInput(new AudioInput(SPECTRUM_SAMPLES, *m_settings)),
   m_studio(new Studio(m_nLedsTotal)),
   m_beatAnalyser(new BeatAnalyser()),
   m_spectrumAnalyser(new SpectrumAnalyser(SPECTRUM_SAMPLES)),

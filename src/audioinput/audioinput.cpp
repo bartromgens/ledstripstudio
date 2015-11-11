@@ -6,14 +6,12 @@
 #include <cmath>
 
 
-AudioInput::AudioInput(unsigned int nSamples, unsigned int nLEDs, ControlSettings& settings)
+AudioInput::AudioInput(unsigned int nSamples, ControlSettings& settings)
   : m_sampleRate(44100),
     m_nSamples(nSamples),
     m_nChannels(2),
     m_data(),
     m_controlSettings(settings),
-    m_nUpdates(0),
-    m_nLEDs(nLEDs),
     m_audioObservers(),
     m_observerMutex()
 {
