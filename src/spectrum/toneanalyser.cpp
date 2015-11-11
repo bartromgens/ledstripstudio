@@ -35,7 +35,7 @@ ToneAnalyser::notifySpectrum(const std::map<double, double>& spectrum)
 std::map<Tone, double>
 ToneAnalyser::computeToneAmplitude(const std::map<double, double>& spectrum)
 {
-  double range = 1.0;
+  double range = 1.0;  // TODO improve the range and the frequency->tone matching
 
   std::map<Tone, double> toneAmplitudes;
 
