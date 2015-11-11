@@ -131,7 +131,7 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn,
       magnitude[i] = sqrt( m_g[i].real()*m_g[i].real() + m_g[i].imag()*m_g[i].imag() );
     }
 
-    double upperFrequency = 2000.0;
+    double upperFrequency = 2000.0;  // TODO: find a good upper range for the frequency
     // put into bins/buckets (histogram)
     bins = binSpectrum(magnitude, nBins, sampleRate, upperFrequency);
   }
