@@ -670,14 +670,14 @@ MainWindow::slotSaveConfiguration(const QString& filename)
 void
 MainWindow::startBeatAnalyser() const
 {
-  m_audioInput->registerObserver(m_beatAnalyser.get());
+  m_spectrumAnalyser->registerObserver(m_beatAnalyser.get());
 }
 
 
 void
 MainWindow::stopBeatAnalyser() const
 {
-  m_audioInput->unregisterObserver(m_beatAnalyser.get());
+  m_spectrumAnalyser->unregisterObserver(m_beatAnalyser.get());
 }
 
 

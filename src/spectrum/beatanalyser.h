@@ -1,22 +1,27 @@
 #ifndef BEATANALYSER_H
 #define BEATANALYSER_H
 
-#include "audioinput/audioinputobserver.h"
+#include "spectrumobserver.h"
 
 #include <QTime>
 
-class BeatAnalyser : public AudioInputObserver
+#include <deque>
+
+
+class BeatAnalyser : public SpectrumObserver
 {
 public:
 
   BeatAnalyser();
   virtual ~BeatAnalyser();
 
-  virtual void notifyAudioData(std::deque<float> audioData, int sampleRate);
+  virtual void notifySpectrum(const std::map<double, double>& spectrum);
 
 private:
-  std::deque<double> m_energySamples;
+  std::vector<std::deque<double>> m_energyHistoryBands;
   QTime m_timer;
+  std::vector<int> m_timeLastBeat;
+  std::vector<int> m_timeSinceLastBeat;
 };
 
 #endif // BEATANALYSER_H

@@ -2,10 +2,14 @@
 
 #include <QDebug>
 
+const std::size_t nSubBands = 64;
 
 BeatAnalyser::BeatAnalyser()
-: AudioInputObserver(),
-  m_timer()
+: SpectrumObserver(),
+  m_energyHistoryBands(nSubBands),
+  m_timer(),
+  m_timeLastBeat(nSubBands, 0),
+  m_timeSinceLastBeat(nSubBands, 0)
 {
   m_timer.start();
 }
@@ -17,49 +21,56 @@ BeatAnalyser::~BeatAnalyser()
 
 
 void
-BeatAnalyser::notifyAudioData(std::deque<float> audioData, int sampleRate)
+BeatAnalyser::notifySpectrum(const std::map<double, double>& spectrum)
 {
-  if (audioData.size() < 1024)
+  const std::size_t nFrequencies = spectrum.size();
+  const std::size_t nSamples = 43;
+
+  std::vector<double> amplitudes;
+  for (const auto& band : spectrum)
   {
-    return;
+    amplitudes.push_back(band.second);
   }
 
-  std::size_t sampleSize = 1024;
-  std::size_t nSamples = 43;
-
-  for (std::size_t j = 0; j < audioData.size()/sampleSize; ++j)
+  for (std::size_t j = 0; j < nSubBands; ++j)
   {
-    double energySample = 0.0;
-    for (std::size_t i = 0; i < sampleSize; ++i)
+    double bandEnergy = 0.0;
+    for (std::size_t i = 0; i < nFrequencies/nSubBands; ++i)
     {
-      energySample += audioData[i+j*sampleSize]*audioData[i+j*sampleSize];
+      bandEnergy += amplitudes[j*nSubBands+i];
     }
-    m_energySamples.push_front(energySample);
+    m_energyHistoryBands[j].push_front(bandEnergy);
   }
 
-  m_energySamples.resize(nSamples);
-
-  double energyAverage = 0.0;
-  for (std::size_t i = 0; i < m_energySamples.size(); ++i)
+  for (std::size_t i = 0; i < m_energyHistoryBands.size(); ++i)
   {
-    energyAverage += m_energySamples[i];
+    m_energyHistoryBands[i].resize(nSamples);
   }
-  energyAverage /= static_cast<double>(m_energySamples.size());
 
-  double energyVariance = 0.0;
-  for (std::size_t i = 0; i < m_energySamples.size(); ++i)
+  std::vector<double> averageEnergy(m_energyHistoryBands.size());
+  for (std::size_t i = 0; i < m_energyHistoryBands.size(); ++i)
   {
-    double energyDifference = m_energySamples[i] - energyAverage;
-    energyVariance += energyDifference * energyDifference;
+    for (std::size_t j = 0; j < m_energyHistoryBands[i].size(); ++j)
+    {
+      averageEnergy[i] += m_energyHistoryBands[i][j];
+    }
+    averageEnergy[i] /= static_cast<double>(m_energyHistoryBands[i].size());
   }
-  energyVariance /= static_cast<double>(m_energySamples.size());
 
-  double factor = -0.0025714 * energyVariance + 1.5142;
-  if (m_energySamples.front() > factor * energyAverage)
+  double factor = 2.7;
+  int currentTime = m_timer.elapsed();
+  for (std::size_t i = 0; i < m_energyHistoryBands.size(); ++i)
   {
-    qDebug() << "BEAT!!!";
-//    qDebug() << "factor: " << factor;
-//    qDebug() << "energyVariance: " << energyVariance;
+    if (m_energyHistoryBands[i].front() > factor * averageEnergy[i])
+    {
+      double beatForce = m_energyHistoryBands[i].front() / averageEnergy[i];
+      int beatBand = i;
+      m_timeSinceLastBeat[i] = currentTime - m_timeLastBeat[i];
+      m_timeLastBeat[i] = currentTime;
+      if (m_timeSinceLastBeat[i] > 100 && m_timeSinceLastBeat[i] < 1000)
+      {
+        qDebug() << "BEAT!!! in band " << beatBand << " - force: " << beatForce << " - time since last beat: " << m_timeSinceLastBeat[beatBand];
+      }
+    }
   }
 }
-
