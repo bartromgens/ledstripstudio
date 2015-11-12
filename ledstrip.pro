@@ -51,6 +51,7 @@ SOURCES += \
     src/gui/playersettingswidget.cpp \
     src/gui/ledstripstatuswidget.cpp \
     src/gui/actionconsistency.cpp \
+    src/gui/applicationsettingsdialog.cpp
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -83,12 +84,14 @@ HEADERS += \
     src/gui/playersettingswidget.h \
     src/gui/ledstripstatuswidget.h \
     src/gui/actionconsistency.h \
+    src/gui/applicationsettingsdialog.h
 
 FORMS += \
     src/gui/mainwindow.ui \
     src/gui/spectrumsettingswidget.ui \
     src/gui/playersettingswidget.ui \
-    src/gui/ledstripstatuswidget.ui
+    src/gui/ledstripstatuswidget.ui \
+    src/gui/applicationsettingsdialog.ui
 
 OTHER_FILES += \
     icons/audio-volume-high.png \

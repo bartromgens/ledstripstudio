@@ -3,6 +3,7 @@
 
 #include "basic/animation.h"
 #include "gui/actionconsistency.h"
+#include "gui/applicationsettingsdialog.h"
 #include "gui/tonetoolbar.h"
 #include "gui/ffttoolbar.h"
 #include "settings/configurationgroup.h"
@@ -103,6 +104,7 @@ private slots:
   void slotToggleImageAnimation(bool isChecked);
 
   void slotToggleRecording(bool isChecked);
+  void slotShowSettingsDialog();
 
 private:
 
@@ -186,6 +188,9 @@ private:
   QAction* m_imageAnimationAct;
   QAction* m_recordAnimationAct;
   QAction* m_openColorPickerAct;
+
+  QAction* m_applicationSettingsAct;
+  ApplicationSettingsDialog* m_applicationSettingsDialog;
 
   ActionConsistency* m_actionConsistency;
 

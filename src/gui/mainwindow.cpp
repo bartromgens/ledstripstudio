@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_playerSettingsWidget(new PlayerSettingsWidget(*m_settings, this)),
   m_toneToolbar(new ToneToolbar(*m_toneStudio)),
   m_fftToolbar(new FFTToolbar(*m_audioInput, *m_spectrumAnalyser)),
+  m_applicationSettingsDialog(new ApplicationSettingsDialog(this)),
   m_actionConsistency(new ActionConsistency()),
   m_timer(),
   m_lastSingleColor(0, 0, 0)
@@ -83,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_configurationGroups.push_back(m_playerSettingsWidget);
   m_configurationGroups.push_back(m_toneToolbar);
   m_configurationGroups.push_back(m_fftToolbar);
+  m_configurationGroups.push_back(m_applicationSettingsDialog);
 
   loadUserOrDefaultConfig();
 }
@@ -432,6 +434,20 @@ MainWindow::slotToggleRecording(bool isChecked)
 
 
 void
+MainWindow::slotShowSettingsDialog()
+{
+  if (m_applicationSettingsDialog->exec())
+  {
+    qDebug() << "ApplicationSettingsDialog accepted";
+  }
+  else
+  {
+    qDebug() << "ApplicationSettingsDialog rejected";
+  }
+}
+
+
+void
 MainWindow::createActions()
 {
   m_stripToggleButton = new QAction(this);
@@ -521,6 +537,11 @@ MainWindow::createActions()
   m_recordAnimationAct->setChecked(false);
   m_recordAnimationAct->setVisible(true);
 
+  m_applicationSettingsAct = new QAction(this);
+  m_applicationSettingsAct->setIcon(QIcon("./icons/preferences-system.svg"));
+  m_applicationSettingsAct->setStatusTip("Settings");
+  connect(m_applicationSettingsAct, SIGNAL(triggered(bool)), this, SLOT(slotShowSettingsDialog()));
+
   m_actionConsistency->m_toneToggleButton = m_toneToggleButton;
   m_actionConsistency->m_animationToggleAct = m_animationToggleAct;
   m_actionConsistency->m_colorToggleAct = m_colorToggleAct;
@@ -558,6 +579,7 @@ MainWindow::createToolbars()
   QAction* saveConfig = new QAction( QIcon("./icons/document-save-as.svg"), "Save configuration as", this );
   connect( saveConfig, SIGNAL(triggered()), this, SLOT(slotSaveConfigurationAs()) );
   m_mainToolBar->addAction(saveConfig);
+  m_mainToolBar->addAction(m_applicationSettingsAct);
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
   addToolBar(Qt::LeftToolBarArea, m_detailsToolBar);
