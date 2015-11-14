@@ -28,10 +28,16 @@ SOURCES += \
     src/basic/color.cpp \
     src/basic/frame.cpp \
     src/basic/led.cpp \
+    src/gui/actionconsistency.cpp \
+    src/gui/applicationsettingsdialog.cpp \
     src/gui/ffttoolbar.cpp \
     src/gui/mainwindow.cpp \
     src/gui/ledstripemulator.cpp \
+    src/gui/ledstripstatuswidget.cpp \
+    src/gui/playersettingswidget.cpp \
+    src/gui/spectrumbarswidget.cpp \
     src/gui/spectrumsettingswidget.cpp \
+    src/gui/spectrumwidget.cpp \
     src/gui/tonetoolbar.cpp \
     src/player/ledcontroller.cpp \
     src/player/player.cpp \
@@ -49,10 +55,6 @@ SOURCES += \
     src/studio/studio.cpp \
     src/studio/tonestudio.cpp \
     src/main.cpp \
-    src/gui/playersettingswidget.cpp \
-    src/gui/ledstripstatuswidget.cpp \
-    src/gui/actionconsistency.cpp \
-    src/gui/applicationsettingsdialog.cpp \
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -64,10 +66,16 @@ HEADERS += \
     src/basic/led.h \
     src/basic/tone.h \
     src/basic/universalsleep.h \
+    src/gui/actionconsistency.h \
+    src/gui/applicationsettingsdialog.h \
     src/gui/ffttoolbar.h \
-    src/gui/mainwindow.h \
     src/gui/ledstripemulator.h \
+    src/gui/ledstripstatuswidget.h \
+    src/gui/mainwindow.h \
+    src/gui/playersettingswidget.h \
+    src/gui/spectrumbarswidget.h \
     src/gui/spectrumsettingswidget.h \
+    src/gui/spectrumwidget.h \
     src/gui/tonetoolbar.h \
     src/player/ledcontroller.h \
     src/player/player.h \
@@ -83,17 +91,14 @@ HEADERS += \
     src/studio/spectrumstudio.h \
     src/studio/tonestudio.h \
     src/studio/imagestudio.h \
-    src/gui/playersettingswidget.h \
-    src/gui/ledstripstatuswidget.h \
-    src/gui/actionconsistency.h \
-    src/gui/applicationsettingsdialog.h \
 
 FORMS += \
     src/gui/mainwindow.ui \
     src/gui/spectrumsettingswidget.ui \
     src/gui/playersettingswidget.ui \
     src/gui/ledstripstatuswidget.ui \
-    src/gui/applicationsettingsdialog.ui
+    src/gui/applicationsettingsdialog.ui \
+    src/gui/spectrumwidget.ui
 
 OTHER_FILES += \
     icons/audio-volume-high.png \

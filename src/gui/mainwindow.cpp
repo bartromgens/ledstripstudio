@@ -5,6 +5,7 @@
 #include "audioinput/audioinput.h"
 #include "gui/ledstripstatuswidget.h"
 #include "gui/spectrumsettingswidget.h"
+#include "gui/spectrumwidget.h"
 #include "gui/playersettingswidget.h"
 #include "settings/configurationgroup.h"
 #include "settings/controlsettings.h"
@@ -51,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_spectrumSettingsWidget(new SpectrumSettingsWidget(*m_settings, this)),
   m_ledStripStatusWidget(new LedStripStatusWidget(this)),
   m_playerSettingsWidget(new PlayerSettingsWidget(*m_settings, this)),
+  m_spectrumWidget(new SpectrumWidget(this)),
   m_toneToolbar(new ToneToolbar(*m_toneStudio)),
   m_fftToolbar(new FFTToolbar(*m_audioInput, *m_spectrumAnalyser)),
   m_applicationSettingsDialog(new ApplicationSettingsDialog(this)),
@@ -73,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   ui->centralwidget->layout()->addWidget(m_playerSettingsWidget);
   ui->centralwidget->layout()->addWidget(m_ledStripStatusWidget);
+  ui->centralwidget->layout()->addWidget(m_spectrumWidget);
   ui->centralwidget->layout()->addWidget(m_spectrumSettingsWidget);
 
   m_spectrumSettingsWidget->setVisible(false);
@@ -170,6 +173,7 @@ MainWindow::notifySpectrum(const std::vector<std::pair<double, double>>& spectru
 
     m_player->playFrame();
   }
+  m_spectrumWidget->setSpectrum(spectrum);
 }
 
 
@@ -668,6 +672,7 @@ MainWindow::slotPlayerPlayed()
   Frame frame = m_player->getLastFrame();
 
   m_ledStripStatusWidget->update(frame);
+  m_spectrumWidget->update();
 }
 
 
