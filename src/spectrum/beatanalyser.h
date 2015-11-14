@@ -15,7 +15,7 @@ public:
   BeatAnalyser();
   virtual ~BeatAnalyser();
 
-  virtual void notifySpectrum(const std::map<double, double>& spectrum);
+  virtual void notifySpectrum(const std::vector<std::pair<double, double>>& spectrum);
 
 private:
   std::vector<std::deque<double>> m_energyHistoryBands;

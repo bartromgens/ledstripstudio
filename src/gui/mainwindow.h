@@ -56,7 +56,7 @@ public:
   explicit MainWindow(QWidget* parent = 0);
   virtual ~MainWindow();
 
-  virtual void notifySpectrum(const std::map<double, double>& spectrum);
+  virtual void notifySpectrum(const std::vector<std::pair<double, double>>& spectrum);
   virtual void notifyTone(const std::map<Tone, double>& toneAmplitudes);
 
   virtual void saveConfiguration(QSettings& config) const;

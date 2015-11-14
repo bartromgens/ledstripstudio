@@ -25,7 +25,7 @@ ToneAnalyser::~ToneAnalyser()
 
 
 void
-ToneAnalyser::notifySpectrum(const std::map<double, double>& spectrum)
+ToneAnalyser::notifySpectrum(const std::vector<std::pair<double, double>>& spectrum)
 {
   const std::map<Tone, double>& toneAmplitude = computeToneAmplitude(spectrum);
   notifyObservers(toneAmplitude);
@@ -33,7 +33,7 @@ ToneAnalyser::notifySpectrum(const std::map<double, double>& spectrum)
 
 
 std::map<Tone, double>
-ToneAnalyser::computeToneAmplitude(const std::map<double, double>& spectrum)
+ToneAnalyser::computeToneAmplitude(const std::vector<std::pair<double, double>>& spectrum)
 {
   double range = 1.0;  // TODO improve the range and the frequency->tone matching
 

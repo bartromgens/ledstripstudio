@@ -9,7 +9,7 @@
 AudioInput::AudioInput(unsigned int nSamples, ControlSettings& settings)
   : m_sampleRate(44100),
     m_nSamples(nSamples),
-    m_nChannels(2),
+    m_nChannels(1),
     m_data(),
     m_controlSettings(settings),
     m_audioObservers(),

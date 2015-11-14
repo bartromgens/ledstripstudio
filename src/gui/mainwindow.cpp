@@ -162,7 +162,7 @@ MainWindow::stopAudioInput()
 
 
 void
-MainWindow::notifySpectrum(const std::map<double, double>& spectrum)
+MainWindow::notifySpectrum(const std::vector<std::pair<double, double>>& spectrum)
 {
   if (m_spectrumToggleButton->isChecked())
   {

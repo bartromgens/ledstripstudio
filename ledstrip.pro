@@ -39,6 +39,7 @@ SOURCES += \
     src/settings/configurationgroup.cpp \
     src/spectrum/beatanalyser.cpp \
     src/spectrum/fftw++.cpp \
+    src/spectrum/powerspectrum.cpp \
     src/spectrum/spectrumanalyser.cpp \
     src/spectrum/spectrumobserver.cpp \
     src/spectrum/toneobserver.cpp \
@@ -51,7 +52,7 @@ SOURCES += \
     src/gui/playersettingswidget.cpp \
     src/gui/ledstripstatuswidget.cpp \
     src/gui/actionconsistency.cpp \
-    src/gui/applicationsettingsdialog.cpp
+    src/gui/applicationsettingsdialog.cpp \
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -73,6 +74,7 @@ HEADERS += \
     src/settings/controlsettings.h \
     src/settings/configurationgroup.h \
     src/spectrum/beatanalyser.h \
+    src/spectrum/powerspectrum.h \
     src/spectrum/spectrumanalyser.h \
     src/spectrum/spectrumobserver.h \
     src/spectrum/toneanalyser.h \
@@ -84,7 +86,7 @@ HEADERS += \
     src/gui/playersettingswidget.h \
     src/gui/ledstripstatuswidget.h \
     src/gui/actionconsistency.h \
-    src/gui/applicationsettingsdialog.h
+    src/gui/applicationsettingsdialog.h \
 
 FORMS += \
     src/gui/mainwindow.ui \
