@@ -2,7 +2,7 @@
 #define SPECTRUMOBSERVER_H
 
 #include <iostream>
-#include <map>
+#include <vector>
 
 class SpectrumObserver
 {
@@ -10,7 +10,7 @@ public:
   SpectrumObserver();
   virtual ~SpectrumObserver();
 
-  virtual void notifySpectrum(const std::map<double, double>& spectrum) = 0;
+  virtual void notifySpectrum(const std::vector<std::pair<double, double>>& spectrum) = 0;
 };
 
 #endif // SPECTRUMOBSERVER_H

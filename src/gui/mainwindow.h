@@ -37,15 +37,17 @@ class SpectrumStudio;
 
 class ControlSettings;
 class LedStripStatusWidget;
-class SpectrumSettingsWidget;
-class PlayerSettingsWidget;
 class LedStripEmulator;
+class PlayerSettingsWidget;
+class SpectrumSettingsWidget;
+class SpectrumWidget;
 
 class QSettings;
 
 namespace Ui {
 class MainWindow;
 }
+
 
 class MainWindow : public QMainWindow, public SpectrumObserver, public ToneObserver, public ConfigurationGroup
 {
@@ -56,7 +58,7 @@ public:
   explicit MainWindow(QWidget* parent = 0);
   virtual ~MainWindow();
 
-  virtual void notifySpectrum(const std::map<double, double>& spectrum);
+  virtual void notifySpectrum(const std::vector<std::pair<double, double>>& spectrum);
   virtual void notifyTone(const std::map<Tone, double>& toneAmplitudes);
 
   virtual void saveConfiguration(QSettings& config) const;
@@ -160,6 +162,7 @@ private:
   SpectrumSettingsWidget* m_spectrumSettingsWidget;
   LedStripStatusWidget* m_ledStripStatusWidget;
   PlayerSettingsWidget* m_playerSettingsWidget;
+  SpectrumWidget* m_spectrumWidget;
 
   std::unique_ptr<boost::thread> m_audioInputThread;
 

@@ -10,7 +10,7 @@ SpectrumStudio::SpectrumStudio()
 
 
 Animation
-SpectrumStudio::createWaveformAnimationCentral(int nLEDs, const std::map<double, double>& spectrum, ControlSettings& settings)
+SpectrumStudio::createWaveformAnimationCentral(int nLEDs, const std::vector<std::pair<double, double>>& spectrum, ControlSettings& settings)
 {
   double brightnessRed = 0.0;
   double brightnessGreen = 0.0;
@@ -21,10 +21,10 @@ SpectrumStudio::createWaveformAnimationCentral(int nLEDs, const std::map<double,
   double amplifyFactorGreen = settings.volumeGreen/50.0;
   double amplifyFactorBlue = settings.volumeBlue/100.0;
 
-  for (auto iter = spectrum.begin(); iter != spectrum.end(); ++iter)
+  for (const auto& bin : spectrum)
   {
-    double frequency = iter->first;
-    double amplitude = iter->second;
+    double frequency = bin.first;
+    double amplitude = bin.second;
 
     if (frequency > settings.freqRedMin && frequency < settings.freqRedMax)
     {
@@ -104,15 +104,15 @@ SpectrumStudio::createWaveformAnimationCentral(int nLEDs, const std::map<double,
 
 
 void
-SpectrumStudio::drawSpectrumInConsole(const std::map<double, double>& spectrum, int minFreq, int maxFreq) const
+SpectrumStudio::drawSpectrumInConsole(const std::vector<std::pair<double, double>>& spectrum, int minFreq, int maxFreq) const
 {
-  for (auto iter = spectrum.begin(); iter != spectrum.end(); ++iter)
+  for (const auto& bin : spectrum)
   {
-    int frequency = static_cast<int>(iter->first);
+    int frequency = static_cast<int>(bin.first);
     if (frequency > minFreq && frequency < maxFreq)
     {
       std::cout << frequency << " :";
-      for (std::size_t j = 0; j < iter->second/4; ++j)
+      for (std::size_t j = 0; j < bin.second/4; ++j)
       {
         std::cout << ".";
       }

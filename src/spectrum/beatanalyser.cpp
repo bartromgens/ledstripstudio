@@ -21,7 +21,7 @@ BeatAnalyser::~BeatAnalyser()
 
 
 void
-BeatAnalyser::notifySpectrum(const std::map<double, double>& spectrum)
+BeatAnalyser::notifySpectrum(const std::vector<std::pair<double, double>>& spectrum)
 {
   const std::size_t nFrequencies = spectrum.size();
   const std::size_t nSamples = 43;

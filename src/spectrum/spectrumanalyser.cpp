@@ -1,4 +1,5 @@
 #include "spectrumanalyser.h"
+
 #include "spectrumobserver.h"
 
 #include <QDebug>
@@ -54,7 +55,7 @@ SpectrumAnalyser::notifyAudioData(std::deque<float> audioData, int sampleRate)
     windowType = m_windowingType;
   }
 
-  computeSpectrum(audioData, 4000, sampleRate, windowType);
+  computeSpectrum(audioData, sampleRate, windowType);
 //  std::cout << "SpectrumAnalyser::notifyAudioData() - computeSpectrum time: " << m_time.elapsed() << std::endl;
 }
 
@@ -82,7 +83,7 @@ SpectrumAnalyser::unregisterObserver(SpectrumObserver* observer)
 
 
 void
-SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
+SpectrumAnalyser::notifyObservers(const std::vector<std::pair<double, double>>& spectrum)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -93,9 +94,8 @@ SpectrumAnalyser::notifyObservers(const std::map<double, double>& spectrum)
 }
 
 
-std::map<double, double>
+PowerSpectrum
 SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn,
-                                  int nBins,
                                   int sampleRate,
                                   SpectrumAnalyser::WindowingType windowType)
 {
@@ -114,7 +114,9 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn,
     realInWindowed = realIn;
   }
 
-  std::map<double, double> bins;
+  double maxFrequency = sampleRate/2.0;  // nyquist frequency
+  double binSize = maxFrequency/m_np;
+  PowerSpectrum spectrum(m_np, 0.0, maxFrequency);
   {
     std::lock_guard<std::mutex> lock(m_mutex);
     for(unsigned int i = 0; (i < m_nSamples) && (i < realIn.size()); i++)
@@ -125,19 +127,15 @@ SpectrumAnalyser::computeSpectrum(const std::deque<float>& realIn,
     // forward FFT real to complex
     m_forward->fft(m_f, m_g);
 
-    std::vector<double> magnitude(m_np);
     for (unsigned int i = 0; i < m_np; i++)
     {
-      magnitude[i] = sqrt( m_g[i].real()*m_g[i].real() + m_g[i].imag()*m_g[i].imag() );
+      spectrum.pushBack(i*binSize, sqrt( m_g[i].real()*m_g[i].real() + m_g[i].imag()*m_g[i].imag() ));
     }
-
-    double upperFrequency = 2000.0;  // TODO: find a good upper range for the frequency
-    // put into bins/buckets (histogram)
-    bins = binSpectrum(magnitude, nBins, sampleRate, upperFrequency);
   }
 
-  notifyObservers(bins);
-  return bins;
+  double upperFrequency = 2000.0;
+  notifyObservers( spectrum.getSpectrum(upperFrequency) );
+  return spectrum;
 }
 
 
@@ -169,37 +167,6 @@ SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
   }
 
   return out;
-}
-
-
-std::map<double, double>
-SpectrumAnalyser::binSpectrum(const std::vector<double>& data,
-                              int nBins,
-                              int sampleRate,
-                              double upperFrequency) const
-{
-  assert(data.size() == m_np);
-  std::map<double, double> hist;
-  double binWidth = sampleRate/nBins;
-
-  int max = m_np;
-  int min = 0;
-  int difference = max-min;
-
-  double frequency = 0.0;
-
-  for (std::size_t i = 0; i < m_np && frequency < upperFrequency; ++i)
-  {
-    int bin = static_cast<int>( (i-min) / (difference/nBins) );
-
-    double frequency = bin*binWidth;
-    if ( (bin >= 0) && ( bin < nBins) && (frequency < sampleRate/2))
-    {
-      hist[frequency] += data[i];
-    }
-  }
-
-  return hist;
 }
 
 

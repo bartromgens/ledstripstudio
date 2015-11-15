@@ -10,7 +10,7 @@ class LedStripEmulator : public QWidget
   Q_OBJECT
 
 public:
-  LedStripEmulator(QWidget* parent = 0);
+  explicit LedStripEmulator(QWidget* parent = 0);
   virtual ~LedStripEmulator();
 
   void setFrame(const Frame& frame);

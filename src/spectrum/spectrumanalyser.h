@@ -1,6 +1,7 @@
 #ifndef SPECTRUMANALYSER_H
 #define SPECTRUMANALYSER_H
 
+#include "powerspectrum.h"
 #include "audioinput/audioinputobserver.h"
 
 #include "fftw++.h"
@@ -41,9 +42,9 @@ public:
 
   void registerObserver(SpectrumObserver* observer);
   void unregisterObserver(SpectrumObserver* observer);
-  void notifyObservers(const std::map<double, double>& spectrum);
+  void notifyObservers(const std::vector<std::pair<double, double>>& spectrum);
 
-  std::map<double, double> computeSpectrum(const std::deque<float>& realIn, int nBins, int sampleRate, SpectrumAnalyser::WindowingType windowType) ;
+  PowerSpectrum computeSpectrum(const std::deque<float>& realIn, int sampleRate, SpectrumAnalyser::WindowingType windowType) ;
 
   void setNSamples(unsigned int nSamples);
   unsigned int getNSamples() const;
@@ -54,7 +55,6 @@ public:
 
 private:
 
-  std::map<double, double> binSpectrum(const std::vector<double>& data, int nBins, int sampleRate, double upperFrequency) const;
   std::deque<float> hannWindowFunction(const std::deque<float>& in) const;
   std::deque<float> linearWindowFunction(const std::deque<float>& in) const;
 

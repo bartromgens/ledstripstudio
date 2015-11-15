@@ -17,9 +17,9 @@ public:
   ToneAnalyser();
   virtual ~ToneAnalyser();
 
-  std::map<Tone, double> computeToneAmplitude(const std::map<double, double>& spectrum);
+  std::map<Tone, double> computeToneAmplitude(const std::vector<std::pair<double, double>>& spectrum);
 
-  void notifySpectrum(const std::map<double, double>& spectrum);
+  void notifySpectrum(const std::vector<std::pair<double, double>>& spectrum);
 
   void registerObserver(ToneObserver* observer);
   void unregisterObserver(ToneObserver* observer);
