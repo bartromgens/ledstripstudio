@@ -39,16 +39,22 @@ void
 SpectrumBarsWidget::paintEvent(QPaintEvent* e)
 {
   Q_UNUSED(e);
-  if (m_spectrum.empty())
+  if (m_spectrum.size() < 2)
   {
     return;
   }
+
+  double binWidth = m_spectrum[1].first - m_spectrum[0].first;
+  double plotWidth = m_barWidth*m_spectrum.size();
 
   QPainter qp(this);
   for (std::size_t i = 0; i < m_spectrum.size(); ++i)
   {
     int barHeight = m_spectrum[i].second;
-    QRect rect(i*m_barWidth, height()-5, m_barWidth, -barHeight);
+    QRect rect(i*m_barWidth, height()-20, m_barWidth, -barHeight);
     qp.drawRect(rect);
   }
+  qp.drawText(QPoint(0, height()), QString("0 Hz"));
+  QString maxFrequencyLabel = QString::number(static_cast<int>(m_spectrum.back().first+binWidth)) + QString(" Hz");
+  qp.drawText(QPoint(plotWidth-75, height()), maxFrequencyLabel);
 }

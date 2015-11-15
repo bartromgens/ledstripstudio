@@ -81,4 +81,3 @@ PowerSpectrum::resizeSpectrum(std::vector<std::pair<double, double>> spectrum,
 
   return spectrumNew;
 }
-
