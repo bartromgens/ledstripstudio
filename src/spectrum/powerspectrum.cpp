@@ -42,3 +42,43 @@ PowerSpectrum::getSpectrum(double maxFrequency) const
   return spectrum;
 }
 
+
+std::vector<std::pair<double, double>>
+PowerSpectrum::resizeSpectrum(std::vector<std::pair<double, double>> spectrum,
+                              std::size_t nBins,
+                              double maxFrequency)
+{
+  if (spectrum.size() < 2)
+  {
+    return {};
+  }
+
+  double binWidthOld = spectrum[1].first - spectrum[0].first;
+  double binWidth = maxFrequency/nBins;
+
+  if (binWidth < binWidthOld)
+  {
+    std::size_t nBinsOld = maxFrequency/binWidthOld;
+    std::vector<std::pair<double, double>> spectrumResized(spectrum.begin(), spectrum.begin()+nBinsOld);
+    return spectrumResized;
+  }
+
+  std::vector<std::pair<double, double>> spectrumNew;
+  spectrumNew.reserve(nBins);
+  std::size_t currentBin = 0;
+
+  for (std::size_t i = 0; i < nBins; ++i)
+  {
+    double binUpperFrequency = (i+1)*binWidth;
+    double binValue = 0.0;
+    while (currentBin < spectrum.size() && spectrum[currentBin].first < binUpperFrequency)
+    {
+      binValue += spectrum[currentBin].second;
+      currentBin++;
+    }
+    spectrumNew.push_back(std::make_pair(i*binWidth, binValue));
+  }
+
+  return spectrumNew;
+}
+

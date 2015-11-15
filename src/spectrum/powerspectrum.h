@@ -29,6 +29,10 @@ public:
   const std::vector<std::pair<double, double>>& getSpectrum() const;
   std::vector<std::pair<double, double>> getSpectrum(double maxFrequency) const;
 
+  static std::vector<std::pair<double, double> > resizeSpectrum(std::vector<std::pair<double, double>> spectrum,
+                                                                std::size_t nBins,
+                                                                double maxFrequency);
+
 private:
   int m_nBins;
   double m_minFrequency;

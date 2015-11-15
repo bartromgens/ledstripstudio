@@ -16,8 +16,13 @@ public:
 
   virtual void paintEvent(QPaintEvent* e);
 
+protected:
+  virtual void resizeEvent(QResizeEvent* e);
+
 private:
   std::vector<std::pair<double, double>> m_spectrum;
+  int m_barWidth;
+  int m_nBars;
 };
 
 #endif // SPECTRUMBARSWIDGET_H
