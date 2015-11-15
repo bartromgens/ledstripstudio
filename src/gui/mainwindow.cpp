@@ -73,9 +73,9 @@ MainWindow::MainWindow(QWidget *parent) :
   connectAllSlots();
   createTimers();
 
-  ui->centralwidget->layout()->addWidget(m_playerSettingsWidget);
   ui->centralwidget->layout()->addWidget(m_ledStripStatusWidget);
   ui->centralwidget->layout()->addWidget(m_spectrumWidget);
+  ui->centralwidget->layout()->addWidget(m_playerSettingsWidget);
   ui->centralwidget->layout()->addWidget(m_spectrumSettingsWidget);
 
   m_spectrumSettingsWidget->setVisible(false);
