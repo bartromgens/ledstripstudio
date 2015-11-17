@@ -470,6 +470,7 @@ MainWindow::createActions()
   m_beatToggleButton->setIcon(QIcon("./icons/beat.png"));
   m_beatToggleButton->setStatusTip("Start beat detection");
   m_beatToggleButton->setCheckable(true);
+  m_beatToggleButton->setVisible(false);  // TODO BR: make visible when beat detection is properly implemented
   connect(m_beatToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleBeatAnalysis(bool)));
 
   m_spectrumToggleButton = new QAction(this);
