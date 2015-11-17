@@ -3,16 +3,22 @@
 #include "spectrum/toneanalyser.h"
 #include "studio.h"
 
+#include <QDebug>
+
+#include <cassert>
 #include <cmath>
 #include <string>
 
+unsigned int ToneStudio::m_historySize = 30;
+
+
 ToneStudio::ToneStudio()
-  : m_toneHistoryFrame(0),
-    m_toneColorMap(),
-    m_maxToneHistory(),
-    m_toneMaxAverage(0.0),
-    m_maxTone(),
-    m_maxToneAmplitude(0.0)
+: m_toneHistoryFrame(0),
+  m_toneColorMap(),
+  m_maxToneHistory(),
+  m_toneMaxAverage(0.0),
+  m_maxTone(),
+  m_maxToneAmplitude(0.0)
 {
 }
 
@@ -40,8 +46,8 @@ ToneStudio::writeToneToConsole(const std::map<std::string, double>& tones)
 void
 ToneStudio::calcMaxAndMinTone(const std::map<Tone, double>& tones)
 {
-  m_maxToneAmplitude = 0.0;
-  m_minToneAmplitude = 1.0e99;
+  m_maxToneAmplitude = std::numeric_limits<double>::min();
+  m_minToneAmplitude = std::numeric_limits<double>::max();
 
   for (auto it = tones.cbegin(); it != tones.cend(); ++it )
   {
@@ -63,11 +69,11 @@ void
 ToneStudio::calcToneMaxAverage()
 {
   m_maxToneHistory.push_back(m_maxToneAmplitude);
-  m_toneMaxAverage += m_maxToneHistory.back()/300;
+  m_toneMaxAverage += m_maxToneHistory.back()/m_historySize;
 
-  if (m_maxToneHistory.size() > 300)
+  if (m_maxToneHistory.size() > m_historySize)
   {
-    m_toneMaxAverage -= m_maxToneHistory.front()/300;
+    m_toneMaxAverage -= m_maxToneHistory.front()/m_historySize;
     m_maxToneHistory.pop_front();
   }
 }
@@ -77,11 +83,11 @@ void
 ToneStudio::calcToneMinAverage()
 {
   m_minToneHistory.push_back(m_minToneAmplitude);
-  m_toneMinAverage += m_minToneHistory.back()/300;
+  m_toneMinAverage += m_minToneHistory.back()/m_historySize;
 
-  if (m_minToneHistory.size() > 300)
+  if (m_minToneHistory.size() > m_historySize)
   {
-    m_toneMinAverage -= m_minToneHistory.front()/300;
+    m_toneMinAverage -= m_minToneHistory.front()/m_historySize;
     m_minToneHistory.pop_front();
   }
 }
@@ -258,8 +264,14 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, d
 
   if (m_toneMaxAverage > 0.01)
   {
-    brightnessRelative = std::pow(m_maxToneAmplitude, 3) / std::pow(m_toneMaxAverage*2.0, 3);
+    brightnessRelative = std::log(m_maxToneAmplitude/ ((m_toneMaxAverage + m_toneMinAverage)/1.5) ) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
+    if (brightnessRelative < 0.0)
+    {
+      brightnessRelative = 0.0;
+    }
+    assert(brightnessRelative >= 0.0);
   }
+  unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
 
   unsigned int i = 0;
   switch (m_maxTone)
@@ -287,7 +299,6 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, d
       break;
   }
 
-  unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
   unsigned int colorInt = static_cast<int>( 3.0*127.0/7.0* (i + colorWheelOffset) ) % (3*128);
   Color color = Studio::wheel(colorInt);
 

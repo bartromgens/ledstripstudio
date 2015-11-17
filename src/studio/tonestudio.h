@@ -55,6 +55,8 @@ private:
   Tone m_maxTone;
   double m_maxToneAmplitude;
   double m_minToneAmplitude;
+
+  static unsigned int m_historySize;
 };
 
 #endif // TONESTUDIO_H
