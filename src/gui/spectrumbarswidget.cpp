@@ -50,7 +50,7 @@ SpectrumBarsWidget::paintEvent(QPaintEvent* e)
   QPainter qp(this);
   for (std::size_t i = 0; i < m_spectrum.size(); ++i)
   {
-    int barHeight = m_spectrum[i].second;
+    int barHeight = static_cast<int>(m_spectrum[i].second);
     QRect rect(i*m_barWidth, height()-20, m_barWidth, -barHeight);
     qp.drawRect(rect);
   }
