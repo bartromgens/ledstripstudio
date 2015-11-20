@@ -14,3 +14,6 @@ wisdom3.txt
 
 ledstripstudio
 ledstripstudio_debug
+
+# generated gui files
+src/gui/ui_*
