@@ -16,9 +16,12 @@ ToneStudio::ToneStudio()
 : m_toneHistoryFrame(0),
   m_toneColorMap(),
   m_maxToneHistory(),
+  m_minToneHistory(),
   m_toneMaxAverage(0.0),
+  m_toneMinAverage(0.0),
   m_maxTone(),
-  m_maxToneAmplitude(0.0)
+  m_maxToneAmplitude(0.0),
+  m_minToneAmplitude(0.0)
 {
 }
 
@@ -264,7 +267,7 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, d
 
   if (m_toneMaxAverage > 0.01)
   {
-    brightnessRelative = std::log(m_maxToneAmplitude/ ((m_toneMaxAverage + m_toneMinAverage)/1.5) ) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
+    brightnessRelative = std::log(m_maxToneAmplitude/ ((m_toneMaxAverage + m_toneMinAverage)/1.5)) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
     if (brightnessRelative < 0.0)
     {
       brightnessRelative = 0.0;
