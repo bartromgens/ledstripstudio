@@ -4,16 +4,24 @@
 *.o
 *.obj 
 
-tmp/*
-
-*.pro.user
-
+# makefiles
 Makefile*
 
-wisdom3.txt
-
+# binaries
 ledstripstudio
 ledstripstudio_debug
 
+# qt creator config files
+*.pro.user
+
 # generated gui files
 src/gui/ui_*
+
+# configuration files
+config/*.cfg
+
+# temp files
+tmp/*
+
+# portaudio generated files
+wisdom3.txt
