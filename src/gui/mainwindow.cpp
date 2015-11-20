@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "gui/ui_mainwindow.h"
 
-
 #include "audioinput/audioinput.h"
 #include "gui/ledstripstatuswidget.h"
 #include "gui/spectrumsettingswidget.h"
@@ -16,11 +15,11 @@
 #include "studio/studio.h"
 #include "studio/spectrumstudio.h"
 
-
+#include <QActionGroup>
 #include <QComboBox>
 #include <QDebug>
-#include <QPushButton>
 #include <QFileDialog>
+#include <QPushButton>
 
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
@@ -266,8 +265,6 @@ void
 MainWindow::slotToggleToneAnalysis(bool isChecked)
 {
   m_settings->positionOffset = m_nLedsTotal/2;
-
-  m_actionConsistency->toggleToneAnalysis(isChecked);
 
   if (isChecked)
   {
@@ -547,11 +544,13 @@ MainWindow::createActions()
   m_applicationSettingsAct->setStatusTip("Settings");
   connect(m_applicationSettingsAct, SIGNAL(triggered(bool)), this, SLOT(slotShowSettingsDialog()));
 
-  m_actionConsistency->m_toneToggleButton = m_toneToggleButton;
-  m_actionConsistency->m_animationToggleAct = m_animationToggleAct;
-  m_actionConsistency->m_colorToggleAct = m_colorToggleAct;
+  m_animationTypeActionGroup = new QActionGroup(this);
+  m_animationTypeActionGroup->addAction(m_toneToggleButton);
+  m_animationTypeActionGroup->addAction(m_spectrumToggleButton);
+  m_animationTypeActionGroup->addAction(m_animationToggleAct);
+  m_animationTypeActionGroup->addAction(m_colorToggleAct);
+
   m_actionConsistency->m_spectrumSettingsToggleAct = m_spectrumSettingsToggleAct;
-  m_actionConsistency->m_spectrumToggleButton = m_spectrumToggleButton;
   m_actionConsistency->m_dotsAnimationAct = m_dotsAnimationAct;
   m_actionConsistency->m_rainbowAnimationAct = m_rainbowAnimationAct;
   m_actionConsistency->m_imageAnimationAct = m_imageAnimationAct;

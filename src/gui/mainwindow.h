@@ -11,12 +11,12 @@
 #include "spectrum/toneobserver.h"
 #include "studio/tonestudio.h"
 
-#include <QMainWindow>
-#include <QToolBar>
 #include <QColorDialog>
 #include <QDockWidget>
+#include <QMainWindow>
 #include <QSlider>
 #include <QTimer>
+#include <QToolBar>
 
 #include <boost/thread.hpp>
 #include <thread>
@@ -42,6 +42,7 @@ class PlayerSettingsWidget;
 class SpectrumSettingsWidget;
 class SpectrumWidget;
 
+class QActionGroup;
 class QSettings;
 
 namespace Ui {
@@ -196,6 +197,7 @@ private:
   ApplicationSettingsDialog* m_applicationSettingsDialog;
 
   ActionConsistency* m_actionConsistency;
+  QActionGroup* m_animationTypeActionGroup;
 
   std::unique_ptr<QTimer> m_timer;
   std::unique_ptr<QTimer> m_timerEmulator;
