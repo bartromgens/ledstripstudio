@@ -10,7 +10,9 @@ SpectrumStudio::SpectrumStudio()
 
 
 Animation
-SpectrumStudio::createWaveformAnimationCentral(int nLEDs, const std::vector<std::pair<double, double>>& spectrum, ControlSettings& settings)
+SpectrumStudio::createWaveformAnimationCentral(int nLEDs,
+                                               const std::vector<std::pair<double, double>>& spectrum,
+                                               ControlSettings& settings)
 {
   double brightnessRed = 0.0;
   double brightnessGreen = 0.0;
@@ -104,7 +106,9 @@ SpectrumStudio::createWaveformAnimationCentral(int nLEDs, const std::vector<std:
 
 
 void
-SpectrumStudio::drawSpectrumInConsole(const std::vector<std::pair<double, double>>& spectrum, int minFreq, int maxFreq) const
+SpectrumStudio::drawSpectrumInConsole(const std::vector<std::pair<double, double>>& spectrum,
+                                      int minFreq,
+                                      int maxFreq) const
 {
   for (const auto& bin : spectrum)
   {
