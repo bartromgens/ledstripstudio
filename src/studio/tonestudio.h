@@ -7,6 +7,7 @@
 class ToneStudio
 {
 public:
+
   enum class AnimationType
   {
     None,
@@ -18,6 +19,7 @@ public:
   };
 
 public:
+
   ToneStudio();
   ~ToneStudio();
 
@@ -28,11 +30,8 @@ public:
 
   static void writeToneToConsole(const std::map<std::string, double>& tones);
 
-  void calcMaxAndMinTone(const std::map<Tone, double>& tones);
-  void calcToneMaxAverage();
-  void calcToneMinAverage();
-
 private:
+
   void createRandomToneColorMap(const std::map<Tone, double>& tones);
   void createToneColorMap(const std::map<Tone, double>& tones);
 
@@ -41,6 +40,11 @@ private:
   Animation createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, double colorWheelOffset);
   Animation createToneAnimationIndividual(unsigned int nLEDs, const std::map<Tone, double>& tones);
   Animation createToneAnimationCorners(unsigned int nLEDs, const std::map<Tone, double>& tones);
+
+  void calcToneMaxAverage();
+  void calcToneMinAverage();
+  void calcMaxAndMinTone(const std::map<Tone, double>& tones);
+  static Color getToneColor(Tone tone, double colorWheelOffset);
 
 private:
 

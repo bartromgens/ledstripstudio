@@ -276,34 +276,7 @@ ToneStudio::createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, d
   }
   unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
 
-  unsigned int i = 0;
-  switch (m_maxTone)
-  {
-    case Tone::C :
-      i = 0;
-      break;
-    case Tone::D :
-      i = 1;
-      break;
-    case Tone::E :
-      i = 2;
-      break;
-    case Tone::F :
-      i = 3;
-      break;
-    case Tone::G :
-      i = 4;
-      break;
-    case Tone::A :
-      i = 5;
-      break;
-    case Tone::B :
-      i = 6;
-      break;
-  }
-
-  unsigned int colorInt = static_cast<int>( 3.0*127.0/7.0* (i + colorWheelOffset) ) % (3*128);
-  Color color = Studio::wheel(colorInt);
+  Color color = ToneStudio::getToneColor(m_maxTone, colorWheelOffset);
 
   color.r = color.r * brightness/127.0;
   color.g = color.g * brightness/127.0;
@@ -547,4 +520,38 @@ ToneStudio::createToneColorMap(const std::map<Tone, double>& tones)
   }
 
   m_toneColorMap = toneColorMap;
+}
+
+
+Color
+ToneStudio::getToneColor(Tone tone, double colorWheelOffset)
+{
+  unsigned int i = 0;
+  switch (tone)
+  {
+    case Tone::C :
+      i = 0;
+      break;
+    case Tone::D :
+      i = 1;
+      break;
+    case Tone::E :
+      i = 2;
+      break;
+    case Tone::F :
+      i = 3;
+      break;
+    case Tone::G :
+      i = 4;
+      break;
+    case Tone::A :
+      i = 5;
+      break;
+    case Tone::B :
+      i = 6;
+      break;
+  }
+
+  unsigned int colorInt = static_cast<int>( 3.0*127.0/7.0* (i + colorWheelOffset) ) % (3*128);
+  return Studio::wheel(colorInt);
 }
