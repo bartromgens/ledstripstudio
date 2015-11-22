@@ -8,6 +8,7 @@ LEDController::LEDController(const QString& serialPortName)
 : m_serialPortName(serialPortName),
   m_timer(),
   m_fpsHistory(),
+  m_mutex(),
   m_io_service(new boost::asio::io_service()),
   m_serialPort()
 {
@@ -122,7 +123,6 @@ LEDController::send(const Frame& frame)
 
 //  std::cout << "LEDController::send() - time: " << (m_timer2.nsecsElapsed()/1000000) << std::endl;
   m_timer.restart();
-  clearAll();
 }
 
 
@@ -150,14 +150,6 @@ LEDController::writeBytes(const QByteArray& bytes)
   {
     std::cout << "LEDController::send() - error: " << error.message() << std::endl;
   }
-}
-
-
-void
-LEDController::clearAll()
-{
-  m_ledNr.clear();
-  m_color.clear();
 }
 
 

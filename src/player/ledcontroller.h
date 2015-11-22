@@ -42,15 +42,9 @@ private:
 
   void addLedByte(QByteArray &bytes, const std::vector<LED>& leds, int pos, int offset, int brightness);
   void writeBytes(const QByteArray& bytes);
-  void clearAll();
 
 private:
 
-  std::vector<int> m_ledNr;
-  std::vector<Color> m_color;
-  std::vector<std::vector<Color> > m_colorOld;
-
-  QByteArray m_byteMessage;
   QString m_serialPortName;
   QElapsedTimer m_timer;
   std::deque<int> m_fpsHistory;
