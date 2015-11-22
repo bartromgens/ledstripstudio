@@ -7,13 +7,6 @@ ActionConsistency::ActionConsistency()
 
 
 void
-ActionConsistency::toggleSpectrumAnalaysis(bool isChecked)
-{
-  m_spectrumSettingsToggleAct->setVisible(isChecked);
-}
-
-
-void
 ActionConsistency::toggleAnimation(bool isChecked)
 {
   m_dotsAnimationAct->setVisible(isChecked);

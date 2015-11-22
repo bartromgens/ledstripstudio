@@ -245,7 +245,8 @@ MainWindow::slotToggleBeatAnalysis(bool isChecked)
 void
 MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 {
-  m_actionConsistency->toggleSpectrumAnalaysis(isChecked);
+  m_spectrumSettingsWidget->setVisible(isChecked);
+  m_fftToolbar->setVisible(isChecked);
 
   if (isChecked)
   {
@@ -255,9 +256,6 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
   {
     stopSpectrumAnalyser();
   }
-
-  m_fftToolbar->setVisible(isChecked);
-  slotToggleSpectrumSettings(isChecked);
 }
 
 
@@ -297,13 +295,6 @@ MainWindow::slotToggleSingleColor(bool isChecked)
   {
     slotColorSelected(m_lastSingleColor);
   }
-}
-
-
-void
-MainWindow::slotToggleSpectrumSettings(bool isChecked)
-{
-  m_spectrumSettingsWidget->setVisible(isChecked);
 }
 
 
@@ -494,13 +485,6 @@ MainWindow::createActions()
   m_colorToggleAct->setCheckable(true);
   connect(m_colorToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSingleColor(bool)));
 
-  m_spectrumSettingsToggleAct = new QAction(this);
-  m_spectrumSettingsToggleAct->setIcon(QIcon("./icons/preferences-system.png"));
-  m_spectrumSettingsToggleAct->setStatusTip(tr("Open spectrum settings."));
-  m_spectrumSettingsToggleAct->setVisible(false);
-  m_spectrumSettingsToggleAct->setCheckable(true);
-  connect(m_spectrumSettingsToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpectrumSettings(bool)));
-
   m_openColorPickerAct = new QAction(this);
   m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel.png"));
   m_openColorPickerAct->setStatusTip(tr("Open color selector."));
@@ -550,7 +534,6 @@ MainWindow::createActions()
   m_animationTypeActionGroup->addAction(m_animationToggleAct);
   m_animationTypeActionGroup->addAction(m_colorToggleAct);
 
-  m_actionConsistency->m_spectrumSettingsToggleAct = m_spectrumSettingsToggleAct;
   m_actionConsistency->m_dotsAnimationAct = m_dotsAnimationAct;
   m_actionConsistency->m_rainbowAnimationAct = m_rainbowAnimationAct;
   m_actionConsistency->m_imageAnimationAct = m_imageAnimationAct;
@@ -587,7 +570,6 @@ MainWindow::createToolbars()
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
   m_detailsToolBar->setIconSize(QSize(32, 32));
 
-  m_detailsToolBar->addAction(m_spectrumSettingsToggleAct);
   m_toneToolbar->initialise(m_detailsToolBar);
   m_detailsToolBar->addAction(m_dotsAnimationAct);
   m_detailsToolBar->addAction(m_rainbowAnimationAct);
