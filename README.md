@@ -7,12 +7,12 @@ An application for realtime audio analysis and ledstrip visualisation written in
 - Spectrum analysis
 - Tone detection
 - Beat detection [In progress]
-- Record ledstrip animations
 - Play ledstrip animation from image
 - ...
 
 ### Dependencies
-- Qt
+- Boost (thread and system)
+- Qt 5
 - PortAudio
 - FFTW
 
