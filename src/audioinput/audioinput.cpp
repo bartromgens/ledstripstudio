@@ -37,7 +37,7 @@ AudioInput::initializeUserData()
 
 
 void
-AudioInput::setNSamples(unsigned int nSamples)
+AudioInput::setSampleSize(unsigned int nSamples)
 {
   std::lock_guard<std::mutex> lock(m_data.data_mutex);
   m_data.nSamples = nSamples;

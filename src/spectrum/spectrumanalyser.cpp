@@ -171,7 +171,7 @@ SpectrumAnalyser::linearWindowFunction(const std::deque<float>& in) const
 
 
 void
-SpectrumAnalyser::setNSamples(unsigned int nSamples)
+SpectrumAnalyser::setSampleSize(unsigned int nSamples)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 

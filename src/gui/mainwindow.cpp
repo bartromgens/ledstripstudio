@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_playerSettingsWidget(new PlayerSettingsWidget(*m_settings, this)),
   m_spectrumWidget(new SpectrumWidget(this)),
   m_toneToolbar(new ToneToolbar(*m_toneStudio)),
-  m_fftToolbar(new FFTToolbar(*m_audioInput, *m_spectrumAnalyser)),
+  m_fftToolbar(new FFTToolbar(*m_audioInput, *m_spectrumAnalyser, this)),
   m_applicationSettingsDialog(new ApplicationSettingsDialog(this)),
   m_actionConsistency(new ActionConsistency()),
   m_timer(),
@@ -245,7 +245,8 @@ MainWindow::slotToggleBeatAnalysis(bool isChecked)
 void
 MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
 {
-  m_actionConsistency->toggleSpectrumAnalaysis(isChecked);
+  m_spectrumSettingsWidget->setVisible(isChecked);
+  m_fftToolbar->setVisible(isChecked);
 
   if (isChecked)
   {
@@ -255,9 +256,6 @@ MainWindow::slotToggleSpectrumAnalysis(bool isChecked)
   {
     stopSpectrumAnalyser();
   }
-
-  m_fftToolbar->setVisible(isChecked);
-  slotToggleSpectrumSettings(isChecked);
 }
 
 
@@ -297,13 +295,6 @@ MainWindow::slotToggleSingleColor(bool isChecked)
   {
     slotColorSelected(m_lastSingleColor);
   }
-}
-
-
-void
-MainWindow::slotToggleSpectrumSettings(bool isChecked)
-{
-  m_spectrumSettingsWidget->setVisible(isChecked);
 }
 
 
@@ -494,13 +485,6 @@ MainWindow::createActions()
   m_colorToggleAct->setCheckable(true);
   connect(m_colorToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSingleColor(bool)));
 
-  m_spectrumSettingsToggleAct = new QAction(this);
-  m_spectrumSettingsToggleAct->setIcon(QIcon("./icons/preferences-system.png"));
-  m_spectrumSettingsToggleAct->setStatusTip(tr("Open spectrum settings."));
-  m_spectrumSettingsToggleAct->setVisible(false);
-  m_spectrumSettingsToggleAct->setCheckable(true);
-  connect(m_spectrumSettingsToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpectrumSettings(bool)));
-
   m_openColorPickerAct = new QAction(this);
   m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel.png"));
   m_openColorPickerAct->setStatusTip(tr("Open color selector."));
@@ -550,7 +534,6 @@ MainWindow::createActions()
   m_animationTypeActionGroup->addAction(m_animationToggleAct);
   m_animationTypeActionGroup->addAction(m_colorToggleAct);
 
-  m_actionConsistency->m_spectrumSettingsToggleAct = m_spectrumSettingsToggleAct;
   m_actionConsistency->m_dotsAnimationAct = m_dotsAnimationAct;
   m_actionConsistency->m_rainbowAnimationAct = m_rainbowAnimationAct;
   m_actionConsistency->m_imageAnimationAct = m_imageAnimationAct;
@@ -562,7 +545,6 @@ void
 MainWindow::createToolbars()
 {
   m_mainToolBar = new QToolBar(tr("Main toolbar"), this);
-  addToolBar(Qt::TopToolBarArea, m_mainToolBar);
   m_mainToolBar->setIconSize(QSize(32, 32));
 
   m_mainToolBar->addAction(m_beatToggleButton);
@@ -586,26 +568,20 @@ MainWindow::createToolbars()
   m_mainToolBar->addAction(m_applicationSettingsAct);
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
-  addToolBar(Qt::LeftToolBarArea, m_detailsToolBar);
   m_detailsToolBar->setIconSize(QSize(32, 32));
-  m_detailsToolBar->setMinimumSize(32, 32);
-  m_detailsToolBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
-  m_detailsToolBar->setOrientation(Qt::Vertical);
-
-  m_detailsToolBar->addSeparator();
-  m_detailsToolBar->addAction(m_spectrumSettingsToggleAct);
 
   m_toneToolbar->initialise(m_detailsToolBar);
-
   m_detailsToolBar->addAction(m_dotsAnimationAct);
   m_detailsToolBar->addAction(m_rainbowAnimationAct);
   m_detailsToolBar->addAction(m_imageAnimationAct);
-
   m_detailsToolBar->addAction(m_openColorPickerAct);
 
-  m_detailsToolBar->addSeparator();
+  addToolBar(Qt::TopToolBarArea, m_mainToolBar);
+  addToolBar(Qt::TopToolBarArea, m_fftToolbar);
+  addToolBarBreak(Qt::TopToolBarArea);
+  addToolBar(Qt::TopToolBarArea, m_detailsToolBar);
 
-  m_fftToolbar->initialise(m_detailsToolBar);
+  m_fftToolbar->setIconSize(QSize(32, 32));
 }
 
 

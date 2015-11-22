@@ -14,6 +14,8 @@ CONFIG(debug, debug|release) {
   TARGET = ledstripstudio
 }
 
+CONFIG(release, debug|release): DEFINES += NDEBUG
+
 # let everything find the source directory without specifying its location
 INCLUDEPATH += ./src/
 DEPENDPATH = $$INCLUDEPATH

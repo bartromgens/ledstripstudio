@@ -46,7 +46,7 @@ public:
 
   PowerSpectrum computeSpectrum(const std::deque<float>& realIn, int sampleRate, SpectrumAnalyser::WindowingType windowType) ;
 
-  void setNSamples(unsigned int nSamples);
+  void setSampleSize(unsigned int nSamples);
   unsigned int getNSamples() const;
 
   void setWindowingType(WindowingType type);
