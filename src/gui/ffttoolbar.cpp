@@ -34,7 +34,7 @@ FFTToolbar::initialise()
   for (int i = minSampleSize; i < maxSampleSize; i++)
   {
     int sampleSize = std::pow(2.0, i);
-    m_sampleSizeCombo->addItem( QString::number(sampleSize), QVariant(sampleSize) );
+    m_sampleSizeCombo->addItem( QString::number(sampleSize/1024), QVariant(sampleSize) );
   }
   m_sampleSizeCombo->setToolTip("Fourier transform sample size");
 
@@ -58,7 +58,7 @@ FFTToolbar::initialise()
 
   addWidget(new QLabel("FFT "));
   addWidget(m_sampleSizeCombo);
-  addWidget(new QLabel(" bit"));
+  addWidget(new QLabel(" Mbit"));
   addSeparator();
   addAction(m_linearWindowingAct);
   addAction(m_hannWindowingAct);
