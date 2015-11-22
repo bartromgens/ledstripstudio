@@ -28,7 +28,7 @@ FFTToolbar::~FFTToolbar()
 void
 FFTToolbar::initialise()
 {
-  const int minSampleSize = 11;
+  const int minSampleSize = 10;
   const int maxSampleSize = 18;
   m_sampleSizeCombo = new QComboBox(this);
   for (int i = minSampleSize; i < maxSampleSize; i++)
