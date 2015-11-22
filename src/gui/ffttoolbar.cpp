@@ -3,15 +3,20 @@
 #include "audioinput/audioinput.h"
 #include "spectrum/spectrumanalyser.h"
 
-#include <QToolBar>
 #include <QAction>
+#include <QDebug>
+#include <QComboBox>
+#include <QLabel>
+#include <QToolBar>
 
-FFTToolbar::FFTToolbar(AudioInput& audioInput, SpectrumAnalyser& spectrumAnalyser)
-  : QObject(),
-    ConfigurationGroup(),
-    m_audioInput(audioInput),
-    m_spectrumAnalyser(spectrumAnalyser)
+
+FFTToolbar::FFTToolbar(AudioInput& audioInput, SpectrumAnalyser& spectrumAnalyser, QWidget* parent)
+: QToolBar(parent),
+  ConfigurationGroup(),
+  m_audioInput(audioInput),
+  m_spectrumAnalyser(spectrumAnalyser)
 {
+  initialise();
 }
 
 
@@ -21,38 +26,27 @@ FFTToolbar::~FFTToolbar()
 
 
 void
-FFTToolbar::initialise(QToolBar* parentToolbar)
+FFTToolbar::initialise()
 {
-  m_FFT14sizeAct = new QAction(parentToolbar);
-  m_FFT14sizeAct->setIcon(QIcon("./icons/fft14.png"));
-  m_FFT14sizeAct->setStatusTip(tr("Set FFT sample size to 16k."));
-  m_FFT14sizeAct->setCheckable(true);
-  connect(m_FFT14sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFTsizeAct()));
+  const int minSampleSize = 11;
+  const int maxSampleSize = 18;
+  m_sampleSizeCombo = new QComboBox(this);
+  for (int i = minSampleSize; i < maxSampleSize; i++)
+  {
+    int sampleSize = std::pow(2.0, i);
+    m_sampleSizeCombo->addItem( QString::number(sampleSize), QVariant(sampleSize) );
+  }
+  m_sampleSizeCombo->setToolTip("Fourier transform sample size");
 
-  m_FFT15sizeAct = new QAction(parentToolbar);
-  m_FFT15sizeAct->setIcon(QIcon("./icons/fft15.png"));
-  m_FFT15sizeAct->setStatusTip(tr("Set FFT sample size to 32k."));
-  m_FFT15sizeAct->setCheckable(true);
-  connect(m_FFT15sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFTsizeAct()));
+  connect(m_sampleSizeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSampleSizeChanged()));
 
-  m_FFT16sizeAct = new QAction(parentToolbar);
-  m_FFT16sizeAct->setIcon(QIcon("./icons/fft16.png"));
-  m_FFT16sizeAct->setStatusTip(tr("Set FFT sample size to 64k."));
-  m_FFT16sizeAct->setCheckable(true);
-  connect(m_FFT16sizeAct, SIGNAL(toggled(bool)), this, SLOT(slotFFTsizeAct()));
-
-  QActionGroup* sizeGroup = new QActionGroup(this);
-  sizeGroup->addAction(m_FFT14sizeAct);
-  sizeGroup->addAction(m_FFT15sizeAct);
-  sizeGroup->addAction(m_FFT16sizeAct);
-
-  m_hannWindowingAct = new QAction(parentToolbar);
+  m_hannWindowingAct = new QAction(this);
   m_hannWindowingAct->setIcon(QIcon("./icons/hann-windowing.png"));
   m_hannWindowingAct->setStatusTip(tr("Set Hann windowing function."));
   m_hannWindowingAct->setCheckable(true);
   connect(m_hannWindowingAct, SIGNAL(toggled(bool)), this, SLOT(slotWindowingAct()));
 
-  m_linearWindowingAct = new QAction(parentToolbar);
+  m_linearWindowingAct = new QAction(this);
   m_linearWindowingAct->setIcon(QIcon("./icons/linear-windowing.png"));
   m_linearWindowingAct->setStatusTip(tr("Set linear windowing function."));
   m_linearWindowingAct->setCheckable(true);
@@ -62,55 +56,30 @@ FFTToolbar::initialise(QToolBar* parentToolbar)
   windowingGroup->addAction(m_hannWindowingAct);
   windowingGroup->addAction(m_linearWindowingAct);
 
-  parentToolbar->addAction(m_FFT14sizeAct);
-  parentToolbar->addAction(m_FFT15sizeAct);
-  parentToolbar->addAction(m_FFT16sizeAct);
-  parentToolbar->addSeparator();
-  parentToolbar->addAction(m_linearWindowingAct);
-  parentToolbar->addAction(m_hannWindowingAct);
+  addWidget(new QLabel("FFT "));
+  addWidget(m_sampleSizeCombo);
+  addWidget(new QLabel(" bit"));
+  addSeparator();
+  addAction(m_linearWindowingAct);
+  addAction(m_hannWindowingAct);
 
-  m_FFT16sizeAct->setChecked(true);
   m_linearWindowingAct->setChecked(true);
 }
 
 
 void
-FFTToolbar::setVisible(bool isChecked)
+FFTToolbar::setSampleSize(unsigned int nSamples)
 {
-  m_FFT14sizeAct->setVisible(isChecked);
-  m_FFT15sizeAct->setVisible(isChecked);
-  m_FFT16sizeAct->setVisible(isChecked);
-
-  m_linearWindowingAct->setVisible(isChecked);
-  m_hannWindowingAct->setVisible(isChecked);
+  m_audioInput.setSampleSize(nSamples);
+  m_spectrumAnalyser.setSampleSize(nSamples);
 }
 
 
 void
-FFTToolbar::setNSamples(unsigned int nSamples)
+FFTToolbar::slotSampleSizeChanged()
 {
-  m_audioInput.setNSamples(nSamples);
-  m_spectrumAnalyser.setNSamples(nSamples);
-}
-
-
-void
-FFTToolbar::slotFFTsizeAct()
-{
-  int nSamples = 0;
-  if (m_FFT14sizeAct->isChecked())
-  {
-    nSamples = static_cast<int>(std::pow(2.0, 14));
-  }
-  else if (m_FFT15sizeAct->isChecked())
-  {
-    nSamples = static_cast<int>(std::pow(2.0, 15));
-  }
-  else if (m_FFT16sizeAct->isChecked())
-  {
-    nSamples = static_cast<int>(std::pow(2.0, 16));
-  }
-  setNSamples(nSamples);
+  int nSamples = m_sampleSizeCombo->currentData().toInt();
+  setSampleSize(nSamples);
 }
 
 
@@ -133,20 +102,6 @@ FFTToolbar::saveConfiguration(QSettings& config) const
 {
   config.beginGroup( "FFT" );
 
-  FFTToolbar::FFTSampleSize sampleSize = FFTSampleSize::FFT15;
-  if (m_FFT14sizeAct->isChecked())
-  {
-    sampleSize = FFTSampleSize::FFT14;
-  }
-  else if (m_FFT15sizeAct->isChecked())
-  {
-    sampleSize = FFTSampleSize::FFT15;
-  }
-  else if (m_FFT15sizeAct->isChecked())
-  {
-    sampleSize = FFTSampleSize::FFT16;
-  }
-
   FFTToolbar::WindowingFunctionType windowFunc = WindowingFunctionType::Linear;
   if (m_linearWindowingAct->isChecked())
   {
@@ -157,7 +112,7 @@ FFTToolbar::saveConfiguration(QSettings& config) const
     windowFunc = WindowingFunctionType::Hann;
   }
 
-  config.setValue("FFTSampleSize", static_cast<int>(sampleSize));
+  config.setValue("FFTSampleSize", static_cast<int>(m_sampleSizeCombo->currentData().toInt()));
   config.setValue("WindowingFunction", static_cast<int>(windowFunc));
 
   config.endGroup();
@@ -169,28 +124,15 @@ FFTToolbar::loadConfiguration(QSettings& config)
 {
   config.beginGroup( "FFT" );
 
-  FFTSampleSize sampleSize =
-      static_cast<FFTSampleSize>(config.value("FFTSampleSize", "").toInt());
+  int sampleSize = static_cast<int>(config.value("FFTSampleSize", "").toInt());
   WindowingFunctionType windowFunc =
       static_cast<WindowingFunctionType>(config.value("WindowingFunction", "").toInt());
 
-  switch (sampleSize)
+  int comboIndex = m_sampleSizeCombo->findData(QVariant(sampleSize));
+
+  if (comboIndex != -1)
   {
-    case FFTSampleSize::FFT14:
-    {
-      m_FFT14sizeAct->setChecked(true);
-      break;
-    }
-    case FFTSampleSize::FFT15:
-    {
-      m_FFT15sizeAct->setChecked(true);
-      break;
-    }
-    case FFTSampleSize::FFT16:
-    {
-      m_FFT16sizeAct->setChecked(true);
-      break;
-    }
+    m_sampleSizeCombo->setCurrentIndex(comboIndex);
   }
 
   switch (windowFunc)

@@ -3,7 +3,7 @@
 
 #include "settings/configurationgroup.h"
 
-#include <QObject>
+#include <QToolBar>
 
 #include <memory>
 
@@ -12,32 +12,25 @@ class SpectrumAnalyser;
 
 class QAction;
 class QActionGroup;
+class QComboBox;
 class QToolBar;
 
-class FFTToolbar : public QObject, public ConfigurationGroup
+class FFTToolbar : public QToolBar, public ConfigurationGroup
 {
   Q_OBJECT
 
 public:
 
-  FFTToolbar(AudioInput& audioInput, SpectrumAnalyser& spectrumAnalyser);
+  FFTToolbar(AudioInput& audioInput, SpectrumAnalyser& spectrumAnalyser, QWidget* parent);
   virtual ~FFTToolbar();
 
-  void initialise(QToolBar* parentToolbar);
 
-  void setVisible(bool isChecked);
+//  void setVisible(bool isChecked);
 
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);
 
 private:
-
-  enum class FFTSampleSize
-  {
-    FFT14 = 0,
-    FFT15 = 1,
-    FFT16 = 2
-  };
 
   enum class WindowingFunctionType
   {
@@ -45,11 +38,13 @@ private:
     Hann = 1
   };
 
-  void setNSamples(unsigned int nSamples);
+  void initialise();
+
+  void setSampleSize(unsigned int nSamples);
 
 private slots:
 
-  void slotFFTsizeAct();
+  void slotSampleSizeChanged();
   void slotWindowingAct();
 
 private:
@@ -57,9 +52,7 @@ private:
   AudioInput& m_audioInput;
   SpectrumAnalyser& m_spectrumAnalyser;
 
-  QAction* m_FFT14sizeAct;
-  QAction* m_FFT15sizeAct;
-  QAction* m_FFT16sizeAct;
+  QComboBox* m_sampleSizeCombo;
 
   QAction* m_hannWindowingAct;
   QAction* m_linearWindowingAct;

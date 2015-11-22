@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_playerSettingsWidget(new PlayerSettingsWidget(*m_settings, this)),
   m_spectrumWidget(new SpectrumWidget(this)),
   m_toneToolbar(new ToneToolbar(*m_toneStudio)),
-  m_fftToolbar(new FFTToolbar(*m_audioInput, *m_spectrumAnalyser)),
+  m_fftToolbar(new FFTToolbar(*m_audioInput, *m_spectrumAnalyser, this)),
   m_applicationSettingsDialog(new ApplicationSettingsDialog(this)),
   m_actionConsistency(new ActionConsistency()),
   m_timer(),
@@ -562,7 +562,6 @@ void
 MainWindow::createToolbars()
 {
   m_mainToolBar = new QToolBar(tr("Main toolbar"), this);
-  addToolBar(Qt::TopToolBarArea, m_mainToolBar);
   m_mainToolBar->setIconSize(QSize(32, 32));
 
   m_mainToolBar->addAction(m_beatToggleButton);
@@ -586,26 +585,21 @@ MainWindow::createToolbars()
   m_mainToolBar->addAction(m_applicationSettingsAct);
 
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
-  addToolBar(Qt::LeftToolBarArea, m_detailsToolBar);
   m_detailsToolBar->setIconSize(QSize(32, 32));
-  m_detailsToolBar->setMinimumSize(32, 32);
-  m_detailsToolBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
-  m_detailsToolBar->setOrientation(Qt::Vertical);
 
-  m_detailsToolBar->addSeparator();
   m_detailsToolBar->addAction(m_spectrumSettingsToggleAct);
-
   m_toneToolbar->initialise(m_detailsToolBar);
-
   m_detailsToolBar->addAction(m_dotsAnimationAct);
   m_detailsToolBar->addAction(m_rainbowAnimationAct);
   m_detailsToolBar->addAction(m_imageAnimationAct);
-
   m_detailsToolBar->addAction(m_openColorPickerAct);
 
-  m_detailsToolBar->addSeparator();
+  addToolBar(Qt::TopToolBarArea, m_mainToolBar);
+  addToolBar(Qt::TopToolBarArea, m_fftToolbar);
+  addToolBarBreak(Qt::TopToolBarArea);
+  addToolBar(Qt::TopToolBarArea, m_detailsToolBar);
 
-  m_fftToolbar->initialise(m_detailsToolBar);
+  m_fftToolbar->setIconSize(QSize(32, 32));
 }
 
 
