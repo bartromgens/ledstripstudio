@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+#include <mutex>
 
 class SpectrumBarsWidget : public QWidget
 {
@@ -23,6 +24,7 @@ private:
   std::vector<std::pair<double, double>> m_spectrum;
   int m_barWidth;
   int m_nBars;
+  std::mutex m_mutex;
 };
 
 #endif // SPECTRUMBARSWIDGET_H

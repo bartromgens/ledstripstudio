@@ -2,14 +2,18 @@
 
 #include "spectrum/powerspectrum.h"
 
+#include <QDebug>
 #include <QPainter>
+
+#include <thread>
 
 
 SpectrumBarsWidget::SpectrumBarsWidget(QWidget* parent)
 : QWidget(parent),
   m_spectrum(),
   m_barWidth(1),
-  m_nBars(500)
+  m_nBars(500),
+  m_mutex()
 {
 }
 
@@ -30,8 +34,8 @@ SpectrumBarsWidget::resizeEvent(QResizeEvent* e)
 void
 SpectrumBarsWidget::setSpectrum(const std::vector<std::pair<double, double>>& spectrum)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_spectrum = PowerSpectrum::resizeSpectrum(spectrum, m_nBars, 2000.0);
-//  m_spectrum = spectrum;
 }
 
 
@@ -39,6 +43,8 @@ void
 SpectrumBarsWidget::paintEvent(QPaintEvent* e)
 {
   Q_UNUSED(e);
+
+  std::lock_guard<std::mutex> lock(m_mutex);
   if (m_spectrum.size() < 2)
   {
     return;
