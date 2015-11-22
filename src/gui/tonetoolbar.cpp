@@ -34,7 +34,6 @@ ToneToolbar::initialise(QToolBar* parentToolbar)
   m_smoothToneAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
   m_smoothToneAct->setStatusTip(tr("Set smooth tone mode."));
   m_smoothToneAct->setCheckable(true);
-  connect(m_smoothToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSmoothTone(bool)));
   m_smoothToneAct->setVisible(false);
 
   m_historyToneAct = new QAction(parentToolbar);
@@ -42,7 +41,6 @@ ToneToolbar::initialise(QToolBar* parentToolbar)
   m_historyToneAct->setIcon(QIcon("./icons/tone-animation-history.png"));
   m_historyToneAct->setStatusTip(tr("Set history tone mode."));
   m_historyToneAct->setCheckable(true);
-  connect(m_historyToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneHistory(bool)));
   m_historyToneAct->setVisible(false);
 
   m_individualToneAct = new QAction(parentToolbar);
@@ -50,7 +48,6 @@ ToneToolbar::initialise(QToolBar* parentToolbar)
   m_individualToneAct->setIcon(QIcon("./icons/tone-animation-individual.png"));
   m_individualToneAct->setStatusTip(tr("Set individual tone mode."));
   m_individualToneAct->setCheckable(true);
-  connect(m_individualToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleIndividualTone(bool)));
   m_individualToneAct->setVisible(false);
 
   m_cornerToneAct = new QAction(parentToolbar);
@@ -58,7 +55,6 @@ ToneToolbar::initialise(QToolBar* parentToolbar)
   m_cornerToneAct->setIcon(QIcon("./icons/tone-animation-corner.png"));
   m_cornerToneAct->setStatusTip(tr("Set corner tone mode."));
   m_cornerToneAct->setCheckable(true);
-  connect(m_cornerToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleCornerTone(bool)));
   m_cornerToneAct->setVisible(false);
 
   m_actionGroup.addAction(m_stepToneAct);
