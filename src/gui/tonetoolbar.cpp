@@ -27,7 +27,6 @@ ToneToolbar::initialise(QToolBar* parentToolbar)
   m_stepToneAct->setStatusTip(tr("Set loudest tone mode."));
   m_stepToneAct->setCheckable(true);
   m_stepToneAct->setVisible(false);
-  connect(m_stepToneAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleStepTone(bool)));
 
   m_smoothToneAct = new QAction(parentToolbar);
   m_smoothToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::SmoothSum)));
