@@ -10,23 +10,23 @@
 
 #include <memory>
 
-class ToneToolbar : public QObject, public ConfigurationGroup
+class ToneToolbar : public QToolBar, public ConfigurationGroup
 {
   Q_OBJECT
 
 public:
 
-  ToneToolbar(ToneStudio& toneStudio);
+  ToneToolbar(ToneStudio& toneStudio, QWidget* parent);
   virtual ~ToneToolbar();
-
-  void initialise(QToolBar* parentToolbar);
-
-  void toggleToneAnalysis(bool isChecked);
 
   ToneStudio::AnimationType getAnimationType() const;
 
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);
+
+private:
+
+  void initialise();
 
 private:
 

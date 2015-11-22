@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
   m_ledStripStatusWidget(new LedStripStatusWidget(this)),
   m_playerSettingsWidget(new PlayerSettingsWidget(*m_settings, this)),
   m_spectrumWidget(new SpectrumWidget(this)),
-  m_toneToolbar(new ToneToolbar(*m_toneStudio)),
+  m_toneToolbar(new ToneToolbar(*m_toneStudio, this)),
   m_fftToolbar(new FFTToolbar(*m_audioInput, *m_spectrumAnalyser, this)),
   m_applicationSettingsDialog(new ApplicationSettingsDialog(this)),
   m_actionConsistency(new ActionConsistency()),
@@ -274,7 +274,7 @@ MainWindow::slotToggleToneAnalysis(bool isChecked)
     stopSpectrumAnalyser();
     stopToneAnalyser();
   }
-  m_toneToolbar->toggleToneAnalysis(isChecked);
+  m_toneToolbar->setVisible(isChecked);
   m_fftToolbar->setVisible(isChecked);
 }
 
@@ -570,7 +570,6 @@ MainWindow::createToolbars()
   m_detailsToolBar = new QToolBar(tr("Details toolbar"), this);
   m_detailsToolBar->setIconSize(QSize(32, 32));
 
-  m_toneToolbar->initialise(m_detailsToolBar);
   m_detailsToolBar->addAction(m_dotsAnimationAct);
   m_detailsToolBar->addAction(m_rainbowAnimationAct);
   m_detailsToolBar->addAction(m_imageAnimationAct);
@@ -579,9 +578,11 @@ MainWindow::createToolbars()
   addToolBar(Qt::TopToolBarArea, m_mainToolBar);
   addToolBar(Qt::TopToolBarArea, m_fftToolbar);
   addToolBarBreak(Qt::TopToolBarArea);
+  addToolBar(Qt::TopToolBarArea, m_toneToolbar);
   addToolBar(Qt::TopToolBarArea, m_detailsToolBar);
 
   m_fftToolbar->setIconSize(QSize(32, 32));
+  m_toneToolbar->setIconSize(QSize(32, 32));
 }
 
 
