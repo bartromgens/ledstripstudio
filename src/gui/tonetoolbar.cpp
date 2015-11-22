@@ -25,31 +25,31 @@ ToneToolbar::initialise()
   m_stepToneAct = new QAction(this);
   m_stepToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Loudest)));
   m_stepToneAct->setIcon(QIcon("./icons/step-tone-setting.png"));
-  m_stepToneAct->setStatusTip(tr("Set loudest tone mode."));
+  m_stepToneAct->setToolTip(tr("Loudest tone mode"));
   m_stepToneAct->setCheckable(true);
 
   m_smoothToneAct = new QAction(this);
   m_smoothToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::SmoothSum)));
   m_smoothToneAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
-  m_smoothToneAct->setStatusTip(tr("Set smooth tone mode."));
+  m_smoothToneAct->setToolTip(tr("Smooth tone mode"));
   m_smoothToneAct->setCheckable(true);
 
   m_historyToneAct = new QAction(this);
   m_historyToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::History)));
   m_historyToneAct->setIcon(QIcon("./icons/tone-animation-history.png"));
-  m_historyToneAct->setStatusTip(tr("Set history tone mode."));
+  m_historyToneAct->setToolTip(tr("History tone mode"));
   m_historyToneAct->setCheckable(true);
 
   m_individualToneAct = new QAction(this);
   m_individualToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Individual)));
   m_individualToneAct->setIcon(QIcon("./icons/tone-animation-individual.png"));
-  m_individualToneAct->setStatusTip(tr("Set individual tone mode."));
+  m_individualToneAct->setToolTip(tr("Individual tone mode"));
   m_individualToneAct->setCheckable(true);
 
   m_cornerToneAct = new QAction(this);
   m_cornerToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Corner)));
   m_cornerToneAct->setIcon(QIcon("./icons/tone-animation-corner.png"));
-  m_cornerToneAct->setStatusTip(tr("Set corner tone mode."));
+  m_cornerToneAct->setToolTip(tr("Corner tone mode."));
   m_cornerToneAct->setCheckable(true);
 
   m_actionGroup.addAction(m_stepToneAct);

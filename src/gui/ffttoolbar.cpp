@@ -42,13 +42,13 @@ FFTToolbar::initialise()
 
   m_hannWindowingAct = new QAction(this);
   m_hannWindowingAct->setIcon(QIcon("./icons/hann-windowing.png"));
-  m_hannWindowingAct->setStatusTip(tr("Set Hann windowing function."));
+  m_hannWindowingAct->setToolTip("Hann windowing");
   m_hannWindowingAct->setCheckable(true);
   connect(m_hannWindowingAct, SIGNAL(toggled(bool)), this, SLOT(slotWindowingAct()));
 
   m_linearWindowingAct = new QAction(this);
   m_linearWindowingAct->setIcon(QIcon("./icons/linear-windowing.png"));
-  m_linearWindowingAct->setStatusTip(tr("Set linear windowing function."));
+  m_linearWindowingAct->setStatusTip("Linear windowing function.");
   m_linearWindowingAct->setCheckable(true);
   connect(m_linearWindowingAct, SIGNAL(toggled(bool)), this, SLOT(slotWindowingAct()));
 

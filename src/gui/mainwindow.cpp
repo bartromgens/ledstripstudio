@@ -444,56 +444,56 @@ MainWindow::createActions()
 {
   m_stripToggleButton = new QAction(this);
   m_stripToggleButton->setIcon(QIcon("./icons/clear-strip.png"));
-  m_stripToggleButton->setStatusTip(tr("Turn all LEDs off."));
+  m_stripToggleButton->setToolTip("Turn all LEDs off");
   connect(m_stripToggleButton, SIGNAL(triggered()), this, SLOT(slotClearStrip()));
 
   m_audioToggleButton = new QAction(this);
   m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-muted.png"));
-  m_audioToggleButton->setStatusTip(tr("Start audio input control panel."));
+  m_audioToggleButton->setToolTip("Toggle audio input control panel");
   m_audioToggleButton->setCheckable(true);
   connect(m_audioToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleAudioInput(bool)));
 //  m_audioToggleButton->setChecked(true);
 
   m_beatToggleButton = new QAction(this);
   m_beatToggleButton->setIcon(QIcon("./icons/beat.png"));
-  m_beatToggleButton->setStatusTip("Start beat detection");
+  m_beatToggleButton->setToolTip("Toggle beat detection");
   m_beatToggleButton->setCheckable(true);
   m_beatToggleButton->setVisible(false);  // TODO BR: make visible when beat detection is properly implemented
   connect(m_beatToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleBeatAnalysis(bool)));
 
   m_spectrumToggleButton = new QAction(this);
   m_spectrumToggleButton->setIcon(QIcon("./icons/wave_high_frequency.png"));
-  m_spectrumToggleButton->setStatusTip(tr("Start spectrum mode."));
+  m_spectrumToggleButton->setToolTip("Toggle spectrum mode");
   m_spectrumToggleButton->setCheckable(true);
   connect(m_spectrumToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleSpectrumAnalysis(bool)));
 
   m_toneToggleButton = new QAction(this);
   m_toneToggleButton->setIcon(QIcon("./icons/audio-x-generic.png"));
-  m_toneToggleButton->setStatusTip(tr("Start tone mode."));
+  m_toneToggleButton->setToolTip("Toggle tone mode");
   m_toneToggleButton->setCheckable(true);
   connect(m_toneToggleButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleToneAnalysis(bool)));
 
   m_animationToggleAct = new QAction(this);
   m_animationToggleAct->setIcon(QIcon("./icons/animation-mode.png"));
-  m_animationToggleAct->setStatusTip(tr("Start animation mode."));
+  m_animationToggleAct->setToolTip("Toggle animation mode.");
   m_animationToggleAct->setCheckable(true);
   connect(m_animationToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleAnimation(bool)));
 
   m_colorToggleAct = new QAction(this);
   m_colorToggleAct->setIcon(QIcon("./icons/color_wheel2.png"));
-  m_colorToggleAct->setStatusTip(tr("Start single color mode."));
+  m_colorToggleAct->setToolTip("Toggle single color mode");
   m_colorToggleAct->setCheckable(true);
   connect(m_colorToggleAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleSingleColor(bool)));
 
   m_openColorPickerAct = new QAction(this);
   m_openColorPickerAct->setIcon(QIcon("./icons/color_wheel.png"));
-  m_openColorPickerAct->setStatusTip(tr("Open color selector."));
+  m_openColorPickerAct->setToolTip("Open color selector");
   m_openColorPickerAct->setVisible(false);
   connect(m_openColorPickerAct, SIGNAL(triggered()), this, SLOT(slotOpenColorPicker()));
 
   m_dotsAnimationAct = new QAction(this);
   m_dotsAnimationAct->setIcon(QIcon("./icons/smooth-tone-setting.png"));
-  m_dotsAnimationAct->setStatusTip(tr("Toggles dots animation."));
+  m_dotsAnimationAct->setToolTip("Toggle dots animation");
   m_dotsAnimationAct->setCheckable(true);
   connect(m_dotsAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleDotAnimation(bool)));
   m_dotsAnimationAct->setChecked(false);
@@ -501,7 +501,7 @@ MainWindow::createActions()
 
   m_rainbowAnimationAct = new QAction(this);
   m_rainbowAnimationAct->setIcon(QIcon("./icons/rainbow-animation.png"));
-  m_rainbowAnimationAct->setStatusTip(tr("Toggles rainbow animation."));
+  m_rainbowAnimationAct->setToolTip("Toggle rainbow animation");
   m_rainbowAnimationAct->setCheckable(true);
   connect(m_rainbowAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleRainbowAnimation(bool)));
   m_rainbowAnimationAct->setChecked(false);
@@ -509,7 +509,7 @@ MainWindow::createActions()
 
   m_imageAnimationAct = new QAction(this);
   m_imageAnimationAct->setIcon(QIcon("./icons/image-animation.png"));
-  m_imageAnimationAct->setStatusTip(tr("Toggles images animation."));
+  m_imageAnimationAct->setToolTip("Play image");
   m_imageAnimationAct->setCheckable(true);
   connect(m_imageAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleImageAnimation(bool)));
   m_imageAnimationAct->setChecked(false);
@@ -517,7 +517,7 @@ MainWindow::createActions()
 
   m_recordAnimationAct = new QAction(this);
   m_recordAnimationAct->setIcon(QIcon("./icons/record-animation.png"));
-  m_recordAnimationAct->setStatusTip(tr("Toggles recording the animation."));
+  m_recordAnimationAct->setToolTip("Record animation");
   m_recordAnimationAct->setCheckable(true);
   connect(m_recordAnimationAct, SIGNAL(toggled(bool)), this, SLOT(slotToggleRecording(bool)));
   m_recordAnimationAct->setChecked(false);
@@ -525,7 +525,7 @@ MainWindow::createActions()
 
   m_applicationSettingsAct = new QAction(this);
   m_applicationSettingsAct->setIcon(QIcon("./icons/preferences-system.svg"));
-  m_applicationSettingsAct->setStatusTip("Settings");
+  m_applicationSettingsAct->setToolTip("Application settings");
   connect(m_applicationSettingsAct, SIGNAL(triggered(bool)), this, SLOT(slotShowSettingsDialog()));
 
   m_animationTypeActionGroup = new QActionGroup(this);
