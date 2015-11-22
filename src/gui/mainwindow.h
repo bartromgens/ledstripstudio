@@ -110,7 +110,6 @@ private slots:
 private:
 
   // create GUI
-  void createMenus();
   void createActions();
   void createToolbars();
   void connectAllSlots();
@@ -170,10 +169,6 @@ private:
 
   ToneToolbar* m_toneToolbar;
   FFTToolbar* m_fftToolbar;
-
-  QMenu* fileMenu;
-  QMenu* editMenu;
-  QMenu* helpMenu;
 
   QAction* m_stripToggleButton;
   QAction* m_audioToggleButton;

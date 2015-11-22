@@ -608,15 +608,6 @@ MainWindow::createConfigurationComboBox()
 
 
 void
-MainWindow::createMenus()
-{
-  fileMenu = menuBar()->addMenu(tr("&File"));
-  editMenu = menuBar()->addMenu(tr("&Edit"));
-  helpMenu = menuBar()->addMenu(tr("&Help"));
-}
-
-
-void
 MainWindow::connectAllSlots()
 {
   connect( m_colorDialog, SIGNAL( currentColorChanged(const QColor) ), this, SLOT( slotColorSelected(const QColor) ));
