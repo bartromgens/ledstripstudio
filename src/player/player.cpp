@@ -200,34 +200,5 @@ Player::smoothenFrames(const Frame& firstFrame, const Frame& secondFrame, int /*
     frameSmooth.addLED(ledNew);
   }
 
-//  while (!frames.empty())
-//  {
-//    Frame frame = frames.front();
-//    animationNew.addFrame(frame);
-
-//    std::vector<Frame> framesSmooth(nFrames, frame.getLEDs().size());
-
-//    std::vector<LED> leds = frame.getLEDs();
-//    for (std::vector<LED>::iterator iter = leds.begin();
-//         iter != leds.end(); ++iter)
-//    {
-//      LED led = iter->second;
-//      for (std::size_t i = 0; i < framesSmooth.size(); i++)
-//      {
-//        LED ledNew;
-//        ledNew.setLEDnr(led.getLEDnr());
-//        ledNew.setColor( Color(led.getColor().r/(i+1), led.getColor().g/(i+1), led.getColor().b/(i+1)));
-//        framesSmooth[i].addLED(ledNew);
-//      }
-//    }
-
-//    for (std::size_t i = 0; i < framesSmooth.size(); ++i)
-//    {
-//      animationNew.addFrame(framesSmooth[i]);
-//    }
-
-//    frames.pop_front();
-//  }
-
   return frameSmooth;
 }
