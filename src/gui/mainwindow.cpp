@@ -6,6 +6,7 @@
 #include "gui/spectrumsettingswidget.h"
 #include "gui/spectrumwidget.h"
 #include "gui/playersettingswidget.h"
+#include "gui/serialportconnectiondialog.h"
 #include "settings/configurationgroup.h"
 #include "settings/controlsettings.h"
 #include "spectrum/beatanalyser.h"
@@ -217,6 +218,11 @@ MainWindow::slotToggleAudioInput(bool isChecked)
   qDebug() << __PRETTY_FUNCTION__;
   if (isChecked)
   {
+    SerialPortConnectionDialog dialog;
+    if (dialog.exec())
+    {
+      m_player->connect(dialog.getSelectedPortName().toStdString());
+    }
     m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-high.png"));
     startAudioInputThread();
   }

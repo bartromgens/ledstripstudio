@@ -37,6 +37,7 @@ SOURCES += \
     src/gui/ledstripemulator.cpp \
     src/gui/ledstripstatuswidget.cpp \
     src/gui/playersettingswidget.cpp \
+    src/gui/serialportconnectiondialog.cpp
     src/gui/spectrumbarswidget.cpp \
     src/gui/spectrumsettingswidget.cpp \
     src/gui/spectrumwidget.cpp \
@@ -75,6 +76,7 @@ HEADERS += \
     src/gui/ledstripstatuswidget.h \
     src/gui/mainwindow.h \
     src/gui/playersettingswidget.h \
+    src/gui/serialportconnectiondialog.h
     src/gui/spectrumbarswidget.h \
     src/gui/spectrumsettingswidget.h \
     src/gui/spectrumwidget.h \
@@ -100,7 +102,8 @@ FORMS += \
     src/gui/playersettingswidget.ui \
     src/gui/ledstripstatuswidget.ui \
     src/gui/applicationsettingsdialog.ui \
-    src/gui/spectrumwidget.ui
+    src/gui/spectrumwidget.ui \
+    src/gui/serialportconnectiondialog.ui
 
 OTHER_FILES += \
     icons/audio-volume-high.png \

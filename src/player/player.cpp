@@ -36,12 +36,20 @@ Player::~Player()
 }
 
 
+void
+Player::connect(const std::string& serialPortName)
+{
+  assert(m_ledController);
+  m_ledController->connect(serialPortName);
+}
+
+
 std::unique_ptr<LEDController>
 Player::createLedController(QString serialPortName)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
-  std::unique_ptr<LEDController> ledController;
+  std::unique_ptr<LEDController> ledController = std::unique_ptr<LEDController>(new LEDController());
   ledController->connect(serialPortName.toStdString());
   return ledController;
 }
