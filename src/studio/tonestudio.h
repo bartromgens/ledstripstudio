@@ -3,6 +3,12 @@
 
 #include "basic/animation.h"
 #include "basic/tone.h"
+#include "studio/tone/tonedata.h"
+
+#include <memory>
+
+class ToneAnimationFactory;
+
 
 class ToneStudio
 {
@@ -25,8 +31,7 @@ public:
 
   Animation createToneAnimation(unsigned int nLEDs,
                                 const std::map<Tone, double>& tones,
-                                ToneStudio::AnimationType animationType,
-                                double colorWheelOffset = 2.8);
+                                ToneStudio::AnimationType animationType);
 
   static void writeToneToConsole(const std::map<std::string, double>& tones);
 
@@ -37,7 +42,7 @@ private:
 
   Animation createToneAnimationLoudest(unsigned int nLEDs);
   Animation createToneAnimationSmoothSum(unsigned int nLEDs, const std::map<Tone, double>& tones);
-  Animation createToneAnimationHistory(unsigned int nLEDs, unsigned int speed, double colorWheelOffset);
+  Animation createToneAnimationHistory(unsigned int nLEDs);
   Animation createToneAnimationIndividual(unsigned int nLEDs, const std::map<Tone, double>& tones);
   Animation createToneAnimationCorners(unsigned int nLEDs, const std::map<Tone, double>& tones);
 
@@ -48,17 +53,10 @@ private:
 
 private:
 
+  std::unique_ptr<ToneAnimationFactory> m_toneAnimationFactory;
   Frame m_toneHistoryFrame;
   std::map<Tone, Color> m_toneColorMap;
-
-  std::deque<double> m_maxToneHistory;
-  std::deque<double> m_minToneHistory;
-  double m_toneMaxAverage;
-  double m_toneMinAverage;
-
-  Tone m_maxTone;
-  double m_maxToneAmplitude;
-  double m_minToneAmplitude;
+  ToneData m_toneData;
 
   static unsigned int m_historySize;
 };

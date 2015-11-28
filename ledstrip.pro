@@ -56,6 +56,9 @@ SOURCES += \
     src/studio/spectrumstudio.cpp \
     src/studio/studio.cpp \
     src/studio/tonestudio.cpp \
+    src/studio/tone/toneanimationfactory.cpp \
+    src/studio/tone/tonedata.cpp \
+    src/studio/tone/tonehistoryanimationfactory.cpp \
     src/main.cpp \
 
 HEADERS += \
@@ -92,6 +95,9 @@ HEADERS += \
     src/studio/studio.h \
     src/studio/spectrumstudio.h \
     src/studio/tonestudio.h \
+    src/studio/tone/toneanimationfactory.h \
+    src/studio/tone/tonedata.h \
+    src/studio/tone/tonehistoryanimationfactory.h \
     src/studio/imagestudio.h \
 
 FORMS += \

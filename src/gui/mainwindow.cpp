@@ -182,8 +182,7 @@ MainWindow::notifyTone(const std::map<Tone, double>& toneAmplitudes)
   const double colorWheelOffset = 2.8;
   m_player->addAnimation( m_toneStudio->createToneAnimation( m_nLedsTotal,
                                                              toneAmplitudes,
-                                                             m_toneToolbar->getAnimationType(),
-                                                             colorWheelOffset ) );
+                                                             m_toneToolbar->getAnimationType() ) );
   m_player->playFrame();
 }
 
