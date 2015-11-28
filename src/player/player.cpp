@@ -6,15 +6,15 @@
 
 
 Player::Player(ControlSettings& controlSettings)
-  : m_ledController(),
-    m_settings(controlSettings),
-    m_lastFrame(0),
-    m_mainAnimation(),
-    m_recordedAnimation(),
-    m_isRecording(false),
-    m_animationFPS(40),
-    m_isPlaying(false),
-    m_mutex()
+: m_ledController(),
+  m_settings(controlSettings),
+  m_lastFrame(0),
+  m_mainAnimation(),
+  m_recordedAnimation(),
+  m_isRecording(false),
+  m_animationFPS(40),
+  m_isPlaying(false),
+  m_mutex()
 {
   QStringList ports;
   for (QSerialPortInfo port : QSerialPortInfo::availablePorts())
@@ -41,8 +41,8 @@ Player::createLedController(QString serialPortName)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
-  std::unique_ptr<LEDController> ledController( new LEDController(serialPortName) );
-  ledController->connect();
+  std::unique_ptr<LEDController> ledController;
+  ledController->connect(serialPortName.toStdString());
   return ledController;
 }
 

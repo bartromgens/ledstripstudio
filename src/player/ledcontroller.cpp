@@ -4,9 +4,8 @@
 #include <boost/asio.hpp>
 
 
-LEDController::LEDController(const QString& serialPortName)
-: m_serialPortName(serialPortName),
-  m_timer(),
+LEDController::LEDController()
+: m_timer(),
   m_fpsHistory(),
   m_mutex(),
   m_io_service(new boost::asio::io_service()),
@@ -24,16 +23,16 @@ LEDController::~LEDController()
 
 
 bool
-LEDController::connect()
+LEDController::connect(const std::string& serialPortName)
 {
   try
   {
-    m_serialPort.reset( new boost::asio::serial_port(*m_io_service, m_serialPortName.toStdString()) );
+    m_serialPort.reset( new boost::asio::serial_port(*m_io_service, serialPortName) );
   }
   catch( std::exception& e )
   {
     std::cout << "LEDController::LEDController() - warning: " << e.what() << std::endl;
-    std::cout << "LEDController::LEDController() - could not create a serial connection on " << m_serialPortName.toStdString() << std::endl;
+    std::cout << "LEDController::LEDController() - could not create a serial connection on " << serialPortName << std::endl;
     return false;
   }
 
