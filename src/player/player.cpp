@@ -2,6 +2,7 @@
 #include "basic/universalsleep.h"
 
 #include <QTime>
+#include <QMessageBox>
 #include <QtSerialPort/QSerialPortInfo>
 
 
@@ -19,10 +20,16 @@ Player::Player(ControlSettings& controlSettings)
   QStringList ports;
   for (QSerialPortInfo port : QSerialPortInfo::availablePorts())
   {
-    std::cout << port.portName().toStdString() << std::endl;
-    ports += port.portName();
+    std::cout << port.systemLocation().toStdString() << std::endl;
+    ports += port.systemLocation();
   }
-  const QString serialPortName = "/dev/ttyACM0";
+
+  QString serialPortName;
+  if (!ports.empty())
+  {
+    serialPortName = ports.first();
+  }
+  //  const QString serialPortName = "/dev/ttyACM0"; // linux
   //  const QString serialPortName = "COM7"; // windows
   m_ledController = createLedController(serialPortName);
 
@@ -42,7 +49,13 @@ Player::createLedController(QString serialPortName)
   std::lock_guard<std::mutex> lock(m_mutex);
 
   std::unique_ptr<LEDController> ledController( new LEDController(serialPortName) );
-  ledController->connect();
+  bool isConnected = ledController->connect();
+  if (!isConnected)
+  {
+    QMessageBox message;
+    message.setText("Unable to find to the LED-strip.\nMake sure the LED-strip is connected.\n\nIf it is, try removing and re-inserting the USB connector, and restart the application.");
+    message.exec();
+  }
   return ledController;
 }
 
