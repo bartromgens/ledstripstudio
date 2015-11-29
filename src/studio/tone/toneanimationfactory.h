@@ -9,6 +9,7 @@ class ToneAnimationFactory
 {
 public:
   ToneAnimationFactory();
+  virtual ~ToneAnimationFactory();
 
   virtual Animation createToneAnimation(unsigned int nLEDs, const ToneData& toneData) = 0;
 

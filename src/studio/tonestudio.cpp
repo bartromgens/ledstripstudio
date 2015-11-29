@@ -137,37 +137,3 @@ ToneStudio::setToneAnimationType(ToneStudio::AnimationType animationType)
     break;
   }
 }
-
-
-Color
-ToneStudio::getToneColor(Tone tone, double colorWheelOffset)
-{
-  unsigned int i = 0;
-  switch (tone)
-  {
-    case Tone::C :
-      i = 0;
-      break;
-    case Tone::D :
-      i = 1;
-      break;
-    case Tone::E :
-      i = 2;
-      break;
-    case Tone::F :
-      i = 3;
-      break;
-    case Tone::G :
-      i = 4;
-      break;
-    case Tone::A :
-      i = 5;
-      break;
-    case Tone::B :
-      i = 6;
-      break;
-  }
-
-  unsigned int colorInt = static_cast<int>( 3.0*127.0/7.0* (i + colorWheelOffset) ) % (3*128);
-  return Studio::wheel(colorInt);
-}

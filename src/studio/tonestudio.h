@@ -39,7 +39,6 @@ private:
   void calcToneMaxAverage();
   void calcToneMinAverage();
   void calcMaxAndMinTone(const std::map<Tone, double>& tones);
-  static Color getToneColor(Tone tone, double colorWheelOffset);
 
 private:
 
