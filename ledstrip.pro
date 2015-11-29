@@ -57,7 +57,14 @@ SOURCES += \
     src/studio/spectrumstudio.cpp \
     src/studio/studio.cpp \
     src/studio/tonestudio.cpp \
+    src/studio/tone/toneanimationfactory.cpp \
+    src/studio/tone/tonedata.cpp \
+    src/studio/tone/tonehistoryanimationfactory.cpp \
     src/main.cpp \
+    src/studio/tone/toneloudestanimationfactory.cpp \
+    src/studio/tone/tonerangeanimationfactory.cpp \
+    src/studio/tone/toneloudestsmoothanimationfactory.cpp \
+    src/studio/tone/toneindividualanimationfactory.cpp
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -94,7 +101,14 @@ HEADERS += \
     src/studio/studio.h \
     src/studio/spectrumstudio.h \
     src/studio/tonestudio.h \
+    src/studio/tone/toneanimationfactory.h \
+    src/studio/tone/tonedata.h \
+    src/studio/tone/tonehistoryanimationfactory.h \
     src/studio/imagestudio.h \
+    src/studio/tone/toneloudestanimationfactory.h \
+    src/studio/tone/tonerangeanimationfactory.h \
+    src/studio/tone/toneloudestsmoothanimationfactory.h \
+    src/studio/tone/toneindividualanimationfactory.h
 
 FORMS += \
     src/gui/mainwindow.ui \

@@ -1,5 +1,6 @@
 #include "tonetoolbar.h"
 
+#include <QDebug>
 #include <QSettings>
 
 #include <memory>
@@ -40,31 +41,39 @@ ToneToolbar::initialise()
   m_historyToneAct->setToolTip(tr("History tone mode"));
   m_historyToneAct->setCheckable(true);
 
+  m_rangeToneAct = new QAction(this);
+  m_rangeToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Range)));
+  m_rangeToneAct->setIcon(QIcon("./icons/tone-animation-individual.png"));
+  m_rangeToneAct->setToolTip(tr("Range tone mode"));
+  m_rangeToneAct->setCheckable(true);
+
   m_individualToneAct = new QAction(this);
   m_individualToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Individual)));
-  m_individualToneAct->setIcon(QIcon("./icons/tone-animation-individual.png"));
+  m_individualToneAct->setIcon(QIcon("./icons/tone-animation-corner.png"));
   m_individualToneAct->setToolTip(tr("Individual tone mode"));
   m_individualToneAct->setCheckable(true);
-
-  m_cornerToneAct = new QAction(this);
-  m_cornerToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Corner)));
-  m_cornerToneAct->setIcon(QIcon("./icons/tone-animation-corner.png"));
-  m_cornerToneAct->setToolTip(tr("Corner tone mode."));
-  m_cornerToneAct->setCheckable(true);
 
   m_actionGroup.addAction(m_stepToneAct);
   m_actionGroup.addAction(m_smoothToneAct);
   m_actionGroup.addAction(m_historyToneAct);
+  m_actionGroup.addAction(m_rangeToneAct);
   m_actionGroup.addAction(m_individualToneAct);
-  m_actionGroup.addAction(m_cornerToneAct);
 
   addAction(m_historyToneAct);
-  addAction(m_cornerToneAct);
   addAction(m_individualToneAct);
+  addAction(m_rangeToneAct);
   addAction(m_smoothToneAct);
   addAction(m_stepToneAct);
 
-  m_historyToneAct->setChecked(true);
+  connect(this, SIGNAL(actionTriggered(QAction*)), this, SLOT(slotToneModeTriggered()));
+}
+
+
+void
+ToneToolbar::slotToneModeTriggered() const
+{
+  qDebug();
+  m_toneStudio.setToneAnimationType(getAnimationType());
 }
 
 
@@ -119,17 +128,19 @@ ToneToolbar::loadConfiguration(QSettings& config)
       m_historyToneAct->setChecked(true);
       break;
     }
+    case ToneStudio::AnimationType::Range:
+    {
+      m_rangeToneAct->setChecked(true);
+      break;
+    }
     case ToneStudio::AnimationType::Individual:
     {
       m_individualToneAct->setChecked(true);
       break;
     }
-    case ToneStudio::AnimationType::Corner:
-    {
-      m_cornerToneAct->setChecked(true);
-      break;
-    }
   }
+
+  slotToneModeTriggered();
 
   config.endGroup();
 }
