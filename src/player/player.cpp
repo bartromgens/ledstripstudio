@@ -26,7 +26,7 @@ Player::Player(ControlSettings& controlSettings)
   QString serialPortName;
   if (!ports.empty())
   {
-//    serialPortName = ports.first();
+    serialPortName = ports.first();
   }
   //  const QString serialPortName = "/dev/ttyACM0"; // linux
   //  const QString serialPortName = "COM7"; // windows
