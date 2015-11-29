@@ -19,14 +19,17 @@ public:
   ToneToolbar(ToneStudio& toneStudio, QWidget* parent);
   virtual ~ToneToolbar();
 
-  ToneStudio::AnimationType getAnimationType() const;
-
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);
+
+private slots:
+
+  void slotToneModeTriggered() const;
 
 private:
 
   void initialise();
+  ToneStudio::AnimationType getAnimationType() const;
 
 private:
 
@@ -35,8 +38,8 @@ private:
   QAction* m_stepToneAct;
   QAction* m_smoothToneAct;
   QAction* m_historyToneAct;
+  QAction* m_rangeToneAct;
   QAction* m_individualToneAct;
-  QAction* m_cornerToneAct;
 
   QActionGroup m_actionGroup;
 };

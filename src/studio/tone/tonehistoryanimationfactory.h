@@ -5,7 +5,6 @@
 
 #include "basic/animation.h"
 #include "basic/tone.h"
-#include "studio/tonestudio.h"
 
 
 class ToneHistoryAnimationFactory : public ToneAnimationFactory
