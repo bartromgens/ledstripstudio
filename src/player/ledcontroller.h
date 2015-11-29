@@ -35,6 +35,8 @@ public:
   bool connect(const std::string& serialPortName);
   void send(const Frame& frame);
 
+  bool isConnected() const;
+
   int getFPS() const;
 
 private:

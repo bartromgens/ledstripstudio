@@ -125,6 +125,13 @@ LEDController::send(const Frame& frame)
 }
 
 
+bool
+LEDController::isConnected() const
+{
+  return m_serialPort && m_serialPort->is_open();
+}
+
+
 void
 LEDController::addLedByte(QByteArray& bytes, const std::vector<LED>& leds, int pos, int offset, int brightness)
 {

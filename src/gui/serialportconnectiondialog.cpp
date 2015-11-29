@@ -14,8 +14,8 @@ SerialPortConnectionDialog::SerialPortConnectionDialog(QWidget *parent) :
 
   for (QSerialPortInfo port : QSerialPortInfo::availablePorts())
   {
-    std::cout << port.portName().toStdString() << std::endl;
-    ui->serialPortComboBox->addItem(port.portName());
+    std::cout << port.systemLocation().toStdString() << std::endl;
+    ui->serialPortComboBox->addItem(port.systemLocation());
   }
 }
 

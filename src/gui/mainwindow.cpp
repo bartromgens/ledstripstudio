@@ -90,6 +90,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_configurationGroups.push_back(m_applicationSettingsDialog);
 
   loadUserOrDefaultConfig();
+
+  checkConnection();
 }
 
 
@@ -218,11 +220,6 @@ MainWindow::slotToggleAudioInput(bool isChecked)
   qDebug() << __PRETTY_FUNCTION__;
   if (isChecked)
   {
-    SerialPortConnectionDialog dialog;
-    if (dialog.exec())
-    {
-      m_player->connect(dialog.getSelectedPortName().toStdString());
-    }
     m_audioToggleButton->setIcon(QIcon("./icons/audio-volume-high.png"));
     startAudioInputThread();
   }
@@ -796,5 +793,21 @@ MainWindow::loadUserOrDefaultConfig()
     QSettings config(m_defaultConfigFilename, QSettings::NativeFormat);
     qDebug() << __PRETTY_FUNCTION__ << " - default config: " << m_defaultConfigFilename;
     loadConfigurationAll(config);
+  }
+}
+
+
+void
+MainWindow::checkConnection() const
+{
+  if (m_player->isConnected())
+  {
+    return;
+  }
+
+  SerialPortConnectionDialog dialog;
+  if (dialog.exec())
+  {
+    m_player->connect(dialog.getSelectedPortName().toStdString());
   }
 }

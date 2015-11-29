@@ -18,7 +18,8 @@ public:
   Player(ControlSettings& controlSettings);
   ~Player();
 
-  void connect(const std::string& serialPortName);
+  bool connect(const std::string& serialPortName);
+  bool isConnected() const;
 
   void addAnimation(const Animation& animation);
 
