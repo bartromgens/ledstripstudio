@@ -59,12 +59,12 @@ SOURCES += \
     src/studio/tonestudio.cpp \
     src/studio/tone/toneanimationfactory.cpp \
     src/studio/tone/tonedata.cpp \
-    src/studio/tone/tonehistoryanimationfactory.cpp \
+    src/studio/tone/toneanimationfactoryhistory.cpp \
     src/main.cpp \
-    src/studio/tone/toneloudestanimationfactory.cpp \
-    src/studio/tone/tonerangeanimationfactory.cpp \
-    src/studio/tone/toneloudestsmoothanimationfactory.cpp \
-    src/studio/tone/toneindividualanimationfactory.cpp
+    src/studio/tone/toneanimationfactoryloudest.cpp \
+    src/studio/tone/toneanimationfactoryrange.cpp \
+    src/studio/tone/toneanimationfactoryloudestsmooth.cpp \
+    src/studio/tone/toneanimationfactoryindividual.cpp
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -103,12 +103,12 @@ HEADERS += \
     src/studio/tonestudio.h \
     src/studio/tone/toneanimationfactory.h \
     src/studio/tone/tonedata.h \
-    src/studio/tone/tonehistoryanimationfactory.h \
+    src/studio/tone/toneanimationfactoryhistory.h \
     src/studio/imagestudio.h \
-    src/studio/tone/toneloudestanimationfactory.h \
-    src/studio/tone/tonerangeanimationfactory.h \
-    src/studio/tone/toneloudestsmoothanimationfactory.h \
-    src/studio/tone/toneindividualanimationfactory.h
+    src/studio/tone/toneanimationfactoryloudest.h \
+    src/studio/tone/toneanimationfactoryrange.h \
+    src/studio/tone/toneanimationfactoryloudestsmooth.h \
+    src/studio/tone/toneanimationfactoryindividual.h
 
 FORMS += \
     src/gui/mainwindow.ui \

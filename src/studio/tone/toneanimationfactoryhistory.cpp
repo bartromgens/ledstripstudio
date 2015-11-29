@@ -1,4 +1,4 @@
-#include "tonehistoryanimationfactory.h"
+#include "toneanimationfactoryhistory.h"
 
 #include "studio/studio.h"
 
@@ -7,7 +7,7 @@
 #include <cassert>
 
 
-ToneHistoryAnimationFactory::ToneHistoryAnimationFactory()
+ToneAnimationFactoryHistory::ToneAnimationFactoryHistory()
 : ToneAnimationFactory(),
   m_toneHistoryFrame(0)
 {
@@ -15,7 +15,7 @@ ToneHistoryAnimationFactory::ToneHistoryAnimationFactory()
 
 
 Animation
-ToneHistoryAnimationFactory::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
+ToneAnimationFactoryHistory::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
 {
   const unsigned int speed = 1;
   const double colorWheelOffset = 2.8;
@@ -34,7 +34,7 @@ ToneHistoryAnimationFactory::createToneAnimation(unsigned int nLEDs, const ToneD
   }
   unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
 
-  Color color = ToneHistoryAnimationFactory::getToneColor(toneData.maxTone, colorWheelOffset);
+  Color color = ToneAnimationFactoryHistory::getToneColor(toneData.maxTone, colorWheelOffset);
 
   color.r = color.r * brightness/127.0;
   color.g = color.g * brightness/127.0;
@@ -74,7 +74,7 @@ ToneHistoryAnimationFactory::createToneAnimation(unsigned int nLEDs, const ToneD
 
 
 Color
-ToneHistoryAnimationFactory::getToneColor(Tone tone, double colorWheelOffset)
+ToneAnimationFactoryHistory::getToneColor(Tone tone, double colorWheelOffset)
 {
   unsigned int i = 0;
   switch (tone)

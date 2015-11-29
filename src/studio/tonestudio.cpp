@@ -2,11 +2,11 @@
 
 #include "spectrum/toneanalyser.h"
 #include "studio.h"
-#include "studio/tone/toneloudestanimationfactory.h"
-#include "studio/tone/toneindividualanimationfactory.h"
-#include "studio/tone/tonehistoryanimationfactory.h"
-#include "studio/tone/toneloudestsmoothanimationfactory.h"
-#include "studio/tone/tonerangeanimationfactory.h"
+#include "studio/tone/toneanimationfactoryloudest.h"
+#include "studio/tone/toneanimationfactoryindividual.h"
+#include "studio/tone/toneanimationfactoryhistory.h"
+#include "studio/tone/toneanimationfactoryloudestsmooth.h"
+#include "studio/tone/toneanimationfactoryrange.h"
 
 #include <QDebug>
 
@@ -19,7 +19,7 @@ unsigned int ToneStudio::m_historySize = 30;
 
 
 ToneStudio::ToneStudio()
-: m_toneAnimationFactory(new ToneHistoryAnimationFactory()),
+: m_toneAnimationFactory(new ToneAnimationFactoryHistory()),
   m_toneHistoryFrame(0),
   m_toneData()
 {
@@ -118,19 +118,19 @@ ToneStudio::setToneAnimationType(ToneStudio::AnimationType animationType)
   switch (animationType)
   {
   case ToneStudio::AnimationType::History :
-    m_toneAnimationFactory.reset( new ToneHistoryAnimationFactory() );
+    m_toneAnimationFactory.reset( new ToneAnimationFactoryHistory() );
     break;
   case ToneStudio::AnimationType::Individual :
-    m_toneAnimationFactory.reset( new ToneIndividualAnimationFactory() );
+    m_toneAnimationFactory.reset( new ToneAnimationFactoryIndividual() );
     break;
   case ToneStudio::AnimationType::Loudest :
-    m_toneAnimationFactory.reset( new ToneLoudestAnimationFactory() );
+    m_toneAnimationFactory.reset( new ToneAnimationFactoryLoudest() );
     break;
   case ToneStudio::AnimationType::Range :
-    m_toneAnimationFactory.reset( new ToneRangeAnimationFactory() );
+    m_toneAnimationFactory.reset( new ToneAnimationFactoryRange() );
     break;
   case ToneStudio::AnimationType::SmoothSum :
-    m_toneAnimationFactory.reset( new ToneLoudestSmoothAnimationFactory() );
+    m_toneAnimationFactory.reset( new ToneAnimationFactoryLoudestSmooth() );
     break;
   case ToneStudio::AnimationType::None :
     assert(false);

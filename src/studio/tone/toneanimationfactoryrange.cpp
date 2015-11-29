@@ -1,4 +1,4 @@
-#include "tonerangeanimationfactory.h"
+#include "toneanimationfactoryrange.h"
 
 #include "studio/studio.h"
 
@@ -7,14 +7,14 @@
 #include <cassert>
 
 
-ToneRangeAnimationFactory::ToneRangeAnimationFactory()
+ToneAnimationFactoryRange::ToneAnimationFactoryRange()
 : ToneAnimationFactory()
 {
 }
 
 
 Animation
-ToneRangeAnimationFactory::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
+ToneAnimationFactoryRange::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
 {
   const double minThreshold = 30;
   const double amplificationExponent = 2.0;

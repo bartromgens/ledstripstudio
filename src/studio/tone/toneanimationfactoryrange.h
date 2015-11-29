@@ -1,5 +1,5 @@
-#ifndef TONERANGEANIMATIONFACTORY_H
-#define TONERANGEANIMATIONFACTORY_H
+#ifndef TONEANIMATIONFACTORYRANGE_H
+#define TONEANIMATIONFACTORYRANGE_H
 
 #include "toneanimationfactory.h"
 
@@ -7,12 +7,12 @@
 #include "basic/tone.h"
 
 
-class ToneRangeAnimationFactory : public ToneAnimationFactory
+class ToneAnimationFactoryRange : public ToneAnimationFactory
 {
 
 public:
 
-  ToneRangeAnimationFactory();
+  ToneAnimationFactoryRange();
 
   virtual Animation createToneAnimation(unsigned int nLEDs, const ToneData& toneData);
 
@@ -20,4 +20,4 @@ private:
 
 };
 
-#endif // TONERANGEANIMATIONFACTORY_H
+#endif // TONEANIMATIONFACTORYRANGE_H

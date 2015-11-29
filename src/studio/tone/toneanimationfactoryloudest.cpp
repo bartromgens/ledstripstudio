@@ -1,4 +1,4 @@
-#include "toneloudestanimationfactory.h"
+#include "toneanimationfactoryloudest.h"
 
 #include "studio/studio.h"
 
@@ -7,14 +7,14 @@
 #include <cassert>
 
 
-ToneLoudestAnimationFactory::ToneLoudestAnimationFactory()
+ToneAnimationFactoryLoudest::ToneAnimationFactoryLoudest()
 : ToneAnimationFactory()
 {
 }
 
 
 Animation
-ToneLoudestAnimationFactory::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
+ToneAnimationFactoryLoudest::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
 {
   Animation animation;
 

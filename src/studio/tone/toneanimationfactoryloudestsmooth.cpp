@@ -1,4 +1,4 @@
-#include "toneloudestsmoothanimationfactory.h"
+#include "toneanimationfactoryloudestsmooth.h"
 
 #include "studio/studio.h"
 
@@ -7,17 +7,16 @@
 #include <cassert>
 
 
-ToneLoudestSmoothAnimationFactory::ToneLoudestSmoothAnimationFactory()
+ToneAnimationFactoryLoudestSmooth::ToneAnimationFactoryLoudestSmooth()
 : ToneAnimationFactory()
 {
 }
 
 
 Animation
-ToneLoudestSmoothAnimationFactory::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
+ToneAnimationFactoryLoudestSmooth::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
 {
   Animation animation;
-
   Frame frame(nLEDs);
 
   for (unsigned int i = 0; i < nLEDs; ++i)

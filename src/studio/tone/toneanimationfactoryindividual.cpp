@@ -1,4 +1,4 @@
-#include "toneindividualanimationfactory.h"
+#include "toneanimationfactoryindividual.h"
 
 #include "studio/studio.h"
 
@@ -7,14 +7,14 @@
 #include <cassert>
 
 
-ToneIndividualAnimationFactory::ToneIndividualAnimationFactory()
+ToneAnimationFactoryIndividual::ToneAnimationFactoryIndividual()
 : ToneAnimationFactory()
 {
 }
 
 
 Animation
-ToneIndividualAnimationFactory::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
+ToneAnimationFactoryIndividual::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
 {
   Animation animation;
   Frame frame(nLEDs);

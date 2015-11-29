@@ -1,5 +1,5 @@
-#ifndef TONEHISTORYANIMATIONFACTORY_H
-#define TONEHISTORYANIMATIONFACTORY_H
+#ifndef TONEANIMATIONFACTORYHISTORY_H
+#define TONEANIMATIONFACTORYHISTORY_H
 
 #include "toneanimationfactory.h"
 
@@ -7,12 +7,12 @@
 #include "basic/tone.h"
 
 
-class ToneHistoryAnimationFactory : public ToneAnimationFactory
+class ToneAnimationFactoryHistory : public ToneAnimationFactory
 {
 
 public:
 
-  ToneHistoryAnimationFactory();
+  ToneAnimationFactoryHistory();
 
   virtual Animation createToneAnimation(unsigned int nLEDs, const ToneData& toneData);
 
@@ -26,4 +26,4 @@ private:
 
 };
 
-#endif // TONEHISTORYANIMATIONFACTORY_H
+#endif // TONEANIMATIONFACTORYHISTORY_H
