@@ -5,19 +5,6 @@
 #include <vector>
 
 
-struct FrequencyBand
-{
-  double getBandWidth() const
-  {
-    return maxFrequency - minFrequency;
-  }
-
-  double value;
-  double minFrequency;
-  double maxFrequency;
-};
-
-
 class PowerSpectrum
 {
 public:
