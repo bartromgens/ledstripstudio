@@ -7,6 +7,11 @@ ToneAnimationFactory::ToneAnimationFactory()
 }
 
 
+ToneAnimationFactory::~ToneAnimationFactory()
+{
+}
+
+
 void
 ToneAnimationFactory::createRandomToneColorMap(const std::map<Tone, double>& tones)
 {
