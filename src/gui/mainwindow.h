@@ -138,6 +138,8 @@ private:
   void loadConfigurationAll(QSettings& config);
   void saveConfigurationAll(QSettings& config) const;
 
+  void checkConnection() const;
+
 private:
 
   Ui::MainWindow* ui;

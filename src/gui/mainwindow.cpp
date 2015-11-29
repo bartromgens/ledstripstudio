@@ -6,6 +6,7 @@
 #include "gui/spectrumsettingswidget.h"
 #include "gui/spectrumwidget.h"
 #include "gui/playersettingswidget.h"
+#include "gui/serialportconnectiondialog.h"
 #include "settings/configurationgroup.h"
 #include "settings/controlsettings.h"
 #include "spectrum/beatanalyser.h"
@@ -89,6 +90,8 @@ MainWindow::MainWindow(QWidget *parent) :
   m_configurationGroups.push_back(m_applicationSettingsDialog);
 
   loadUserOrDefaultConfig();
+
+  checkConnection();
 }
 
 
@@ -790,5 +793,21 @@ MainWindow::loadUserOrDefaultConfig()
     QSettings config(m_defaultConfigFilename, QSettings::NativeFormat);
     qDebug() << __PRETTY_FUNCTION__ << " - default config: " << m_defaultConfigFilename;
     loadConfigurationAll(config);
+  }
+}
+
+
+void
+MainWindow::checkConnection() const
+{
+  if (m_player->isConnected())
+  {
+    return;
+  }
+
+  SerialPortConnectionDialog dialog;
+  if (dialog.exec())
+  {
+    m_player->connect(dialog.getSelectedPortName().toStdString());
   }
 }

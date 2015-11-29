@@ -6,6 +6,7 @@
 #include "basic/animation.h"
 #include "settings/controlsettings.h"
 
+#include <string>
 #include <memory>
 
 
@@ -16,6 +17,9 @@ public:
 
   Player(ControlSettings& controlSettings);
   ~Player();
+
+  bool connect(const std::string& serialPortName);
+  bool isConnected() const;
 
   void addAnimation(const Animation& animation);
 

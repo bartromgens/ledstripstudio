@@ -12,6 +12,7 @@
 #include <deque>
 #include <mutex>
 #include <memory>
+#include <string>
 #include <vector>
 
 
@@ -28,11 +29,13 @@ class LEDController
 
 public:
 
-  explicit LEDController(const QString& serialPortName);
+  explicit LEDController();
   ~LEDController();
 
-  bool connect();
+  bool connect(const std::string& serialPortName);
   void send(const Frame& frame);
+
+  bool isConnected() const;
 
   int getFPS() const;
 
@@ -45,7 +48,6 @@ private:
 
 private:
 
-  QString m_serialPortName;
   QElapsedTimer m_timer;
   std::deque<int> m_fpsHistory;
   mutable std::mutex m_mutex;
