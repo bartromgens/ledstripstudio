@@ -37,7 +37,7 @@ SOURCES += \
     src/gui/ledstripemulator.cpp \
     src/gui/ledstripstatuswidget.cpp \
     src/gui/playersettingswidget.cpp \
-    src/gui/serialportconnectiondialog.cpp
+    src/gui/serialportconnectiondialog.cpp \
     src/gui/spectrumbarswidget.cpp \
     src/gui/spectrumsettingswidget.cpp \
     src/gui/spectrumwidget.cpp \
@@ -76,7 +76,7 @@ HEADERS += \
     src/gui/ledstripstatuswidget.h \
     src/gui/mainwindow.h \
     src/gui/playersettingswidget.h \
-    src/gui/serialportconnectiondialog.h
+    src/gui/serialportconnectiondialog.h \
     src/gui/spectrumbarswidget.h \
     src/gui/spectrumsettingswidget.h \
     src/gui/spectrumwidget.h \
