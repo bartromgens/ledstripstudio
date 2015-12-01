@@ -9,7 +9,6 @@
 
 ToneAnimationFactoryHistory::ToneAnimationFactoryHistory()
 : ToneAnimationFactory(),
-  m_toneHistoryFrame(0),
   m_toneHistory()
 {
 }
@@ -29,62 +28,14 @@ ToneAnimationFactoryHistory::createToneAnimation(unsigned int nLEDs, const ToneD
     m_toneHistory.pop_back();
   }
 
-  return createToneAnimationDynamicHistory(nLEDs, toneData);
-  return createToneAnimationStaticHistory(nLEDs, toneData);
+  return doCreateToneAnimation(nLEDs, toneData);
 }
 
 
-Animation
-ToneAnimationFactoryHistory::createToneAnimationStaticHistory(unsigned int nLEDs, const ToneData& toneData)
+const
+std::deque<std::pair<Tone, double> >&ToneAnimationFactoryHistory::getToneHistory() const
 {
-  Animation animation;
-  Color color = ToneAnimationFactoryHistory::getToneColor(toneData.maxTone);
-  double brightness = ToneAnimationFactoryHistory::getNormalisedBrightness(toneData.maxToneAmplitude, toneData);
-  color.setBrightness(brightness);
-
-  Frame frame(nLEDs);
-
-  LED led(0, color);
-  frame.addLED(led);
-
-  std::vector<LED> leds = m_toneHistoryFrame.getLEDs();
-  for (auto& led : leds)
-  {
-    led.setLEDnr(led.getLEDnr() + 1);
-    frame.addLED(led);
-  }
-
-  frame.mirror();
-  animation.addFrame(frame);
-  m_toneHistoryFrame = frame;
-  return animation;
-}
-
-
-Animation
-ToneAnimationFactoryHistory::createToneAnimationDynamicHistory(unsigned int nLEDs, const ToneData& toneData)
-{
-  Animation animation;
-  Frame frame(nLEDs);
-
-  unsigned int ledNr = 0;
-  for (const auto& toneAmplitude : m_toneHistory)
-  {
-    Tone tone = toneAmplitude.first;
-    double amplitude = toneAmplitude.second;
-
-    Color color = ToneAnimationFactoryHistory::getToneColor(tone);
-    double brightness = ToneAnimationFactoryHistory::getNormalisedBrightness(toneData.currentTones.at(tone), toneData);
-    color.setBrightness(brightness);
-
-    LED led(ledNr, color);
-    frame.addLED(led);
-    ledNr++;
-  }
-
-  frame.mirror();
-  animation.addFrame(frame);
-  return animation;
+  return m_toneHistory;
 }
 
 

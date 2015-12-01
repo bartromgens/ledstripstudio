@@ -37,7 +37,8 @@ private:
 
   QAction* m_stepToneAct;
   QAction* m_smoothToneAct;
-  QAction* m_historyToneAct;
+  QAction* m_historyStaticToneAct;
+  QAction* m_historyDynamicToneAct;
   QAction* m_rangeToneAct;
   QAction* m_individualToneAct;
 

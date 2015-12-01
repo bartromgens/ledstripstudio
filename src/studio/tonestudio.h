@@ -19,7 +19,8 @@ public:
     None,
     Loudest,
     SmoothSum,
-    History,
+    HistoryStatic,
+    HistoryDynamic,
     Individual,
     Range
   };

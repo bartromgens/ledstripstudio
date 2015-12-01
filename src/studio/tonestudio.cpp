@@ -4,7 +4,8 @@
 #include "studio.h"
 #include "studio/tone/toneanimationfactoryloudest.h"
 #include "studio/tone/toneanimationfactoryindividual.h"
-#include "studio/tone/toneanimationfactoryhistory.h"
+#include "studio/tone/toneanimationfactoryhistorystatic.h"
+#include "studio/tone/toneanimationfactoryhistorydynamic.h"
 #include "studio/tone/toneanimationfactoryloudestsmooth.h"
 #include "studio/tone/toneanimationfactoryrange.h"
 
@@ -19,7 +20,7 @@ unsigned int ToneStudio::m_historySize = 30;
 
 
 ToneStudio::ToneStudio()
-: m_toneAnimationFactory(new ToneAnimationFactoryHistory()),
+: m_toneAnimationFactory(new ToneAnimationFactoryHistoryStatic()),
   m_toneHistoryFrame(0),
   m_toneData()
 {
@@ -117,8 +118,11 @@ ToneStudio::setToneAnimationType(ToneStudio::AnimationType animationType)
 {
   switch (animationType)
   {
-  case ToneStudio::AnimationType::History :
-    m_toneAnimationFactory.reset( new ToneAnimationFactoryHistory() );
+  case ToneStudio::AnimationType::HistoryStatic :
+    m_toneAnimationFactory.reset( new ToneAnimationFactoryHistoryStatic() );
+    break;
+  case ToneStudio::AnimationType::HistoryDynamic :
+    m_toneAnimationFactory.reset( new ToneAnimationFactoryHistoryDynamic() );
     break;
   case ToneStudio::AnimationType::Individual :
     m_toneAnimationFactory.reset( new ToneAnimationFactoryIndividual() );

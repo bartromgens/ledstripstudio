@@ -19,19 +19,19 @@ public:
 
   virtual Animation createToneAnimation(unsigned int nLEDs, const ToneData& toneData);
 
-  Animation createToneAnimationStaticHistory(unsigned int nLEDs, const ToneData& toneData);
+protected:
 
-private:
+  const std::deque<std::pair<Tone, double>>& getToneHistory() const;
 
   static Color getToneColor(Tone tone, double colorWheelOffset = 2.8);
-
-  Animation createToneAnimationDynamicHistory(unsigned int nLEDs, const ToneData& toneData);
-
   static double getNormalisedBrightness(double toneAmplitude, const ToneData& toneData);
 
 private:
 
-  Frame m_toneHistoryFrame;
+  virtual Animation doCreateToneAnimation(unsigned int nLEDs, const ToneData& toneData) = 0;
+
+private:
+
   std::deque<std::pair<Tone, double>> m_toneHistory;
 
 };

@@ -35,11 +35,17 @@ ToneToolbar::initialise()
   m_smoothToneAct->setToolTip(tr("Smooth tone mode"));
   m_smoothToneAct->setCheckable(true);
 
-  m_historyToneAct = new QAction(this);
-  m_historyToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::History)));
-  m_historyToneAct->setIcon(QIcon("./icons/tone-animation-history.png"));
-  m_historyToneAct->setToolTip(tr("History tone mode"));
-  m_historyToneAct->setCheckable(true);
+  m_historyStaticToneAct = new QAction(this);
+  m_historyStaticToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::HistoryStatic)));
+  m_historyStaticToneAct->setIcon(QIcon("./icons/tone-animation-history.png"));
+  m_historyStaticToneAct->setToolTip(tr("Static history tone mode"));
+  m_historyStaticToneAct->setCheckable(true);
+
+  m_historyDynamicToneAct = new QAction(this);
+  m_historyDynamicToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::HistoryDynamic)));
+  m_historyDynamicToneAct->setIcon(QIcon("./icons/tone-animation-history-dynamic.png"));
+  m_historyDynamicToneAct->setToolTip(tr("Dynamic history tone mode"));
+  m_historyDynamicToneAct->setCheckable(true);
 
   m_rangeToneAct = new QAction(this);
   m_rangeToneAct->setData(QVariant(static_cast<int>(ToneStudio::AnimationType::Range)));
@@ -55,11 +61,13 @@ ToneToolbar::initialise()
 
   m_actionGroup.addAction(m_stepToneAct);
   m_actionGroup.addAction(m_smoothToneAct);
-  m_actionGroup.addAction(m_historyToneAct);
+  m_actionGroup.addAction(m_historyStaticToneAct);
+  m_actionGroup.addAction(m_historyDynamicToneAct);
   m_actionGroup.addAction(m_rangeToneAct);
   m_actionGroup.addAction(m_individualToneAct);
 
-  addAction(m_historyToneAct);
+  addAction(m_historyStaticToneAct);
+  addAction(m_historyDynamicToneAct);
   addAction(m_individualToneAct);
   addAction(m_rangeToneAct);
   addAction(m_smoothToneAct);
@@ -123,9 +131,14 @@ ToneToolbar::loadConfiguration(QSettings& config)
       m_smoothToneAct->setChecked(true);
       break;
     }
-    case ToneStudio::AnimationType::History:
+    case ToneStudio::AnimationType::HistoryStatic:
     {
-      m_historyToneAct->setChecked(true);
+      m_historyStaticToneAct->setChecked(true);
+      break;
+    }
+    case ToneStudio::AnimationType::HistoryDynamic:
+    {
+      m_historyStaticToneAct->setChecked(true);
       break;
     }
     case ToneStudio::AnimationType::Range:
