@@ -9,7 +9,13 @@
 
 ToneAnimationFactoryHistory::ToneAnimationFactoryHistory()
 : ToneAnimationFactory(),
-  m_toneHistoryFrame(0)
+  m_toneHistoryFrame(0),
+  m_toneHistory()
+{
+}
+
+
+ToneAnimationFactoryHistory::~ToneAnimationFactoryHistory()
 {
 }
 
@@ -17,58 +23,67 @@ ToneAnimationFactoryHistory::ToneAnimationFactoryHistory()
 Animation
 ToneAnimationFactoryHistory::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
 {
-  const unsigned int speed = 1;
-  const double colorWheelOffset = 2.8;
-
-  Animation animation;
-
-  double brightnessRelative = 0.0;
-  if (toneData.toneMaxAverage > 0.01)
+  m_toneHistory.push_front(std::make_pair(toneData.maxTone, toneData.maxToneAmplitude));
+  if (m_toneHistory.size() > nLEDs)
   {
-    brightnessRelative = std::log(toneData.maxToneAmplitude/ ((toneData.toneMaxAverage + toneData.toneMinAverage)/1.5)) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
-    if (brightnessRelative < 0.0)
-    {
-      brightnessRelative = 0.0;
-    }
-    assert(brightnessRelative >= 0.0);
+    m_toneHistory.pop_back();
   }
-  unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
 
-  Color color = ToneAnimationFactoryHistory::getToneColor(toneData.maxTone, colorWheelOffset);
+  return createToneAnimationDynamicHistory(nLEDs, toneData);
+  return createToneAnimationStaticHistory(nLEDs, toneData);
+}
 
-  color.r = color.r * brightness/127.0;
-  color.g = color.g * brightness/127.0;
-  color.b = color.b * brightness/127.0;
+
+Animation
+ToneAnimationFactoryHistory::createToneAnimationStaticHistory(unsigned int nLEDs, const ToneData& toneData)
+{
+  Animation animation;
+  Color color = ToneAnimationFactoryHistory::getToneColor(toneData.maxTone);
+  double brightness = ToneAnimationFactoryHistory::getNormalisedBrightness(toneData.maxToneAmplitude, toneData);
+  color.setBrightness(brightness);
 
   Frame frame(nLEDs);
+
+  LED led(0, color);
+  frame.addLED(led);
+
   std::vector<LED> leds = m_toneHistoryFrame.getLEDs();
-
-  for (std::size_t i = 0 ; i < leds.size()/2; ++i)
+  for (auto& led : leds)
   {
-    unsigned int mirrorI = leds.size()-i-1;
-    if (mirrorI > i + speed)
-    {
-      leds[i].setLEDnr(leds[i].getLEDnr() + speed);
-      leds[mirrorI].setLEDnr(leds[mirrorI].getLEDnr() - speed);
-
-      frame.addLED(leds[i]);
-      frame.addLED(leds[mirrorI]);
-    }
-  }
-
-  for (unsigned int i = 0; i < speed; ++i)
-  {
-    int mirrorI = nLEDs-i-1;
-
-    LED led(i, color);
+    led.setLEDnr(led.getLEDnr() + 1);
     frame.addLED(led);
-    LED led2(mirrorI, color);
-    frame.addLED(led2);
   }
 
+  frame.mirror();
   animation.addFrame(frame);
   m_toneHistoryFrame = frame;
+  return animation;
+}
 
+
+Animation
+ToneAnimationFactoryHistory::createToneAnimationDynamicHistory(unsigned int nLEDs, const ToneData& toneData)
+{
+  Animation animation;
+  Frame frame(nLEDs);
+
+  unsigned int ledNr = 0;
+  for (const auto& toneAmplitude : m_toneHistory)
+  {
+    Tone tone = toneAmplitude.first;
+    double amplitude = toneAmplitude.second;
+
+    Color color = ToneAnimationFactoryHistory::getToneColor(tone);
+    double brightness = ToneAnimationFactoryHistory::getNormalisedBrightness(toneData.currentTones.at(tone), toneData);
+    color.setBrightness(brightness);
+
+    LED led(ledNr, color);
+    frame.addLED(led);
+    ledNr++;
+  }
+
+  frame.mirror();
+  animation.addFrame(frame);
   return animation;
 }
 
@@ -104,4 +119,30 @@ ToneAnimationFactoryHistory::getToneColor(Tone tone, double colorWheelOffset)
 
   unsigned int colorInt = static_cast<int>( 3.0*127.0/7.0* (i + colorWheelOffset) ) % (3*128);
   return Studio::wheel(colorInt);
+}
+
+
+double
+ToneAnimationFactoryHistory::getNormalisedBrightness(double toneAmplitude, const ToneData& toneData)
+{
+//  double toneAmplitudeSum = 0.0;
+//  for (const auto& toneAmplitude : toneData.currentTones)
+//  {
+//    toneAmplitudeSum += toneAmplitude.second;
+//  }
+//  double toneAmplitudeAverage = toneAmplitudeSum/toneData.currentTones.size();
+
+  double brightnessRelative = 0.0;
+  if (toneData.toneMaxAverage > 0.01)
+  {
+//    brightnessRelative = std::log( toneAmplitude / ((toneData.toneMaxAverage + toneData.toneMinAverage)) ) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
+    brightnessRelative = std::log( toneAmplitude / (toneData.toneMaxAverage/2.0) ) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
+    if (brightnessRelative < 0.0)
+    {
+      brightnessRelative = 0.0;
+    }
+    assert(brightnessRelative >= 0.0);
+  }
+
+  return brightnessRelative;
 }
