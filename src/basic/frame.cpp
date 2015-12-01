@@ -39,11 +39,6 @@ Frame::addLED(const LED& led)
   {
     m_leds[led.getLEDnr()] = led;
   }
-  else
-  {
-    std::cout << "Frame::addLED() - led nr: " << led.getLEDnr() << std::endl; // TODO fixme
-    assert(true);
-  }
 }
 
 void
