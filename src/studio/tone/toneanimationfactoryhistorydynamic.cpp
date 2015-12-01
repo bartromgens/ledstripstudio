@@ -10,7 +10,6 @@ ToneAnimationFactoryHistoryDynamic::ToneAnimationFactoryHistoryDynamic()
 Animation
 ToneAnimationFactoryHistoryDynamic::doCreateToneAnimation(unsigned int nLEDs, const ToneData& toneData)
 {
-  std::cout << __PRETTY_FUNCTION__ << std::endl;
   Animation animation;
   Frame frame(nLEDs);
 
