@@ -20,7 +20,7 @@ protected:
 private:
 
   void createRandomToneColorMap(const std::map<Tone, double>& tones);
-  void createToneColorMap(const std::map<Tone, double>& tones);
+  static std::map<Tone, Color> createToneColorMap(const std::map<Tone, double>& tones);
 
 private:
 
