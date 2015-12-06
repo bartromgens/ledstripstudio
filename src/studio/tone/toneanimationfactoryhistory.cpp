@@ -87,7 +87,7 @@ ToneAnimationFactoryHistory::getNormalisedBrightness(double toneAmplitude, const
   if (toneData.toneMaxAverage > 0.01)
   {
 //    brightnessRelative = std::log( toneAmplitude / ((toneData.toneMaxAverage + toneData.toneMinAverage)) ) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
-    brightnessRelative = std::log( toneAmplitude / (toneData.toneMaxAverage/2.0) ) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
+    brightnessRelative = std::log( toneAmplitude / (toneData.toneMaxAverage/3.0) ) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
     if (brightnessRelative < 0.0)
     {
       brightnessRelative = 0.0;
