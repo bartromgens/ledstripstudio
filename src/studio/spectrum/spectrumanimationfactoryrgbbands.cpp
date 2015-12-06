@@ -17,7 +17,7 @@ SpectrumAnimationFactoryRGBBands::~SpectrumAnimationFactoryRGBBands()
 Animation
 SpectrumAnimationFactoryRGBBands::createSpectrumAnimation(unsigned int nLEDs,
                                                           const std::vector<std::pair<double, double>>& spectrum,
-                                                          const ControlSettings& settings)
+                                                          const ControlSettings& settings) const
 {
   double brightnessRed = 0.0;
   double brightnessGreen = 0.0;

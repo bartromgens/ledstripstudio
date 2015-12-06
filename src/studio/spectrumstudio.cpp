@@ -18,9 +18,9 @@ SpectrumStudio::~SpectrumStudio()
 
 
 Animation
-SpectrumStudio::createWaveformAnimationCentral(unsigned int nLEDs,
-                                               const std::vector<std::pair<double, double>>& spectrum,
-                                               const ControlSettings& settings)
+SpectrumStudio::createAnimation(unsigned int nLEDs,
+                                const std::vector<std::pair<double, double>>& spectrum,
+                                const ControlSettings& settings)
 {
   return m_spectrumAnimationFactory->createSpectrumAnimation(nLEDs, spectrum, settings);
 }

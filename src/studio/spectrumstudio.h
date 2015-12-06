@@ -16,9 +16,9 @@ public:
   SpectrumStudio();
   ~SpectrumStudio();
 
-  Animation createWaveformAnimationCentral(unsigned int nLEDs,
-                                           const std::vector<std::pair<double, double>>& spectrum,
-                                           const ControlSettings& settings);
+  Animation createAnimation(unsigned int nLEDs,
+                            const std::vector<std::pair<double, double>>& spectrum,
+                            const ControlSettings& settings);
 
   void drawSpectrumInConsole(const std::vector<std::pair<double, double>>& spectrum,
                              int minFreq,

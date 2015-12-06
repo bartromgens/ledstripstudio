@@ -15,7 +15,7 @@ public:
 
   virtual Animation createSpectrumAnimation(unsigned int nLEDs,
                                             const std::vector<std::pair<double, double>>& spectrum,
-                                            const ControlSettings& settings) = 0;
+                                            const ControlSettings& settings) const = 0;
 
 private:
 
