@@ -743,6 +743,8 @@ MainWindow::loadConfiguration(QSettings& config)
   m_colorToggleAct->setChecked(config.value("singleColor").toBool());
   m_animationToggleAct->setChecked(config.value("animation").toBool());
 
+  m_toneToolbar->setVisible(config.value("toneAnalysis").toBool());
+
   config.endGroup();
 }
 
