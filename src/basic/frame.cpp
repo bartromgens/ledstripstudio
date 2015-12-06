@@ -39,11 +39,6 @@ Frame::addLED(const LED& led)
   {
     m_leds[led.getLEDnr()] = led;
   }
-  else
-  {
-    std::cout << "Frame::addLED() - led nr: " << led.getLEDnr() << std::endl; // TODO fixme
-    assert(true);
-  }
 }
 
 void
@@ -97,4 +92,16 @@ void
 Frame::setBrightness(int brightness)
 {
   m_brightness = brightness;
+}
+
+void
+Frame::mirror()
+{
+  const std::vector<LED>& leds = getLEDs();
+  for (std::size_t i = 0 ; i < leds.size()/2; ++i)
+  {
+    unsigned int mirrorI = leds.size()-i-1;
+    LED led(mirrorI, leds[i].getColor());
+    addLED(led);
+  }
 }

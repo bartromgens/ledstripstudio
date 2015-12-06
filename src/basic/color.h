@@ -13,8 +13,13 @@ struct Color
   int b;
 
 public:
+
+  void setBrightness(double brightness);
+
   void print() const;
+
   static Color randomColor();
+
 };
 
 #endif // COLOR_H

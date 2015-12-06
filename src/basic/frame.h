@@ -27,6 +27,8 @@ public:
   int getBrightness() const;
   void setBrightness(int brightness);
 
+  void mirror();
+
 private:
   void fill();
 

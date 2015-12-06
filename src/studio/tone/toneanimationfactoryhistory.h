@@ -6,6 +6,8 @@
 #include "basic/animation.h"
 #include "basic/tone.h"
 
+#include <deque>
+
 
 class ToneAnimationFactoryHistory : public ToneAnimationFactory
 {
@@ -13,16 +15,24 @@ class ToneAnimationFactoryHistory : public ToneAnimationFactory
 public:
 
   ToneAnimationFactoryHistory();
+  virtual ~ToneAnimationFactoryHistory();
 
   virtual Animation createToneAnimation(unsigned int nLEDs, const ToneData& toneData);
 
+protected:
+
+  const std::deque<std::pair<Tone, double>>& getToneHistory() const;
+
+  static Color getToneColor(Tone tone, double colorWheelOffset = 2.8);
+  static double getNormalisedBrightness(double toneAmplitude, const ToneData& toneData);
+
 private:
 
-  static Color getToneColor(Tone tone, double colorWheelOffset);
+  virtual Animation doCreateToneAnimation(unsigned int nLEDs, const ToneData& toneData) = 0;
 
 private:
 
-  Frame m_toneHistoryFrame;
+  std::deque<std::pair<Tone, double>> m_toneHistory;
 
 };
 

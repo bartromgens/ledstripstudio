@@ -9,7 +9,12 @@
 
 ToneAnimationFactoryHistory::ToneAnimationFactoryHistory()
 : ToneAnimationFactory(),
-  m_toneHistoryFrame(0)
+  m_toneHistory()
+{
+}
+
+
+ToneAnimationFactoryHistory::~ToneAnimationFactoryHistory()
 {
 }
 
@@ -17,59 +22,20 @@ ToneAnimationFactoryHistory::ToneAnimationFactoryHistory()
 Animation
 ToneAnimationFactoryHistory::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
 {
-  const unsigned int speed = 1;
-  const double colorWheelOffset = 2.8;
-
-  Animation animation;
-
-  double brightnessRelative = 0.0;
-  if (toneData.toneMaxAverage > 0.01)
+  m_toneHistory.push_front(std::make_pair(toneData.maxTone, toneData.maxToneAmplitude));
+  if (m_toneHistory.size() > nLEDs)
   {
-    brightnessRelative = std::log(toneData.maxToneAmplitude/ ((toneData.toneMaxAverage + toneData.toneMinAverage)/1.5)) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
-    if (brightnessRelative < 0.0)
-    {
-      brightnessRelative = 0.0;
-    }
-    assert(brightnessRelative >= 0.0);
-  }
-  unsigned int brightness = std::min(static_cast<int>(127 * brightnessRelative), 127);
-
-  Color color = ToneAnimationFactoryHistory::getToneColor(toneData.maxTone, colorWheelOffset);
-
-  color.r = color.r * brightness/127.0;
-  color.g = color.g * brightness/127.0;
-  color.b = color.b * brightness/127.0;
-
-  Frame frame(nLEDs);
-  std::vector<LED> leds = m_toneHistoryFrame.getLEDs();
-
-  for (std::size_t i = 0 ; i < leds.size()/2; ++i)
-  {
-    unsigned int mirrorI = leds.size()-i-1;
-    if (mirrorI > i + speed)
-    {
-      leds[i].setLEDnr(leds[i].getLEDnr() + speed);
-      leds[mirrorI].setLEDnr(leds[mirrorI].getLEDnr() - speed);
-
-      frame.addLED(leds[i]);
-      frame.addLED(leds[mirrorI]);
-    }
+    m_toneHistory.pop_back();
   }
 
-  for (unsigned int i = 0; i < speed; ++i)
-  {
-    int mirrorI = nLEDs-i-1;
+  return doCreateToneAnimation(nLEDs, toneData);
+}
 
-    LED led(i, color);
-    frame.addLED(led);
-    LED led2(mirrorI, color);
-    frame.addLED(led2);
-  }
 
-  animation.addFrame(frame);
-  m_toneHistoryFrame = frame;
-
-  return animation;
+const
+std::deque<std::pair<Tone, double> >&ToneAnimationFactoryHistory::getToneHistory() const
+{
+  return m_toneHistory;
 }
 
 
@@ -104,4 +70,30 @@ ToneAnimationFactoryHistory::getToneColor(Tone tone, double colorWheelOffset)
 
   unsigned int colorInt = static_cast<int>( 3.0*127.0/7.0* (i + colorWheelOffset) ) % (3*128);
   return Studio::wheel(colorInt);
+}
+
+
+double
+ToneAnimationFactoryHistory::getNormalisedBrightness(double toneAmplitude, const ToneData& toneData)
+{
+//  double toneAmplitudeSum = 0.0;
+//  for (const auto& toneAmplitude : toneData.currentTones)
+//  {
+//    toneAmplitudeSum += toneAmplitude.second;
+//  }
+//  double toneAmplitudeAverage = toneAmplitudeSum/toneData.currentTones.size();
+
+  double brightnessRelative = 0.0;
+  if (toneData.toneMaxAverage > 0.01)
+  {
+//    brightnessRelative = std::log( toneAmplitude / ((toneData.toneMaxAverage + toneData.toneMinAverage)) ) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
+    brightnessRelative = std::log( toneAmplitude / (toneData.toneMaxAverage/3.0) ) * 0.5;  // see also https://en.wikipedia.org/wiki/Weber-Fechner_law
+    if (brightnessRelative < 0.0)
+    {
+      brightnessRelative = 0.0;
+    }
+    assert(brightnessRelative >= 0.0);
+  }
+
+  return brightnessRelative;
 }

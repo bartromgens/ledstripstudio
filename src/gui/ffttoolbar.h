@@ -24,9 +24,6 @@ public:
   FFTToolbar(AudioInput& audioInput, SpectrumAnalyser& spectrumAnalyser, QWidget* parent);
   virtual ~FFTToolbar();
 
-
-//  void setVisible(bool isChecked);
-
   virtual void saveConfiguration(QSettings& config) const;
   virtual void loadConfiguration(QSettings& config);
 
