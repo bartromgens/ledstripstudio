@@ -64,7 +64,9 @@ SOURCES += \
     src/studio/tone/toneanimationfactoryloudest.cpp \
     src/studio/tone/toneanimationfactoryrange.cpp \
     src/studio/tone/toneanimationfactoryloudestsmooth.cpp \
-    src/studio/tone/toneanimationfactoryindividual.cpp
+    src/studio/tone/toneanimationfactoryindividual.cpp \
+    src/studio/spectrum/spectrumanimationfactory.cpp \
+    src/studio/spectrum/spectrumanimationfactoryrgbbands.cpp
 
 HEADERS += \
     src/audioinput/audioinput.h \
@@ -108,7 +110,9 @@ HEADERS += \
     src/studio/tone/toneanimationfactoryloudest.h \
     src/studio/tone/toneanimationfactoryrange.h \
     src/studio/tone/toneanimationfactoryloudestsmooth.h \
-    src/studio/tone/toneanimationfactoryindividual.h
+    src/studio/tone/toneanimationfactoryindividual.h \
+    src/studio/spectrum/spectrumanimationfactory.h \
+    src/studio/spectrum/spectrumanimationfactoryrgbbands.h
 
 FORMS += \
     src/gui/mainwindow.ui \
