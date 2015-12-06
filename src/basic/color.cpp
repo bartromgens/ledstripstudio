@@ -39,6 +39,9 @@ Color::randomColor()
 void
 Color::setBrightness(double brightness)
 {
+  // convert to LED brightness (non-linear)
+  // use a logistic function (https://en.wikipedia.org/wiki/Logistic_function)
+  brightness = 1.0 / ( 1.0 + std::exp( (brightness*10.0-6) * -1.0 ) );  // based on emprical model http://electronics.stackexchange.com/a/11100
   assert(brightness >= 0.0);
   unsigned int brightnessInRange = std::min(static_cast<int>(127 * brightness), 127);
   r *= brightnessInRange/127.0;
