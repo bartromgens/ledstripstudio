@@ -61,7 +61,7 @@ PlayerSettingsWidget::loadConfiguration(QSettings& config)
 {
   config.beginGroup( "PlayerSettings" );
 
-  m_settings.positionOffset = config.value("positionOffset", "").toInt();
+//  m_settings.positionOffset = config.value("positionOffset", "").toInt();  // do not remember the position, position is still hard-coded in animation types
   m_settings.brightness = config.value("brightness", "").toInt();
   ui->offsetHorizontalSlider->setValue(m_settings.positionOffset);
   ui->brightnessHorizontalSlider->setValue(m_settings.brightness);
