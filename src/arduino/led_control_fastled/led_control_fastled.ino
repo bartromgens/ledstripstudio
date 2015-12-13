@@ -17,13 +17,12 @@ CRGB leds[NUM_LEDS];
 #define BRIGHTNESS  96
 
 int nLEDsSet = 0;
-int nLEDsPerWrite = 1;
+int nLEDsPerWrite = 2;
 int nBytesPerLED = 4;
 
 
-void setup() {
-  delay(3000); // 3 second delay for recovery
-  
+void setup() 
+{
   // tell FastLED about the LED strip configuration
   //FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
   FastLED.addLeds<LED_TYPE, DATA_PIN, CLK_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
@@ -32,7 +31,7 @@ void setup() {
   //FastLED.setBrightness(BRIGHTNESS);
   FastLED.clear();
   FastLED.show();
-  
+
   Serial.begin(2000000); // same value as in your c++ script
 }
 
@@ -64,3 +63,4 @@ void loop()
     }
   }
 }
+

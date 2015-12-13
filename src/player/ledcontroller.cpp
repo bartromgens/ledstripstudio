@@ -95,7 +95,7 @@ LEDController::send(const Frame& frame, double minSleep_ms)
 
   // send the frame
 //  std::cout << "=================" << std::endl;
-  int nLedsPerWrite = 1; // TODO: needs to be global setting, needs to be aligned with arduino code.
+  int nLedsPerWrite = 2; // TODO: needs to be global setting, needs to be aligned with arduino code.
   int offset = frame.getOffset();
   int brightness = frame.getBrightness();
   for (std::size_t i = 0; i < leds.size()/nLedsPerWrite; ++i)
