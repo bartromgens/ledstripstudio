@@ -2,15 +2,6 @@
 
 FASTLED_USING_NAMESPACE
 
-// FastLED "100-lines-of-code" demo reel, showing just a few 
-// of the kinds of animation patterns you can quickly and easily 
-// compose using FastLED.  
-//
-// This example also shows one easy way to define multiple 
-// animations patterns and have them automatically rotate.
-//
-// -Mark Kriegsman, December 2014
-
 #if FASTLED_VERSION < 3001000
 #error "Requires FastLED 3.1 or later; check github for latest code."
 #endif
@@ -20,13 +11,14 @@ FASTLED_USING_NAMESPACE
 
 #define LED_TYPE    LPD8806
 #define COLOR_ORDER GRB
-#define NUM_LEDS    158
+#define NUM_LEDS    156
 CRGB leds[NUM_LEDS];
 
 #define BRIGHTNESS  96
 
 int nLEDsSet = 0;
 int nLEDsPerWrite = 1;
+int nBytesPerLED = 4;
 
 
 void setup() {
@@ -47,18 +39,18 @@ void setup() {
 
 void loop() 
 { 
-  if (Serial.available() > nLEDsPerWrite*4-1)
+  if (Serial.available() >= nLEDsPerWrite*nBytesPerLED)
   {    
-    uint8_t values[nLEDsPerWrite*4];
+    uint8_t values[nLEDsPerWrite*nBytesPerLED];
     
-    for (int i = 0; i < nLEDsPerWrite*4; ++i)
+    for (int i = 0; i < nLEDsPerWrite*nBytesPerLED; ++i)
     {
-      values[i] = Serial.read(); // used to read incoming data
+      values[i] = Serial.read();
     }
     
     for (int i = 0; i < nLEDsPerWrite; ++i)
     {
-      int offset = 4*i;  
+      int offset = nBytesPerLED*i;  
       leds[values[offset]][0] = values[offset+1];
       leds[values[offset]][1] = values[offset+2];
       leds[values[offset]][2] = values[offset+3];
