@@ -25,6 +25,8 @@
 
 const int SPECTRUM_SAMPLES = static_cast<int>(std::pow(2.0, 15));
 const int NLEDS = 156;
+//const int NLEDS = 120;
+//const int NLEDS = 160;
 
 QString MainWindow::m_defaultConfigFilename = "./config/default.cfg";
 QString MainWindow::m_userConfigFilename = "./config/user.cfg";
@@ -346,12 +348,12 @@ MainWindow::playDotAnimation()
   m_player->playAllAnimations();
 
   std::vector<Color> colors;
-  colors.push_back(Color(127, 0, 0));
-  colors.push_back(Color(0, 127, 0));
-  colors.push_back(Color(0, 0, 127));
-  colors.push_back(Color(127, 0, 127));
-  colors.push_back(Color(127, 127, 0));
-  colors.push_back(Color(0, 127, 127));
+  colors.push_back(Color(255, 0, 0));
+  colors.push_back(Color(0, 255, 0));
+  colors.push_back(Color(0, 0, 255));
+  colors.push_back(Color(255, 0, 255));
+  colors.push_back(Color(255, 255, 0));
+  colors.push_back(Color(0, 255, 255));
 
   while (m_player->isPlaying())
   {

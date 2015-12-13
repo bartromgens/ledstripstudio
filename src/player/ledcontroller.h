@@ -33,7 +33,7 @@ public:
   ~LEDController();
 
   bool connect(const std::string& serialPortName);
-  void send(const Frame& frame);
+  void send(const Frame& frame, double minSleep_ms);
 
   bool isConnected() const;
 

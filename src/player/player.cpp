@@ -6,7 +6,7 @@
 
 
 Player::Player(ControlSettings& controlSettings)
-: m_ledController(),
+: m_ledController(new LEDController()),
   m_settings(controlSettings),
   m_lastFrame(0),
   m_mainAnimation(),
@@ -30,7 +30,7 @@ Player::Player(ControlSettings& controlSettings)
   }
   //  const QString serialPortName = "/dev/ttyACM0"; // linux
   //  const QString serialPortName = "COM7"; // windows
-  m_ledController = createLedController(serialPortName);
+  connect(serialPortName.toStdString());
 
   universalsleep::sleep_ms(2000); // let the LED strip initialise
 }
@@ -54,17 +54,6 @@ bool
 Player::isConnected() const
 {
   return m_ledController->isConnected();
-}
-
-
-std::unique_ptr<LEDController>
-Player::createLedController(QString serialPortName)
-{
-  std::lock_guard<std::mutex> lock(m_mutex);
-
-  std::unique_ptr<LEDController> ledController( new LEDController() );
-  ledController->connect(serialPortName.toStdString());
-  return ledController;
 }
 
 
@@ -161,7 +150,8 @@ Player::playFrame()
     }
   }
 
-  m_ledController->send(frame); // this takes about 4-10 ms
+  int minSleep_ms = 15/160.0 * frame.getLEDs().size();
+  m_ledController->send(frame, minSleep_ms); // this takes about 4-10 ms
 }
 
 
