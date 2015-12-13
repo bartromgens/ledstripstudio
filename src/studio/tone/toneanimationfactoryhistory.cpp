@@ -68,7 +68,7 @@ ToneAnimationFactoryHistory::getToneColor(Tone tone, double colorWheelOffset)
       break;
   }
 
-  unsigned int colorInt = static_cast<int>( 3.0*127.0/7.0* (i + colorWheelOffset) ) % (3*128);
+  unsigned int colorInt = static_cast<int>( 3.0*255.0/7.0* (i + colorWheelOffset) ) % (3*255);
   return Studio::wheel(colorInt);
 }
 

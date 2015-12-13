@@ -28,7 +28,7 @@ ToneAnimationFactoryIndividual::createToneAnimation(unsigned int nLEDs, const To
     double ampRatio = amplitude/toneData.maxToneAmplitude;
     double amplification = ampRatio*ampRatio;
     Color color2;
-    if (127 * amplification < 40)
+    if (255 * amplification < 40)
     {
       color2 = Color();
     }
