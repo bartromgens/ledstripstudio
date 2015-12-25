@@ -2,7 +2,7 @@
 An application for realtime audio analysis and ledstrip visualisation written in C++.
 
 ### Features
-- Control a full color RGB ledstrip @ 35 FPS (5 m strip)
+- Control a full color RGB ledstrip @ 60 FPS (5 m strip)
 - Capture audio from any music player, browser or microphone
 - Spectrum analysis
 - Tone detection
@@ -17,7 +17,6 @@ An application for realtime audio analysis and ledstrip visualisation written in
 - FFTW
 
 ### References
-
 - https://en.wikipedia.org/wiki/Loudness
 - https://en.wikipedia.org/wiki/Weber-Fechner_law
 - https://en.wikipedia.org/wiki/Cepstrum, https://en.wikipedia.org/wiki/Mel-frequency_cepstrum

@@ -1,13 +1,14 @@
+
 #include "FastLED.h"
 
 FASTLED_USING_NAMESPACE
 
 #if FASTLED_VERSION < 3001000
-#error "Requires FastLED 3.1 or later; check github for latest code."
+#warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
-#define DATA_PIN    2
-#define CLK_PIN     3
+#define DATA_PIN   7
+#define CLK_PIN    14
 
 #define LED_TYPE    LPD8806
 #define COLOR_ORDER GRB
@@ -18,7 +19,7 @@ CRGB leds[NUM_LEDS];
 
 int nLEDsSet = 0;
 int nLEDsPerWrite = 2;
-int nBytesPerLED = 4;
+int nValuesPerLED = 4;
 
 
 void setup() 
@@ -29,27 +30,25 @@ void setup()
 
   // set master brightness control
   //FastLED.setBrightness(BRIGHTNESS);
-  FastLED.clear();
-  FastLED.show();
 
   Serial.begin(2000000); // same value as in your c++ script
 }
 
 
 void loop() 
-{ 
-  if (Serial.available() >= nLEDsPerWrite*nBytesPerLED)
+{  
+  if (Serial.available() >= nLEDsPerWrite*nValuesPerLED)
   {    
-    uint8_t values[nLEDsPerWrite*nBytesPerLED];
+    uint8_t values[nLEDsPerWrite*nValuesPerLED];
     
-    for (int i = 0; i < nLEDsPerWrite*nBytesPerLED; ++i)
+    for (int i = 0; i < nLEDsPerWrite*nValuesPerLED; ++i)
     {
       values[i] = Serial.read();
     }
-    
+
     for (int i = 0; i < nLEDsPerWrite; ++i)
     {
-      int offset = nBytesPerLED*i;  
+      int offset = nValuesPerLED*i;  
       leds[values[offset]][0] = values[offset+1];
       leds[values[offset]][1] = values[offset+2];
       leds[values[offset]][2] = values[offset+3];
