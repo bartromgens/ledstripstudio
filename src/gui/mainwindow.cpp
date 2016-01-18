@@ -143,7 +143,7 @@ void
 MainWindow::startAudioInputThread()
 {
   qDebug() << __PRETTY_FUNCTION__;
-  m_audioInputThread.reset(new boost::thread(&MainWindow::startAudioInput, this));
+//  m_audioInputThread.reset(new boost::thread(&MainWindow::startAudioInput, this));
 }
 
 
@@ -152,6 +152,7 @@ MainWindow::startAudioInput()
 {
   m_settings->setActive(true);
 
+//  m_audioInput->startAudioMonitoring();
   m_audioInput->openStream();
   m_audioInput->startStream();
   m_audioInput->closeStream();

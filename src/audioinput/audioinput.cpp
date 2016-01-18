@@ -2,8 +2,78 @@
 #include "spectrum/spectrumanalyser.h"
 #include "spectrum/toneanalyser.h"
 
+#include <QAudioDeviceInfo>
+#include <QDebug>
+
 #include <cassert>
 #include <cmath>
+
+
+AudioInfo::AudioInfo(const QAudioFormat& format, std::size_t nSamples, AudioInput* audioInput, QObject *parent)
+: QIODevice(parent),
+  m_format(format),
+  m_data(nSamples),
+  m_audioInput(audioInput)
+{
+}
+
+AudioInfo::~AudioInfo()
+{
+}
+
+void
+AudioInfo::start()
+{
+  open(QIODevice::WriteOnly);
+}
+
+void
+AudioInfo::stop()
+{
+  close();
+}
+
+qint64
+AudioInfo::readData(char *data, qint64 maxlen)
+{
+  Q_UNUSED(data)
+  Q_UNUSED(maxlen)
+
+  return 0;
+}
+
+qint64
+AudioInfo::writeData(const char* data, qint64 len)
+{
+  Q_ASSERT(m_format.sampleSize() % 8 == 0);
+  const int channelBytes = m_format.sampleSize() / 8;
+  const int sampleBytes = m_format.channelCount() * channelBytes;
+  Q_ASSERT(len % sampleBytes == 0);
+  const int numSamples = len / sampleBytes;
+
+  const unsigned char *ptr = reinterpret_cast<const unsigned char *>(data);
+
+  for (int i = 0; i < numSamples; ++i)
+  {
+    for (int j = 0; j < m_format.channelCount(); ++j)
+    {
+      float value = 0;
+
+      if (m_format.sampleSize() == 32 && m_format.sampleType() == QAudioFormat::Float) {
+        value = *reinterpret_cast<const float*>(ptr) * 2.0;
+//        std::cout << value << std::endl;
+      }
+      m_data.push_back(value);
+      m_data.pop_front();
+
+      ptr += channelBytes;
+    }
+  }
+
+  m_audioInput->notifyObservers(m_data);
+
+  return len;
+}
 
 
 AudioInput::AudioInput(unsigned int nSamples, ControlSettings& settings)
@@ -13,16 +83,45 @@ AudioInput::AudioInput(unsigned int nSamples, ControlSettings& settings)
     m_data(),
     m_controlSettings(settings),
     m_audioObservers(),
-    m_observerMutex()
+    m_observerMutex(),
+    m_input(0),
+    m_audioInfo(0),
+    m_format(),
+    m_deviceInfo()
 {
-  std::cout << "AudioInput::AudioInput() - sample size: " << m_nSamples << std::endl;
+  m_format.setSampleRate(m_sampleRate);
+  m_format.setChannelCount(m_nChannels);
+  m_format.setSampleSize(32);
+  m_format.setSampleType(QAudioFormat::Float);
+  m_format.setByteOrder(QAudioFormat::LittleEndian);
+  m_format.setCodec("audio/pcm");
 
+  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+  m_deviceInfo = QAudioDeviceInfo::defaultInputDevice();
+  for (auto device : devices)
+  {
+    if (device.deviceName().contains("05_04.0.analog-stereo.monitor"))
+    {
+      m_deviceInfo = device;
+    }
+    std::cout << device.deviceName().toStdString() << std::endl;
+  }
+  std::cout << "selected input device: " << m_deviceInfo.deviceName().toStdString() << std::endl;
+  if (!m_deviceInfo.isFormatSupported(m_format)) {
+      qWarning() << "Default format not supported - trying to use nearest";
+      m_format = m_deviceInfo.nearestFormat(m_format);
+  }
+
+  std::cout << "AudioInput::AudioInput() - sample size: " << m_nSamples << std::endl;
+  startAudioMonitoring();
   initializeUserData(); // From now on, recordedSamples is initialised.
 }
 
 
 AudioInput::~AudioInput()
 {
+  delete m_input;
+  delete m_audioInfo;
   std::cout << "AudioInput::~AudioInput()" << std::endl;
 }
 
@@ -43,6 +142,19 @@ AudioInput::setSampleSize(unsigned int nSamples)
   m_data.nSamples = nSamples;
   m_nSamples = nSamples;
   m_data.recordedSamplesVec.resize(nSamples);
+}
+
+
+void
+AudioInput::startAudioMonitoring()
+{
+  m_audioInfo = new AudioInfo(m_format, m_nSamples, this, 0);
+
+  m_input = new QAudioInput(m_deviceInfo, m_format, 0);
+  m_input->setNotifyInterval(8);
+  m_audioInfo->start();
+  m_input->start(m_audioInfo);
+  std::cout << "notify interval: " << m_input->notifyInterval() << std::endl;
 }
 
 
@@ -170,7 +282,7 @@ AudioInput::recordCallback( const void* inputBuffer,
   {
     if (data->recordedSamplesVec.size() > data->nSamples)
     {
-      data->recordedSamplesVec.pop_front();
+      data->recordedSamplesVec.pop_front();  // TODO: does pop_front and push_back make more sense? Check with windowing function.
     }
     data->recordedSamplesVec.push_back((float)(*rptr++));
 

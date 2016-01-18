@@ -3,6 +3,7 @@
 QT += core gui
 QT += widgets
 QT += serialport
+QT += multimedia
 
 TEMPLATE = app
 CONFIG += qt

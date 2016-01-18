@@ -11,6 +11,9 @@
 
 #include "portaudio/portaudio.h"
 
+#include <QAudioFormat>
+#include <QAudioInput>
+#include <QIODevice>
 #include <QTime>
 
 #include <stdio.h>
@@ -19,6 +22,31 @@
 #include <memory>
 #include <mutex>
 #include <set>
+
+
+class AudioInput;
+
+
+class AudioInfo : public QIODevice
+{
+  Q_OBJECT
+
+public:
+  AudioInfo(const QAudioFormat &format, std::size_t nSamples, AudioInput* audioInput, QObject *parent);
+  virtual ~AudioInfo();
+
+  void start();
+  void stop();
+
+  qint64 readData(char *data, qint64 maxlen);
+  qint64 writeData(const char *data, qint64 len);
+
+private:
+  const QAudioFormat m_format;
+  std::deque<float> m_data;
+  AudioInput* m_audioInput;
+};
+
 
 class AudioInput
 {
@@ -41,6 +69,8 @@ public:
   void notifyObservers(const std::deque<float>& audioData);
 
   void setSampleSize(unsigned int nSamples);
+
+  void startAudioMonitoring();
 
 private:
 
@@ -70,6 +100,11 @@ private:
   std::set<AudioInputObserver*> m_audioObservers;
 
   mutable std::mutex m_observerMutex;
+
+  QAudioInput* m_input;
+  AudioInfo* m_audioInfo;
+  QAudioFormat m_format;
+  QAudioDeviceInfo m_deviceInfo;
 };
 
 #endif // AUDIOINPUT_H
