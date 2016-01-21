@@ -25,3 +25,6 @@ tmp/*
 
 # portaudio generated files
 wisdom3.txt
+
+# IDE files
+.idea/*
