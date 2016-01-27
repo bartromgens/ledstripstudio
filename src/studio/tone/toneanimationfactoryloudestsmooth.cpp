@@ -58,9 +58,9 @@ ToneAnimationFactoryLoudestSmooth::createToneAnimation(unsigned int nLEDs, const
     }
 
     double norm = std::sqrt(r*r+g*g+b*b);
-    int rNorm = static_cast<int>(r/norm*127);
-    int gNorm = static_cast<int>(g/norm*127);
-    int bNorm = static_cast<int>(b/norm*127);
+    int rNorm = static_cast<int>(r/norm*255);
+    int gNorm = static_cast<int>(g/norm*255);
+    int bNorm = static_cast<int>(b/norm*255);
 
     Color color(rNorm, gNorm, bNorm);
 

@@ -33,7 +33,7 @@ ToneAnimationFactory::createToneColorMap(const std::map<Tone, double>& tones)
   for (const auto& tone : tones)
   {
     Color color;
-    int brightness = 127;
+    int brightness = 255;
 
     switch (tone.first)
     {

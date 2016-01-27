@@ -27,25 +27,25 @@ ToneAnimationFactoryLoudest::createToneAnimation(unsigned int nLEDs, const ToneD
     switch (toneData.maxTone)
     {
       case Tone::C :
-        color = Color(127, 0, 0);
+        color = Color(255, 0, 0);
         break;
       case Tone::D :
-        color = Color(127, 127, 0);
+        color = Color(255, 255, 0);
         break;
       case Tone::E :
-        color = Color(0, 127, 0);
+        color = Color(0, 255, 0);
         break;
       case Tone::F :
-        color = Color(0, 127, 127);
+        color = Color(0, 255, 255);
         break;
       case Tone::G :
-        color = Color(0, 0, 127);
+        color = Color(0, 0, 255);
         break;
       case Tone::A :
-        color = Color(127, 0, 127);
+        color = Color(255, 0, 255);
         break;
       case Tone::B :
-        color = Color(127, 50, 50);
+        color = Color(255, 50, 50);
         break;
     }
 

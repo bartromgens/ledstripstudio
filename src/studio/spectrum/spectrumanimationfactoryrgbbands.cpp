@@ -55,30 +55,30 @@ SpectrumAnimationFactoryRGBBands::createSpectrumAnimation(unsigned int nLEDs,
   int centreLedNr = nLEDs/2;
 
 //  int maxRGB = std::max(brightnessBlue, std::max(brightnessRed, brightnessGreen));
-//  brightnessRed *= 127.0/maxRGB;
-//  brightnessGreen *= 127.0/maxRGB;
-//  brightnessBlue *= 127.0/maxRGB;
+//  brightnessRed *= 255.0/maxRGB;
+//  brightnessGreen *= 255.0/maxRGB;
+//  brightnessBlue *= 255.0/maxRGB;
 
   for (int i = 0; i < centreLedNr; ++i)
   {
-    int scaleFact = (i * 127) / centreLedNr;
+    int scaleFact = (i * 255) / centreLedNr;
 //    int scaleFact = 0.0;
 
     int r = brightnessRed - scaleFact;
     int g = brightnessGreen - scaleFact;
     int b = brightnessBlue - scaleFact;
 
-    if (r > 127)
+    if (r > 255)
     {
-      r = 127;
+      r = 255;
     }
-    if (g > 127)
+    if (g > 255)
     {
-      g = 127;
+      g = 255;
     }
-    if (b > 127)
+    if (b > 255)
     {
-      b = 127;
+      b = 255;
     }
 
     if (r < 0)

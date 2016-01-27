@@ -56,7 +56,6 @@ void loop()
     if (nLEDsSet >= nLEDs)
     {
       strip.show();
-      clearStrip();
       nLEDsSet = 0;
     }
   }

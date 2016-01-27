@@ -17,7 +17,7 @@ LED::getColor() const
 QColor
 LED::getQColor() const
 {
-  double factor = 255.0 / 127.0;
+  double factor = 255.0 / 255.0;
   QColor qcolor(m_color.r * factor, m_color.g * factor, m_color.b * factor);
   return qcolor;
 }

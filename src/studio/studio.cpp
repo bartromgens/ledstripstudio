@@ -32,9 +32,9 @@ Studio::createRandomMovingDots(int nDots, int nFrames)
     positions.push_back(startPos);
     positions_int.push_back(startPos);
 
-    int r = (rand() % 128);
-    int g = (rand() % 128);
-    int b = (rand() % 128);
+    int r = (rand() % 256);
+    int g = (rand() % 256);
+    int b = (rand() % 256);
 
     r = 0;
     g = 0;
@@ -44,17 +44,17 @@ Studio::createRandomMovingDots(int nDots, int nFrames)
     {
     case 0:
     {
-      r = 127;
+      r = 255;
       break;
     }
     case 1:
     {
-      g = 127;
+      g = 255;
       break;
     }
     case 2:
     {
-      b = 127;
+      b = 255;
       break;
     }
     }
@@ -238,21 +238,21 @@ Studio::wheel(int wheelPos)
   int g = 0;
   int b = 0;
 
-  switch(wheelPos / 128)
+  switch(wheelPos / 256)
   {
     case 0:
-      r = 127 - wheelPos % 128;   //Red down
-      g = wheelPos % 128;      // Green up
+      r = 255 - wheelPos % 256;   //Red down
+      g = wheelPos % 256;      // Green up
       b = 0;                  //blue off
       break;
     case 1:
-      g = 127 - wheelPos % 128;  //green down
-      b = wheelPos % 128;      //blue up
+      g = 255 - wheelPos % 256;  //green down
+      b = wheelPos % 256;      //blue up
       r = 0;                  //red off
       break;
     case 2:
-      b = 127 - wheelPos % 128;  //blue down
-      r = wheelPos % 128;      //red up
+      b = 255 - wheelPos % 256;  //blue down
+      r = wheelPos % 256;      //red up
       g = 0;                  //green off
       break;
   }
@@ -280,7 +280,7 @@ Studio::createCellularAutomata()
       Color color;
       if (state[i] == 1)
       {
-        color = Color(127, 0, 0);
+        color = Color(255, 0, 0);
       }
 
       LED led(i, color);

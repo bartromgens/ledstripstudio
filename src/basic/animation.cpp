@@ -82,7 +82,7 @@ Animation::combineTwoAnimations(const Animation& animationA, const Animation& an
       Color colorA = ledsA.at(j).getColor();
       Color colorB = ledsB.at(j).getColor();
 
-      Color combinedColor( std::min(colorA.r + colorB.r, 127), std::min(colorA.g + colorB.g, 127), std::min(colorA.b + colorB.b, 127) );
+      Color combinedColor( std::min(colorA.r + colorB.r, 255), std::min(colorA.g + colorB.g, 255), std::min(colorA.b + colorB.b, 255) );
 
       LED ledNew(j, combinedColor);
 

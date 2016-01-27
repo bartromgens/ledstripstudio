@@ -37,7 +37,7 @@ ToneAnimationFactoryRange::createToneAnimation(unsigned int nLEDs, const ToneDat
     double amplification = toneAmplitude.second/toneData.maxToneAmplitude;
     toneAmplification[toneAmplitude.first] = std::pow(amplification, amplificationExponent);
 
-    if (127 * toneAmplification[toneAmplitude.first] < minThreshold)
+    if (255 * toneAmplification[toneAmplitude.first] < minThreshold)
     {
       continue;
     }
@@ -54,7 +54,7 @@ ToneAnimationFactoryRange::createToneAnimation(unsigned int nLEDs, const ToneDat
 
     int nLEDsPerTone = std::ceil(nLEDs / totalAmplification * amplification);
 
-    if (127 * amplification < minThreshold)
+    if (255 * amplification < minThreshold)
     {
       nLEDsPerTone = 0;
     }
@@ -83,7 +83,7 @@ ToneAnimationFactoryRange::createToneAnimation(unsigned int nLEDs, const ToneDat
     double amplification = toneAmplification[tone];
 
     Color color2;
-    if (127 * amplification < minThreshold)
+    if (255 * amplification < minThreshold)
     {
       continue;
     }

@@ -68,7 +68,7 @@ LEDController::disconnect()
 
 
 void
-LEDController::send(const Frame& frame)
+LEDController::send(const Frame& frame, double minSleep_ms)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -76,12 +76,9 @@ LEDController::send(const Frame& frame)
 
   const std::vector<LED>& leds = frame.getLEDs();
 
-  // make sure n ms has elapsed since the last send, for the Arduino to process the data.
-//  int minSleep = 20; //160 leds
-//  int minSleep = 21/160.0 * leds.size();
-  int minSleep = 20/160.0 * leds.size();
+  // make sure minSleep_ms elapsed since the last send, for the Arduino to process the data.
   qint64 elapsed_ms = m_timer.nsecsElapsed()/1000000;
-  qint64 toSleep = minSleep - elapsed_ms;
+  qint64 toSleep = minSleep_ms - elapsed_ms;
 
   if (toSleep > 0)
   {
@@ -98,7 +95,7 @@ LEDController::send(const Frame& frame)
 
   // send the frame
 //  std::cout << "=================" << std::endl;
-  int nLedsPerWrite = 4; // TODO: needs to be global setting, needs to be aligned with arduino code.
+  int nLedsPerWrite = 2; // TODO: needs to be global setting, needs to be aligned with arduino code.
   int offset = frame.getOffset();
   int brightness = frame.getBrightness();
   for (std::size_t i = 0; i < leds.size()/nLedsPerWrite; ++i)

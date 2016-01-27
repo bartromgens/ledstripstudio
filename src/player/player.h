@@ -41,8 +41,6 @@ public:
 
 private:
 
-  std::unique_ptr<LEDController> createLedController(QString serialPortName);
-
   static Frame smoothenFrames(const Frame& firstFrame, const Frame& secondFrame, int nFrames = 1);
 
 private:
