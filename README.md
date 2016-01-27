@@ -1,9 +1,10 @@
 # ledstripstudio
-An application for realtime audio analysis and ledstrip visualisation written in C++.
+Realtime audio visualisation on a LED strip.
 
 ### Features
 - Control a full color RGB ledstrip @ 60 FPS (5 m strip)
 - Capture audio from any music player, browser or microphone
+- Graphical user interface for desktop
 - Spectrum analysis
 - Tone detection
 - Beat detection [In progress]
