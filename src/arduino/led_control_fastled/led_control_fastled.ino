@@ -1,3 +1,5 @@
+#include <Time.h>
+#include <TimeLib.h>
 
 #include "FastLED.h"
 
@@ -7,12 +9,13 @@ FASTLED_USING_NAMESPACE
 #warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
+// on a Teensy 3, use 7/14 or 11/13
 #define DATA_PIN   7
 #define CLK_PIN    14
 
 #define LED_TYPE    LPD8806
 #define COLOR_ORDER GRB
-#define NUM_LEDS    156
+#define NUM_LEDS    160
 CRGB leds[NUM_LEDS];
 
 #define BRIGHTNESS  96
@@ -60,6 +63,11 @@ void loop()
       FastLED.show();
       nLEDsSet = 0;
     }
+  }
+  else if ( second() == 0 )
+  {
+    FastLED.showColor(CRGB(0,0,0));
+    FastLED.show();
   }
 }
 
