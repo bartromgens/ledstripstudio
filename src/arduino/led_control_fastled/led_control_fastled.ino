@@ -15,7 +15,7 @@ FASTLED_USING_NAMESPACE
 
 #define LED_TYPE    LPD8806
 #define COLOR_ORDER GRB
-#define NUM_LEDS    160
+#define NUM_LEDS    156
 CRGB leds[NUM_LEDS];
 
 #define BRIGHTNESS  96
