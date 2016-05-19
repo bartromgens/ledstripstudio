@@ -24,3 +24,15 @@ Realtime audio visualisation on a LED strip.
 - https://en.wikipedia.org/wiki/Audio_to_video_synchronization
 - http://electronics.stackexchange.com/questions/12407/what-is-the-relation-between-fft-length-and-frequency-resolution
 - "Real-time temporal segmentation of note objects in music signals" - http://aubio.org/articles/brossier04realtimesegmentation.pdf
+
+
+## Controllers 
+
+### Teensy
+
+For the Teensy 3.1, 3.2, one of the following Hardware SPI data/clock pin combinations should be used,
+
+ - Hardware SPI - data 11, clock 13
+ - Hardware SPI - data 7, clock 14
+ 
+See a list of configurations for other controllers [here](https://github.com/FastLED/FastLED/wiki/SPI-Hardware-or-Bit-banging).

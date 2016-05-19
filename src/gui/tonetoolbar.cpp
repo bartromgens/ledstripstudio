@@ -138,7 +138,7 @@ ToneToolbar::loadConfiguration(QSettings& config)
     }
     case ToneStudio::AnimationType::HistoryDynamic:
     {
-      m_historyStaticToneAct->setChecked(true);
+      m_historyDynamicToneAct->setChecked(true);
       break;
     }
     case ToneStudio::AnimationType::Range:

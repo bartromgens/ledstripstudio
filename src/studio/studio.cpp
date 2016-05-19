@@ -210,6 +210,7 @@ Animation
 Studio::createMovingRainbow(double speed)
 {
   Animation animation;
+  // taken from https://github.com/adafruit/LPD8806/blob/master/examples/strandtest/strandtest.ino
   for (int j = 0; j < 384 * 5; j++)
   {
     // 5 cycles of all 384 colors in the wheel
@@ -220,7 +221,7 @@ Studio::createMovingRainbow(double speed)
       // (thats the i / strip.numPixels() part)
       // Then add in j which makes the colors go around per pixel
       // the % 384 is to make the wheel cycle around
-      Color color = wheel( ((i * 384 / m_nLEDs) + static_cast<int>(j*speed)) % 384 );
+      Color color = wheel( ((i * 384 / m_nLEDs) + static_cast<int>(j*speed)) % 384*2 );
       LED led(i, color);
 //      led.print();
       frame.addLED(led);
@@ -238,7 +239,7 @@ Studio::wheel(int wheelPos)
   int g = 0;
   int b = 0;
 
-  switch(wheelPos / 256)
+  switch (wheelPos / 256)
   {
     case 0:
       r = 255 - wheelPos % 256;   //Red down
