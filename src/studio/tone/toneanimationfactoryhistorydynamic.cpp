@@ -19,6 +19,10 @@ ToneAnimationFactoryHistoryDynamic::doCreateToneAnimation(unsigned int nLEDs, co
   for (std::size_t i = 0; i < toneHistory.size(); ++i)
   {
     int ledPos = ledNr/m_speed;
+    if (ledPos >= nLEDs)  //TODO: remove break and just stop loop naturally
+    {
+      break;
+    }
 
     Color color;
     for (std::size_t j = 0; j < m_speed; ++j)
