@@ -14,6 +14,10 @@ private:
 
   virtual Animation doCreateToneAnimation(unsigned int nLEDs, const ToneData& toneData);
 
+private:
+
+  unsigned int m_speed;
+
 };
 
 #endif // TONEANIMATIONFactoryHISTORYDYNAMIC_H

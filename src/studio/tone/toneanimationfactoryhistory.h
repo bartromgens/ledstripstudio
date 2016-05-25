@@ -33,6 +33,7 @@ private:
 private:
 
   std::deque<std::pair<Tone, double>> m_toneHistory;
+  std::size_t m_sizeToneHistory;
 
 };
 

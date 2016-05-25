@@ -9,7 +9,8 @@
 
 ToneAnimationFactoryHistory::ToneAnimationFactoryHistory()
 : ToneAnimationFactory(),
-  m_toneHistory()
+  m_toneHistory(),
+  m_sizeToneHistory(2000)
 {
 }
 
@@ -23,7 +24,7 @@ Animation
 ToneAnimationFactoryHistory::createToneAnimation(unsigned int nLEDs, const ToneData& toneData)
 {
   m_toneHistory.push_front(std::make_pair(toneData.maxTone, toneData.maxToneAmplitude));
-  if (m_toneHistory.size() > nLEDs)
+  if (m_toneHistory.size() > m_sizeToneHistory)
   {
     m_toneHistory.pop_back();
   }
@@ -33,7 +34,7 @@ ToneAnimationFactoryHistory::createToneAnimation(unsigned int nLEDs, const ToneD
 
 
 const
-std::deque<std::pair<Tone, double> >&ToneAnimationFactoryHistory::getToneHistory() const
+std::deque<std::pair<Tone, double> >& ToneAnimationFactoryHistory::getToneHistory() const
 {
   return m_toneHistory;
 }

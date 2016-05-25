@@ -150,7 +150,7 @@ Player::playFrame()
     }
   }
 
-  int minSleep_ms = 2/160.0 * frame.getLEDs().size();
+  int minSleep_ms = 1.0/160.0 * frame.getLEDs().size();
   m_ledController->send(frame, minSleep_ms); // this takes about 4-10 ms
 }
 

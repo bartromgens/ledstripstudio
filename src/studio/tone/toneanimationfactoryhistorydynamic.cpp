@@ -2,8 +2,9 @@
 
 
 ToneAnimationFactoryHistoryDynamic::ToneAnimationFactoryHistoryDynamic()
-: ToneAnimationFactoryHistory()
-{  
+: ToneAnimationFactoryHistory(),
+  m_speed(4)
+{
 }
 
 
@@ -14,16 +15,30 @@ ToneAnimationFactoryHistoryDynamic::doCreateToneAnimation(unsigned int nLEDs, co
   Frame frame(nLEDs);
 
   unsigned int ledNr = 0;
-  for (const auto& toneAmplitude : getToneHistory())
+  const std::deque<std::pair<Tone, double> >& toneHistory = getToneHistory();
+  for (std::size_t i = 0; i < toneHistory.size(); ++i)
   {
-    Tone tone = toneAmplitude.first;
+    int ledPos = ledNr/m_speed;
 
-    Color color = ToneAnimationFactoryHistory::getToneColor(tone);
-    double brightness = ToneAnimationFactoryHistory::getNormalisedBrightness(toneData.currentTones.at(tone), toneData);
-    brightness *= (nLEDs/1.2-ledNr) / static_cast<double>(nLEDs/2.0);  // division by 2 because of frame.mirror(). TODO BR: encapsulate this in the mirror functionality
+    Color color;
+    for (std::size_t j = 0; j < m_speed; ++j)
+    {
+      if (i + j < toneHistory.size())
+      {
+        Color toneColor = ToneAnimationFactoryHistory::getToneColor(toneHistory[i+j].first);
+        color.r += toneColor.r;
+        color.g += toneColor.g;
+        color.b += toneColor.b;
+      }
+    }
+    color.r /= m_speed;
+    color.g /= m_speed;
+    color.b /= m_speed;
+    double brightness = ToneAnimationFactoryHistory::getNormalisedBrightness(toneData.currentTones.at(toneHistory[i].first), toneData);
+    brightness *= (nLEDs/1.2-ledPos) / static_cast<double>(nLEDs/2.0);  // division by 2 because of frame.mirror(). TODO BR: encapsulate this in the mirror functionality
     color.setBrightness(brightness);
 
-    LED led(ledNr, color);
+    LED led(ledPos, color);
     frame.addLED(led);
     ledNr++;
   }
